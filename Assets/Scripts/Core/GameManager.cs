@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
         {
             loadingScreen.SetActive(false);
         }
-        // Subscribe to scene loading events
+        // 添加订阅场景加载事件
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
     
@@ -49,19 +49,19 @@ public class GameManager : MonoBehaviour
     
     private IEnumerator LoadSceneAsync(string sceneName)
     {
-        // Show loading screen
+        // 显示加载界面
         if (loadingScreen != null)
         {
             loadingScreen.SetActive(true);
         }
         
-        // Start async loading
+        // 异步加载场景
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false;
         
         float startTime = Time.time;
         
-        // Update loading progress
+        // 更新加载进度
         while (!asyncLoad.isDone)
         {
             float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
                 loadingBar.value = progress;
             }
             
-            // Wait until we're close to done and minimum time has passed
+            // 等待直到接近完成并且最小时间已过
             if (asyncLoad.progress >= 0.9f && Time.time - startTime >= minimumLoadingTime)
             {
                 asyncLoad.allowSceneActivation = true;
@@ -81,29 +81,30 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    // 处理场景加载完成事件
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Hide loading screen
+        // 隐藏加载界面
         if (loadingScreen != null)
         {
             loadingScreen.SetActive(false);
         }
         
-        // Initialize scene
         InitializeScene(scene.name);
     }
     
+    // 初始化场景
     private void InitializeScene(string sceneName)
     {
-        // Setup scene-specific logic
+        // 建立场景初始化逻辑
         switch (sceneName)
         {
             case "MainMenu":
-                Time.timeScale = 1f; // Ensure game is not paused
+                Time.timeScale = 1f; // 确保游戏没有暂停
                 break;
                 
             case "GameScene":
-                // Find the player start position and place player there
+                // 找到玩家初始位置并放置玩家
                 GameObject playerStart = GameObject.FindGameObjectWithTag("PlayerStart");
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 
@@ -113,25 +114,26 @@ public class GameManager : MonoBehaviour
                 }
                 break;
                 
-            // Add more scenes as needed
+            // 根据需要添加更多场景
         }
     }
     
-    // For handling game progression
+    // 处理游戏进度
+    // 例如：游戏开始、玩家死亡等
     public void OnGameEvent(string eventName)
     {
-        // Example of handling game events
+        // 处理游戏事件的示例
         switch (eventName)
         {
             case "GameStarted":
-                // Initialize game state
+                // 初始化游戏状态
                 GameStateManager.Instance.ClearAllFlags();
-                // Start initial quests
+                // 开始初始任务
                 QuestManager.Instance.StartQuest("quest_intro");
                 break;
                 
             case "PlayerDied":
-                // Show game over screen
+                // 显示游戏结束界面
                 UIManager.Instance.ShowConfirmDialog(
                     "你死了",
                     "是否重新加载最近的保存点？",
@@ -140,26 +142,27 @@ public class GameManager : MonoBehaviour
                 );
                 break;
                 
-            // Add more events as needed
+            // 根据需要添加更多事件
         }
     }
     
+    // 加载最近的保存
     private void LoadLastSave()
     {
-        // Find the most recent save
+        // 找到最近的存档
         SaveDataInfo[] saves = SaveLoadSystem.GetSaveDataInfos();
         
         if (saves.Length > 0)
         {
-            // Sort by date (newest first)
+            // 按日期排序（最新的在前）
             System.Array.Sort(saves, (a, b) => b.saveDate.CompareTo(a.saveDate));
             
-            // Load the newest save
+            // 加载最新的存档
             SaveLoadSystem.LoadGame(saves[0].slotIndex);
         }
         else
         {
-            // No saves found, go to main menu
+            // 没有找到存档，返回主菜单
             LoadScene("MainMenu");
         }
     }
