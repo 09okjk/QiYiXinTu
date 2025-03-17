@@ -18,7 +18,7 @@ public class QuestLogEntry : MonoBehaviour
     {
         quest = newQuest;
         
-        // Set name
+        // 设置名称
         if (questNameText != null)
         {
             questNameText.text = quest.questName;
@@ -27,21 +27,24 @@ public class QuestLogEntry : MonoBehaviour
         UpdateDisplay();
     }
     
+    /// <summary>
+    /// 更新任务显示
+    /// </summary>
     private void UpdateDisplay()
     {
-        // Clear existing objective entries
+        // 清除现有目标条目
         foreach (Transform child in objectiveContainer)
         {
             Destroy(child.gameObject);
         }
         
-        // Set description
+        // 设置描述
         if (questDescriptionText != null)
         {
             questDescriptionText.text = quest.description;
         }
         
-        // Add objective entries
+        // 添加目标条目
         foreach (QuestObjective objective in quest.objectives)
         {
             GameObject entryGO = Instantiate(objectiveEntryPrefab, objectiveContainer);
@@ -56,11 +59,14 @@ public class QuestLogEntry : MonoBehaviour
             if (entryToggle != null)
             {
                 entryToggle.isOn = objective.isCompleted;
-                entryToggle.interactable = false; // Read-only
+                entryToggle.interactable = false; // 只读
             }
         }
     }
     
+    /// <summary>
+    /// 描述面板开关
+    /// </summary>
     public void ToggleDetails()
     {
         if (detailsPanel != null)

@@ -44,7 +44,7 @@ public class MenuManager : MonoBehaviour
     
     private void Start()
     {
-        // Setup volume sliders
+        // 设置音量滑块
         if (masterVolumeSlider != null)
             masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
             
@@ -54,13 +54,14 @@ public class MenuManager : MonoBehaviour
         if (sfxVolumeSlider != null)
             sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
         
-        // Initialize with saved values
+        // 初始化保存的值
         LoadAudioSettings();
         
-        // Hide all panels initially
+        // 初始时隐藏所有面板
         CloseAllPanels();
     }
     
+    // 切换菜单的显示状态
     public void ToggleMenu()
     {
         if (isMenuActive)
@@ -114,30 +115,32 @@ public class MenuManager : MonoBehaviour
         savePanel.SetActive(false);
     }
     
+    // 保存和加载游戏的插槽
     private void PopulateSaveSlots()
     {
-        // Clear existing slots
+        // 清除现有的插槽
         foreach (Transform child in saveSlotContainer)
         {
             Destroy(child.gameObject);
         }
         
-        // Get save data info
+        // 获取保存的数据信息
         SaveDataInfo[] saveDataInfos = SaveLoadSystem.GetSaveDataInfos();
         
-        // Create slots for existing saves
+        // 创建现有保存的插槽
         for (int i = 0; i < saveDataInfos.Length; i++)
         {
             CreateSaveSlot(i, saveDataInfos[i]);
         }
         
-        // Create empty slots up to max
+        // 创建空插槽到最大
         for (int i = saveDataInfos.Length; i < maxSaveSlots; i++)
         {
             CreateSaveSlot(i, null);
         }
     }
     
+    // 用于创建保存插槽
     private void CreateSaveSlot(int slotIndex, SaveDataInfo info)
     {
         GameObject slotGO = Instantiate(saveSlotPrefab, saveSlotContainer);
@@ -145,45 +148,46 @@ public class MenuManager : MonoBehaviour
         
         if (info != null)
         {
-            // Existing save
+            // 已存在的存档
             slotUI.SetupExistingSlot(slotIndex, info);
         }
         else
         {
-            // Empty slot
+            // 空插槽
             slotUI.SetupEmptySlot(slotIndex);
         }
     }
     
-    // Audio settings
+    // 音频设置
+    // 设置音量
     public void SetMasterVolume(float volume)
     {
         SetAudioMixerVolume("MasterVolume", volume);
         PlayerPrefs.SetFloat("MasterVolume", volume);
         PlayerPrefs.Save();
     }
-    
+    // 设置音乐音量
     public void SetMusicVolume(float volume)
     {
         SetAudioMixerVolume("MusicVolume", volume);
         PlayerPrefs.SetFloat("MusicVolume", volume);
         PlayerPrefs.Save();
     }
-    
+    // 设置音效音量
     public void SetSFXVolume(float volume)
     {
         SetAudioMixerVolume("SFXVolume", volume);
         PlayerPrefs.SetFloat("SFXVolume", volume);
         PlayerPrefs.Save();
     }
-    
+    // 设置音频混合器音量
     private void SetAudioMixerVolume(string parameterName, float normalizedValue)
     {
-        // Convert normalized value (0-1) to mixer value (logarithmic, -80db to 0db)
+        // 将归一化值（0-1）转换为混音器值（对数，-80db到0db）
         float mixerValue = normalizedValue > 0.001f ? Mathf.Log10(normalizedValue) * 20 : -80f;
         audioMixer.SetFloat(parameterName, mixerValue);
     }
-    
+    // 加载音频设置
     private void LoadAudioSettings()
     {
         float masterVolume = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
@@ -195,7 +199,7 @@ public class MenuManager : MonoBehaviour
         if (musicVolumeSlider != null) musicVolumeSlider.value = musicVolume;
         if (sfxVolumeSlider != null) sfxVolumeSlider.value = sfxVolume;
         
-        // Apply to audio mixer
+        // 应用到音频混合器
         SetAudioMixerVolume("MasterVolume", masterVolume);
         SetAudioMixerVolume("MusicVolume", musicVolume);
         SetAudioMixerVolume("SFXVolume", sfxVolume);
@@ -213,13 +217,13 @@ public class MenuManager : MonoBehaviour
         SaveLoadSystem.LoadGame(slotIndex);
         CloseMenu();
     }
-    
+    // 返回主菜单
     public void ReturnToMainMenu()
     {
         CloseAllPanels();
         mainMenuPanel.SetActive(true);
     }
-    
+    // 退出到桌面
     public void QuitToDesktop()
     {
         #if UNITY_EDITOR

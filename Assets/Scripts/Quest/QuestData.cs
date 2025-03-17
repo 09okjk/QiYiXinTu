@@ -18,7 +18,7 @@ public class QuestData : ScriptableObject
     public List<QuestObjective> objectives = new List<QuestObjective>();
     public List<QuestReward> rewards = new List<QuestReward>();
     
-    // Runtime state (not serialized)
+    // 运行时状态（不序列化）
     [System.NonSerialized] public bool isActive;
     [System.NonSerialized] public bool isCompleted;
 }
@@ -29,7 +29,7 @@ public class QuestObjective
     public string objectiveID;
     [TextArea] public string description;
     
-    // Runtime state (not serialized)
+    // 运行时状态（不序列化）
     [System.NonSerialized] public bool isCompleted;
 }
 
@@ -37,6 +37,6 @@ public class QuestObjective
 public class QuestReward
 {
     public QuestRewardType rewardType;
-    public string rewardID; // Item ID, or amount for currency/XP
+    public string rewardID; // 物品ID，或者货币/经验的数量
     public string description;
 }

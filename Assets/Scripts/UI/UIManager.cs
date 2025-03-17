@@ -42,7 +42,10 @@ public class UIManager : MonoBehaviour
             confirmDialogPanel.SetActive(false);
         }
     }
-    
+    /// <summary>
+    /// 显示通知
+    /// </summary>
+    /// <param name="message">通知内容</param>
     public void ShowNotification(string message)
     {
         GameObject notificationGO = Instantiate(notificationPrefab, notificationContainer);
@@ -56,14 +59,19 @@ public class UIManager : MonoBehaviour
         StartCoroutine(FadeOutNotification(notificationGO));
     }
     
+    /// <summary>
+    /// 逐渐消失通知
+    /// </summary>
+    /// <param name="notification">通知对象</param>
+    /// <returns></returns>
     private IEnumerator FadeOutNotification(GameObject notification)
     {
         CanvasGroup canvasGroup = notification.GetComponent<CanvasGroup>();
         
-        // Show for the main duration
+        // 显示主要持续时间
         yield return new WaitForSeconds(notificationDuration);
         
-        // Fade out
+        // 淡出
         float startTime = Time.time;
         while (Time.time < startTime + notificationFadeTime)
         {
@@ -72,10 +80,16 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
         
-        // Destroy when done
+        // 完成后销毁
         Destroy(notification);
     }
-    
+    /// <summary>
+    /// 显示确认对话框
+    /// </summary>
+    /// <param name="title">对话框标题</param>
+    /// <param name="message">对话框消息</param>
+    /// <param name="onYes">点击确认时执行的操作</param>
+    /// <param name="onNo">点击取消时执行的操作</param>
     public void ShowConfirmDialog(string title, string message, Action onYes, Action onNo)
     {
         if (confirmDialogPanel == null)
@@ -87,11 +101,11 @@ public class UIManager : MonoBehaviour
         confirmTitleText.text = title;
         confirmMessageText.text = message;
         
-        // Clear previous listeners
+        // 清除之前的监听器 防止重复调用
         confirmYesButton.onClick.RemoveAllListeners();
         confirmNoButton.onClick.RemoveAllListeners();
         
-        // Add new listeners
+        // 添加新的监听器
         confirmYesButton.onClick.AddListener(() => 
         {
             onYes?.Invoke();

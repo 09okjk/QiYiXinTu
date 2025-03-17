@@ -89,25 +89,27 @@ public class InventoryManager : MonoBehaviour
             puzzleItems.Add(item);
         }
 
-        // If inventory is open, refresh it
+        // 如果背包打开，刷新背包
         if (inventoryPanel.activeSelf)
         {
             RefreshInventoryUI();
         }
 
-        // Notify player of new item
+        // 通知玩家获得新物品
         UIManager.Instance.ShowNotification($"新物品获得: {item.itemName}");
     }
 
+    // 检查是否拥有某个物品
     public bool HasItem(string itemID)
     {
         return questItems.Exists(item => item.itemID == itemID) ||
                puzzleItems.Exists(item => item.itemID == itemID);
     }
-
+    
+    // 移除物品
     public void RemoveItem(string itemID)
     {
-        // Find item in either list
+        // 在两个列表中查找物品
         ItemData item = questItems.Find(i => i.itemID == itemID);
         if (item != null)
         {
@@ -122,13 +124,14 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        // If inventory is open, refresh it
+        // 如果背包打开，刷新背包
         if (inventoryPanel.activeSelf)
         {
             RefreshInventoryUI();
         }
     }
 
+    // 获取所有物品
     public List<ItemData> GetAllItems()
     {
         List<ItemData> allItems = new List<ItemData>(questItems);
@@ -136,25 +139,28 @@ public class InventoryManager : MonoBehaviour
         return allItems; // 返回列表的副本
     }
 
+    // 清空背包
     public void ClearInventory()
     {
         questItems.Clear();
         puzzleItems.Clear();
     }
 
+    // 切换选项卡
     private void SwitchTab(ItemType tabType)
     {
         currentTab = tabType;
         RefreshInventoryUI();
 
-        // Update tab button visual state
+        // 更新选项卡按钮的可交互状态
         questTabButton.interactable = tabType != ItemType.QuestItem;
         puzzleTabButton.interactable = tabType != ItemType.PuzzleItem;
     }
 
+    // 刷新背包UI
     private void RefreshInventoryUI()
     {
-        // Clear existing item slots
+        // 清除现有物品槽
         foreach (Transform child in questItemContainer)
         {
             Destroy(child.gameObject);
@@ -164,11 +170,11 @@ public class InventoryManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        // Show/hide containers based on current tab
+        // 根据当前选项卡显示/隐藏容器
         questItemContainer.gameObject.SetActive(currentTab == ItemType.QuestItem);
         puzzleItemContainer.gameObject.SetActive(currentTab == ItemType.PuzzleItem);
 
-        // Populate the current tab
+        // 填充当前选项卡
         if (currentTab == ItemType.QuestItem)
         {
             PopulateItemContainer(questItems, questItemContainer);
@@ -179,6 +185,11 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 填充物品容器
+    /// </summary>
+    /// <param name="items">物品列表</param>
+    /// <param name="container">容器</param>
     private void PopulateItemContainer(List<ItemData> items, Transform container)
     {
         foreach (ItemData item in items)
@@ -187,12 +198,13 @@ public class InventoryManager : MonoBehaviour
             ItemSlot slot = slotGO.GetComponent<ItemSlot>();
             slot.SetItem(item);
 
-            // Add click listener
+            // 添加点击监听器
             Button button = slotGO.GetComponent<Button>();
             button.onClick.AddListener(() => ShowItemDetails(item));
         }
     }
 
+    // 显示物品详情
     private void ShowItemDetails(ItemData item)
     {
         itemNameText.text = item.itemName;
@@ -201,6 +213,7 @@ public class InventoryManager : MonoBehaviour
         itemImage.gameObject.SetActive(true);
     }
 
+    // 清除物品详情
     private void ClearItemDetails()
     {
         itemNameText.text = "";
