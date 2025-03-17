@@ -80,10 +80,10 @@ public class PlayerCombat : MonoBehaviour
     /// </summary>
     public void ApplyDamage()
     {
-        // Get all enemies in range // 获取范围内的所有敌人
+        // 获取范围内的所有敌人
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
         
-        // Apply damage to each enemy // 对每个敌人应用伤害
+        // 对每个敌人应用伤害
         foreach (Collider2D enemy in hitEnemies)
         {
             enemy.GetComponent<EnemyHealth>()?.TakeDamage(attackDamage);
