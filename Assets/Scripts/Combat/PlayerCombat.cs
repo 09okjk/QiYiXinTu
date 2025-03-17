@@ -21,7 +21,7 @@ public class PlayerCombat : MonoBehaviour
     private bool canAttack = true;
     private bool isDefending = false;
     
-    // Animation parameter hashes
+    // 动画参数哈希值 可以提高性能
     private int attackTriggerHash;
     private int attackCounterHash;
     private int defendHash;
@@ -39,20 +39,20 @@ public class PlayerCombat : MonoBehaviour
     
     private void Update()
     {
-        // Reset combo if time window passed
+        // 重置连击窗口
         if (Time.time - lastAttackTime > comboTimeWindow && attackCounter > 0)
         {
             attackCounter = 0;
             animator.SetInteger(attackCounterHash, attackCounter);
         }
         
-        // Attack input
+        // 攻击输入，如果可以攻击且没有在防御
         if (Input.GetButtonDown("Fire1") && canAttack && !isDefending)
         {
             Attack();
         }
         
-        // Defense input
+        // 防御输入，如果没有在防御且可以攻击
         if (Input.GetButtonDown("Fire2") && !isDefending && canAttack)
         {
             StartCoroutine(Defend());
@@ -61,58 +61,69 @@ public class PlayerCombat : MonoBehaviour
     
     private void Attack()
     {
-        // Increment attack counter (cycles 1-2-3)
+        // 增加攻击计数器（循环1-2-3）
         attackCounter = (attackCounter % 3) + 1;
         
-        // Update last attack time
+        // 更新上次攻击时间
         lastAttackTime = Time.time;
         
-        // Set animator parameters
+        // 设置动画参数
         animator.SetInteger(attackCounterHash, attackCounter);
         animator.SetTrigger(attackTriggerHash);
         
-        // Actual damage is applied via animation event
+        // 实际伤害通过动画事件应用
     }
     
-    // Called by animation event
+    // 由动画事件调用
+    /// <summary>
+    /// 应用伤害
+    /// </summary>
     public void ApplyDamage()
     {
-        // Get all enemies in range
+        // Get all enemies in range // 获取范围内的所有敌人
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
         
-        // Apply damage to each enemy
+        // Apply damage to each enemy // 对每个敌人应用伤害
         foreach (Collider2D enemy in hitEnemies)
         {
             enemy.GetComponent<EnemyHealth>()?.TakeDamage(attackDamage);
         }
     }
     
+    /// <summary>
+    /// 防御
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Defend()
     {
         isDefending = true;
         canAttack = false;
         
-        // Set animator
+        // 设置动画
         animator.SetBool(defendHash, true);
         
-        // Apply brief invincibility
+        // 应用短暂的无敌
         playerHealth.SetInvincible(true);
         
-        // Wait for invincibility period
+        // 等待无敌时间
         yield return new WaitForSeconds(defenseInvincibilityTime);
         
-        // Remove invincibility but keep defending animation
+        // 移除无敌但保持防御动画
         playerHealth.SetInvincible(false);
         
-        // Wait for the rest of defense duration
+        // 等待剩余的防御时间
         yield return new WaitForSeconds(defenseDuration - defenseInvincibilityTime);
         
-        // End defense
+        // 结束防御
         isDefending = false;
         canAttack = true;
         animator.SetBool(defendHash, false);
     }
     
+    
+    /// <summary>
+    /// 绘制攻击范围
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         if (attackPoint != null)
