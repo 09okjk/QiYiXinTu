@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class PlayerCombat : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator animator;
     
+    [Header("Input")]
+    [SerializeField] private InputActionReference attackAction;  // 添加攻击输入
+    [SerializeField] private InputActionReference defendAction;  // 添加防御输入
+
     private int attackCounter = 0;
     private float lastAttackTime;
     private bool canAttack = true;
@@ -37,6 +42,28 @@ public class PlayerCombat : MonoBehaviour
         playerHealth = GetComponent<PlayerHealth>();
     }
     
+    private void OnEnable()
+    {
+        // 启用输入操作
+        attackAction.action.Enable();
+        defendAction.action.Enable();
+        
+        // 注册输入回调
+        attackAction.action.performed += OnAttack;
+        defendAction.action.performed += OnDefend;
+    }
+    
+    private void OnDisable()
+    {
+        // 禁用输入操作
+        attackAction.action.Disable();
+        defendAction.action.Disable();
+        
+        // 取消注册回调
+        attackAction.action.performed -= OnAttack;
+        defendAction.action.performed -= OnDefend;
+    }
+    
     private void Update()
     {
         // 重置连击窗口
@@ -45,15 +72,21 @@ public class PlayerCombat : MonoBehaviour
             attackCounter = 0;
             animator.SetInteger(attackCounterHash, attackCounter);
         }
-        
-        // 攻击输入，如果可以攻击且没有在防御
-        if (Input.GetButtonDown("Fire1") && canAttack && !isDefending)
+    }
+    
+    // 攻击回调函数
+    private void OnAttack(InputAction.CallbackContext context)
+    {
+        if (canAttack && !isDefending)
         {
             Attack();
         }
-        
-        // 防御输入，如果没有在防御且可以攻击
-        if (Input.GetButtonDown("Fire2") && !isDefending && canAttack)
+    }
+    
+    // 防御回调函数
+    private void OnDefend(InputAction.CallbackContext context)
+    {
+        if (!isDefending && canAttack)
         {
             StartCoroutine(Defend());
         }
@@ -75,9 +108,6 @@ public class PlayerCombat : MonoBehaviour
     }
     
     // 由动画事件调用
-    /// <summary>
-    /// 应用伤害
-    /// </summary>
     public void ApplyDamage()
     {
         // 获取范围内的所有敌人
