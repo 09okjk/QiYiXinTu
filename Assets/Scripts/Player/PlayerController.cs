@@ -28,7 +28,7 @@
         private Vector2 moveInput;
         private bool jumpPressed;
         
-        // Animation parameter hashes for efficiency
+        // 为了效率，动画参数哈希值
         private int moveSpeedHash;
         private int isGroundedHash;
         private int jumpHash;
@@ -37,7 +37,7 @@
         {
             rb = GetComponent<Rigidbody2D>();
             
-            // Cache animation parameter hashes
+            // 缓存动画参数哈希值
             moveSpeedHash = Animator.StringToHash("MoveSpeed");
             isGroundedHash = Animator.StringToHash("IsGrounded");
             jumpHash = Animator.StringToHash("Jump");
@@ -45,13 +45,13 @@
         
         private void OnEnable()
         {
-            // Enable input actions
+            // 启用输入操作
             moveAction.action.Enable();
             jumpAction.action.Enable();
             inventoryAction.action.Enable();
             menuAction.action.Enable();
             
-            // Register callbacks
+            // 注册回调
             jumpAction.action.performed += OnJump;
             inventoryAction.action.performed += OnInventoryToggle;
             menuAction.action.performed += OnMenuToggle;
@@ -59,13 +59,13 @@
         
         private void OnDisable()
         {
-            // Disable input actions
+            // 禁用输入操作
             moveAction.action.Disable();
             jumpAction.action.Disable();
             inventoryAction.action.Disable();
             menuAction.action.Disable();
             
-            // Unregister callbacks
+            // 取消注册回调
             jumpAction.action.performed -= OnJump;
             inventoryAction.action.performed -= OnInventoryToggle;
             menuAction.action.performed -= OnMenuToggle;
@@ -80,7 +80,7 @@
             // Get movement input
             moveInput = moveAction.action.ReadValue<Vector2>();
             
-            // Handle jump if pressed and grounded
+            // 如果按下并在地面上则处理跳跃
             if (jumpPressed && isGrounded)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -88,10 +88,10 @@
                 jumpPressed = false;
             }
             
-            // Update animator
+            // 更新动画
             animator.SetFloat(moveSpeedHash, Mathf.Abs(moveInput.x));
             
-            // Flip character based on movement direction
+            // 根据移动方向翻转角色
             if (moveInput.x > 0 && !facingRight)
             {
                 Flip();
@@ -104,7 +104,7 @@
         
         private void FixedUpdate()
         {
-            // Move player in FixedUpdate for consistency
+            // 在 FixedUpdate 中移动玩家以保持一致性
             rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
         }
         
@@ -123,6 +123,7 @@
             MenuManager.Instance.ToggleMenu();
         }
         
+        // 翻转角色
         private void Flip()
         {
             facingRight = !facingRight;
