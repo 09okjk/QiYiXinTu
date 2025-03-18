@@ -58,6 +58,10 @@ public class DialogueImporter : EditorWindow
                                 "其后的列: 每两列为一组，分别是选项文本和目标节点ID", MessageType.Info);
     }
 
+    /// <summary>
+    /// 导入对话数据
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
     private void ImportDialogue(string filePath)
     {
         try
@@ -111,22 +115,6 @@ public class DialogueImporter : EditorWindow
                 
                 dialogueGroups[dialogueTitle].Add(values);
             }
-
-            // // 为每组对话创建对应的 DialogueData
-            // string saveFolder = EditorUtility.SaveFolderPanel("选择保存对话数据的文件夹", "Assets", "");
-            // if (string.IsNullOrEmpty(saveFolder))
-            // {
-            //     return;
-            // }
-            //
-            // // 确保路径是相对于 Assets 的路径
-            // if (!saveFolder.StartsWith(Application.dataPath))
-            // {
-            //     EditorUtility.DisplayDialog("错误", "请选择项目 Assets 文件夹内的位置。", "确定");
-            //     return;
-            // }
-            //
-            // string relativePath = "Assets" + saveFolder.Substring(Application.dataPath.Length);
 
             int successCount = 0;
             

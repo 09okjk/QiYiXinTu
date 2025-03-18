@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NPCDialogueTrigger : MonoBehaviour
+public class NPCController : MonoBehaviour
 {
     [Header("Dialogue Data")]
     [SerializeField] private DialogueData dialogue;
