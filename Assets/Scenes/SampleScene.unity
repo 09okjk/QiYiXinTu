@@ -6007,6 +6007,7 @@ GameObject:
   - component: {fileID: 1359717122}
   - component: {fileID: 1359717121}
   - component: {fileID: 1359717124}
+  - component: {fileID: 1359717125}
   - component: {fileID: 1359717120}
   - component: {fileID: 1359717119}
   - component: {fileID: 1359717118}
@@ -6221,7 +6222,7 @@ MonoBehaviour:
   groundCheck: {fileID: 0}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   groundCheckRadius: 0.2
   animator: {fileID: 0}
   spriteRenderer: {fileID: 0}
@@ -6321,6 +6322,28 @@ MonoBehaviour:
   invincibilityDuration: 1
   flashInterval: 0.1
   spriteRenderer: {fileID: 0}
+--- !u!114 &1359717125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359717117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62973f353b394a6b9b4079c771b23301, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 1.5
+  attackPoint: {fileID: 0}
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  attackDamage: 20
+  comboTimeWindow: 0.5
+  defenseDuration: 0.5
+  defenseInvincibilityTime: 0.2
+  animator: {fileID: 0}
 --- !u!1 &1397150883
 GameObject:
   m_ObjectHideFlags: 0
