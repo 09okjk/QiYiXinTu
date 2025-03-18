@@ -12,6 +12,10 @@ public class DialogueData : ScriptableObject
 public class DialogueNode
 {
     public string text;
+    public string speakerID; // 新增：对话发言者的ID
+    public string speakerName; // 新增：对话发言者的名字
+    public int nextNodeIndex; // 新增：下一个对话节点的索引
+    public string speakerPosition; // 新增：对话发言者的位置
     public List<DialogueChoice> choices = new List<DialogueChoice>();
 }
 

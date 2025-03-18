@@ -25,6 +25,9 @@ public class NPCDialogueTrigger : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// 触发对话
+    /// </summary>
     private void TriggerDialogue()
     {
         DialogueManager.Instance.StartDialogue(dialogue);
