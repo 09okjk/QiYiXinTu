@@ -79,7 +79,6 @@ public class GameManager : MonoBehaviour
             {
                 asyncLoad.allowSceneActivation = true;
             }
-            
             yield return null;
         }
     }
@@ -92,7 +91,6 @@ public class GameManager : MonoBehaviour
         {
             loadingScreen.SetActive(false);
         }
-        
         InitializeScene(scene.name);
     }
     
@@ -123,8 +121,7 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    // 处理游戏进度
-    // 例如：游戏开始、玩家死亡等
+    // 处理进度
     public void OnGameEvent(string eventName)
     {
         // 处理游戏事件的示例
