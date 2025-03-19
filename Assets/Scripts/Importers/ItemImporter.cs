@@ -11,7 +11,7 @@
             {
                 private string csvFilePath = "";
                 private string iconFolderPath = "Assets/Art/UI/Icons"; // 默认图标路径
-                private const string SAVE_PATH = "Assets/Resources/Items";
+                private const string SAVE_PATH = "Assets/ScriptableObjects/Items";
                 
                 [MenuItem("Tools/Inventory System/Import Items CSV")]
                 public static void ShowWindow()

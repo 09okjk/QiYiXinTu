@@ -11,7 +11,7 @@ using System.Linq;
 public class QuestImporter : EditorWindow
 {
     private string csvFilePath = "";
-    private const string SAVE_PATH = "Assets/Resources/Quests";
+    private const string SAVE_PATH = "Assets/ScriptableObjects/Quests";
 
     [MenuItem("Tools/Quest System/Import Quests CSV")]
     public static void ShowWindow()

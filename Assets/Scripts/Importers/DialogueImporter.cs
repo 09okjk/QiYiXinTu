@@ -11,7 +11,7 @@ using System.Linq;
 public class DialogueImporter : EditorWindow
 {
     private string csvFilePath = "";
-    private const string SAVE_PATH = "Assets/Resources/Dialogues";
+    private const string SAVE_PATH = "Assets/ScriptableObjects/Dialogues";
 
     [MenuItem("Tools/Dialogue System/Import Dialogue CSV")]
     public static void ShowWindow()
