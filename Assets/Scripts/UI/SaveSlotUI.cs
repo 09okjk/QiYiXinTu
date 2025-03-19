@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,13 +12,19 @@ public class SaveSlotUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI sceneNameText;
     [SerializeField] private Button saveButton;
     [SerializeField] private Button loadButton;
-    [SerializeField] private Image slotBackground;
+    [SerializeField] private RawImage slotBackground;
     [SerializeField] private Color emptySlotColor;
     [SerializeField] private Color existingSlotColor;
     
     private int slotIndex;
     private bool isEmpty;
-    
+
+    private void Start()
+    {
+        saveButton.onClick.AddListener(OnSaveButtonClicked);
+        loadButton.onClick.AddListener(OnLoadButtonClicked);
+    }
+
     public void SetupExistingSlot(int index, SaveDataInfo info)
     {
         slotIndex = index;
@@ -29,7 +36,7 @@ public class SaveSlotUI : MonoBehaviour
         
         slotBackground.color = existingSlotColor;
         
-        // Enable both buttons
+        // 启用两个按钮
         saveButton.interactable = true;
         loadButton.interactable = true;
     }
@@ -39,23 +46,23 @@ public class SaveSlotUI : MonoBehaviour
         slotIndex = index;
         isEmpty = true;
         
-        slotNameText.text = "Empty Slot";
+        slotNameText.text = "存档"+(index+1);
         dateText.text = "";
         sceneNameText.text = "";
         
         slotBackground.color = emptySlotColor;
         
-        // Only enable save button
+        // 只启用保存按钮
         saveButton.interactable = true;
         loadButton.interactable = false;
     }
     
     public void OnSaveButtonClicked()
     {
-        // Confirm overwrite if slot is not empty
+        // 如果槽不为空，请确认覆盖
         if (!isEmpty)
         {
-            // Show confirmation dialog (UI manager implementation needed)
+            // 显示确认对话框（需要 UI 管理器实现）
             UIManager.Instance.ShowConfirmDialog(
                 "Overwrite Save?",
                 "Are you sure you want to overwrite this save?",

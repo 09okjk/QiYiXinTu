@@ -25,7 +25,7 @@ public class MenuManager : MonoBehaviour
     [Header("Save/Load")]
     [SerializeField] private Transform saveSlotContainer;
     [SerializeField] private GameObject saveSlotPrefab;
-    [SerializeField] private int maxSaveSlots = 5;
+    [SerializeField] private int maxSaveSlots = 6;
     
     private bool isMenuActive = false;
     
@@ -34,7 +34,7 @@ public class MenuManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {

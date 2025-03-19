@@ -4880,7 +4880,7 @@ MonoBehaviour:
   sfxVolumeSlider: {fileID: 884912515}
   saveSlotContainer: {fileID: 1234400804}
   saveSlotPrefab: {fileID: 1881237230}
-  maxSaveSlots: 5
+  maxSaveSlots: 6
 --- !u!1 &1059794251
 GameObject:
   m_ObjectHideFlags: 0
