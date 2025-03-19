@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour
         }
         // 添加订阅场景加载事件
         SceneManager.sceneLoaded += OnSceneLoaded;
+        
+        // 自动加载主菜单场景
+        LoadScene("MainMenu");
     }
     
     private void OnDestroy()
@@ -103,7 +106,10 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f; // 确保游戏没有暂停
                 break;
                 
-            case "GameScene":
+            case "Scene 1":
+            case "Scene 2":
+            case "Scene 3":
+            case "Scene 4":
                 // 找到玩家初始位置并放置玩家
                 GameObject playerStart = GameObject.FindGameObjectWithTag("PlayerStart");
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -113,7 +119,6 @@ public class GameManager : MonoBehaviour
                     player.transform.position = playerStart.transform.position;
                 }
                 break;
-                
             // 根据需要添加更多场景
         }
     }

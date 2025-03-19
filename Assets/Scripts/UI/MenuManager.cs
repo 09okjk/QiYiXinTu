@@ -59,6 +59,12 @@ public class MenuManager : MonoBehaviour
         
         // 初始时隐藏所有面板
         CloseAllPanels();
+        
+        // 检测当前场景是否为主菜单，如果是则显示主菜单面板
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            mainMenuPanel.SetActive(true);
+        }
     }
     
     // 切换菜单的显示状态
@@ -231,5 +237,13 @@ public class MenuManager : MonoBehaviour
         #else
         Application.Quit();
         #endif
+    }
+    
+    // 开始新游戏
+    public void StartNewGame()
+    {
+        // 重置游戏数据
+        GameManager.Instance.OnGameEvent("GameStarted");
+        SceneManager.LoadScene("Scene1");
     }
 }
