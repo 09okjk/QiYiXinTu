@@ -1,0 +1,5 @@
+﻿QuestID,QuestName,Description,ObjectiveID,ObjectiveDescription,"rewardType（数字：0=物品, 1=经验, 2=金币）",rewardID,rewardDescription
+quest_001,开发软件,根据公司提供的需求完成工作,objective_001,完成需求文档整理,2,100,100块钱
+quest_001,开发软件,根据公司提供的需求完成工作,objective_002,完成工作,2,200,200块钱
+quest_001,开发软件,根据公司提供的需求完成工作,,,2,500,500块钱
+quest_002,打印文件,根据要求打印对应的文件,,,2,10,10块钱

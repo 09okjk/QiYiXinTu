@@ -1,0 +1,5 @@
+﻿DialogueTitle,NodeID,SpeakerID,Speaker,Text,NextNodeID,SpeakerPosition,ChoiceText1,ChoiceNextNodeID1,ChoiceText2,ChoiceNextNodeID2,ChoiceText3,ChoiceNextNodeID3,ChoiceText4,ChoiceNextNodeID4
+firstDialogue,0,1,前台,欢迎来到我们公司,1,right,,,,,,,,
+firstDialogue,1,1,前台,下面让我来为你进行介绍,-1,right,,,,,,,,
+secondDialogue,0,2,老板,你好,1,right,,,,,,,,
+secondDialogue,1,2,老板,好好工作,-1,right,,,,,,,,

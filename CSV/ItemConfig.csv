@@ -1,0 +1,3 @@
+﻿ItemID,ItemName,Description,IconFileName,ItemType（数字:0-任务物品，1-解密物品）,Property1Key,Proerty1Value,Proerty2Key,Proerty2Value
+book001,轮机日志,记载轮机的每日维护信息,lun_icon,0,pages,20,weight,10
+book002,员工手册,规定了员工应该遵守的相关规定和公司内的条例,yuan_icon,0,pages,10,,
