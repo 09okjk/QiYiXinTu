@@ -11,7 +11,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float currentMana;
     [SerializeField] private float manaRegenRate = 5f;
     
-        [Header("UI References")]
+    [Header("UI References")]
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Slider manaSlider;
     
@@ -42,7 +42,7 @@ public class PlayerHealth : MonoBehaviour
     
     private void Update()
     {
-        // Regenerate mana over time
+        // Regenerate mana over time // 每秒回复法力
         if (currentMana < maxMana)
         {
             currentMana += manaRegenRate * Time.deltaTime;
@@ -124,7 +124,7 @@ public class PlayerHealth : MonoBehaviour
     {
         isInvincible = true;
         
-        // Flash effect
+        // 闪烁效果
         float endTime = Time.time + invincibilityDuration;
         bool visible = false;
         
@@ -145,7 +145,7 @@ public class PlayerHealth : MonoBehaviour
         
         isDead = true;
         
-        // Disable player control
+        // Disable player control 
         GetComponent<PlayerController>().enabled = false;
         GetComponent<PlayerCombat>().enabled = false;
         
