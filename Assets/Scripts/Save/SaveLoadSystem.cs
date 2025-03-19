@@ -18,6 +18,7 @@ public class SaveLoadSystem : MonoBehaviour
         public float playerMana;
         public float[] playerPosition = new float[3];
         public string currentSceneName;
+        public Dictionary<ItemData,int> PlayerSkills = new Dictionary<ItemData, int>();
 
         // Inventory data
         public List<string> questItems = new List<string>();
@@ -82,6 +83,9 @@ public class SaveLoadSystem : MonoBehaviour
                 saveData.playerHealth = health.GetHealthPercentage() * 100;
                 saveData.playerMana = health.GetManaPercentage() * 100;
             }
+            
+            // Player skills
+            saveData.PlayerSkills = player.GetComponent<PlayerCombat>().GetSkills();
         }
 
         // Current scene

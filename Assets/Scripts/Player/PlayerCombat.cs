@@ -26,6 +26,8 @@ public class PlayerCombat : MonoBehaviour
     private bool canAttack = true;
     private bool isDefending = false;
     
+    private Dictionary<ItemData,int> PlayerSkills = new Dictionary<ItemData, int>();
+    
     // 动画参数哈希值 可以提高性能
     private int attackTriggerHash;
     private int attackCounterHash;
@@ -150,6 +152,46 @@ public class PlayerCombat : MonoBehaviour
         animator.SetBool(defendHash, false);
     }
     
+    // 添加技能
+    public void AddSkill(ItemData skill)
+    {
+        if (!PlayerSkills.TryAdd(skill, 1))
+        {
+            PlayerSkills[skill]++;
+        }
+    }
+    
+    // 使用技能
+    public void UseSkill(ItemData skill)
+    {
+        if (PlayerSkills.ContainsKey(skill))
+        {
+            // 使用技能
+            Debug.Log("Using skill: " + skill.itemName);
+            
+            // 减少技能数量
+            PlayerSkills[skill]--;
+            
+            // 如果技能数量为0，从字典中删除
+            if (PlayerSkills[skill] <= 0)
+            {
+                PlayerSkills.Remove(skill);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Player does not have skill: " + skill.itemName);
+        }
+        
+        // 刷新技能栏
+        GameUIManager.Instance.RefreshSkillBar();
+    }
+    
+    // 获取所有技能
+    public Dictionary<ItemData,int> GetSkills()
+    {
+        return PlayerSkills;
+    }
     
     /// <summary>
     /// 绘制攻击范围

@@ -7,7 +7,8 @@ using TMPro;
 public enum ItemType
 {
     QuestItem,
-    PuzzleItem
+    PuzzleItem,
+    SkillItem
 }
 
 public class InventoryManager : MonoBehaviour
