@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 public class GameUIManager : MonoBehaviour
 {
     public static GameUIManager Instance { get; private set; }
+    
+    [SerializeField] GameObject gameUIPanel;
 
     [Header("Player Status")]
     [SerializeField] private Image playerPortrait;
@@ -44,6 +46,9 @@ public class GameUIManager : MonoBehaviour
 
     private void Start()
     {
+        // 显示游戏UI
+        gameUIPanel.SetActive(true);
+        
         // 初始化技能栏
         InitializeSkillBar();
         
@@ -58,6 +63,9 @@ public class GameUIManager : MonoBehaviour
         
         // 查找并连接玩家
         FindAndConnectPlayer();
+        
+        // 显示任务日志面板
+        QuestManager.Instance.ToggleQuestLog();
     }
 
     private void OnDestroy()

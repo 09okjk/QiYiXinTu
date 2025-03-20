@@ -374,6 +374,7 @@ GameObject:
   m_Component:
   - component: {fileID: 160279489}
   - component: {fileID: 160279490}
+  - component: {fileID: 160279491}
   m_Layer: 0
   m_Name: InventoryManager
   m_TagString: Untagged
@@ -417,6 +418,21 @@ MonoBehaviour:
   itemImage: {fileID: 1761846216}
   questTabButton: {fileID: 175446592}
   puzzleTabButton: {fileID: 1848758509}
+--- !u!114 &160279491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160279488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f825c68317cf482f8d2e4fec15c259f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allItems:
+  - {fileID: 11400000, guid: f92fcb84f4691d842bec865cba61f20c, type: 2}
+  - {fileID: 11400000, guid: fb172e64dd10c5a4f90645f88cdf807f, type: 2}
 --- !u!1 &165886508
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,7 +655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.4117647}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -916,6 +932,7 @@ GameObject:
   m_Component:
   - component: {fileID: 263444025}
   - component: {fileID: 263444026}
+  - component: {fileID: 263444027}
   m_Layer: 0
   m_Name: QuestManager
   m_TagString: Untagged
@@ -956,6 +973,21 @@ MonoBehaviour:
   questNotificationPrefab: {fileID: 936016954236643607, guid: b7c653e441ba09b4a930b528e6b9f2c6, type: 3}
   questNotificationContainer: {fileID: 929313835}
   notificationDuration: 5
+--- !u!114 &263444027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263444024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de6b0d8663f4af899898eb9c069f997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quests:
+  - {fileID: 11400000, guid: f627e30928b57ca4b8da8e178559e26e, type: 2}
+  - {fileID: 11400000, guid: 5f6bc0f2cf1727d408d5c4051a1a3c7d, type: 2}
 --- !u!1 &397846291
 GameObject:
   m_ObjectHideFlags: 0
@@ -1281,7 +1313,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 469251769}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 160279490}
+        m_TargetAssemblyTypeName: InventoryManager, Assembly-CSharp
+        m_MethodName: CloseInventory
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &469251769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2624,6 +2668,7 @@ GameObject:
   m_Component:
   - component: {fileID: 938126837}
   - component: {fileID: 938126838}
+  - component: {fileID: 938126839}
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -2667,6 +2712,21 @@ MonoBehaviour:
   role2: {fileID: 713159491}
   typewriterSpeed: 0.05
   dialogueAudioSource: {fileID: 0}
+--- !u!114 &938126839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938126836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f80d263aeecf47de91f24d2b9b63c785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogues:
+  - {fileID: 11400000, guid: a04f3acd3ad36b243b56c5e009c10c24, type: 2}
+  - {fileID: 11400000, guid: a13a364877444b946a49615820230607, type: 2}
 --- !u!1 &943936971
 GameObject:
   m_ObjectHideFlags: 0
@@ -2933,7 +2993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.8248306, b: 0.6179246, a: 0.392}
+  m_Color: {r: 1, g: 0.8248306, b: 0.6179246, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

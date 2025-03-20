@@ -45,6 +45,11 @@ public class QuestManager : MonoBehaviour
         LoadQuests();
         UpdateQuestLog();
     }
+    
+    public void ToggleQuestLog()
+    {
+        questLogPanel.SetActive(!questLogPanel.activeSelf);
+    }
 
     /// <summary>
     /// 加载所有任务
@@ -216,7 +221,7 @@ public class QuestManager : MonoBehaviour
             switch (reward.rewardType)
             {
                 case QuestRewardType.Item:
-                    ItemData item = Resources.Load<ItemData>($"Items/{reward.rewardID}");
+                    ItemData item = ItemDatabase.Instance.GetItem(reward.rewardID);
                     if (item != null)
                     {
                         InventoryManager.Instance.AddItem(item);

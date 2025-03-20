@@ -10,11 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 348990c788c94c4bb92fcae76ca543c1, type: 3}
-  m_Name: New Item
+  m_Name: book001
   m_EditorClassIdentifier: 
-  itemID: 
-  itemName: 
-  description: 
-  icon: {fileID: 0}
+  itemID: book001
+  itemName: "\u8F6E\u673A\u65E5\u5FD7"
+  description: "\u8BB0\u8F7D\u8F6E\u673A\u7684\u6BCF\u65E5\u7EF4\u62A4\u4FE1\u606F"
+  icon: {fileID: 7482667652216324306, guid: 16fd5b6e0b12ddd4fadb3ea8118f9761, type: 3}
   itemType: 0
-  properties: []
+  properties:
+  - key: pages
+    value: 20
+  - key: weight
+    value: 10

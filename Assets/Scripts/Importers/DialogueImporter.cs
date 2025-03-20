@@ -138,6 +138,7 @@ public class DialogueImporter : EditorWindow
                 
                 // 创建对话数据资源
                 DialogueData dialogueData = ScriptableObject.CreateInstance<DialogueData>();
+                dialogueData.dialogueID = dialogueTitle;
                 dialogueData.nodes = new List<DialogueNode>();
 
                 Dictionary<int, int> nodeIDToIndex = new Dictionary<int, int>();

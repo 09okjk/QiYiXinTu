@@ -10,10 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa9729b0c5174d399b8cd7f64f8da848, type: 3}
-  m_Name: New Quest
+  m_Name: "\u6253\u5370\u6587\u4EF6"
   m_EditorClassIdentifier: 
-  questID: 
-  questName: 
-  description: 
+  questID: quest_002
+  questName: "\u6253\u5370\u6587\u4EF6"
+  description: "\u6839\u636E\u8981\u6C42\u6253\u5370\u5BF9\u5E94\u7684\u6587\u4EF6"
   objectives: []
-  rewards: []
+  rewards:
+  - rewardType: 2
+    rewardID: 10
+    description: "10\u5757\u94B1"

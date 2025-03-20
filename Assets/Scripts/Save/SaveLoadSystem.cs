@@ -10,6 +10,11 @@ public class SaveLoadSystem : MonoBehaviour
     private static string SaveDirectory => Application.persistentDataPath + "/Saves/";
     private static int slotIndex = 0; // 添加一个静态字段来保存当前使用的存档槽
 
+    private void Start()
+    {
+        Debug.Log(SaveDirectory);
+    }
+
     [Serializable]
     public class SaveData
     {
@@ -17,9 +22,11 @@ public class SaveLoadSystem : MonoBehaviour
         public float playerHealth;
         public float playerMana;
         public float[] playerPosition = new float[3];
-        public string currentSceneName;
         public Dictionary<ItemData,int> PlayerSkills = new Dictionary<ItemData, int>();
 
+        // Scene data
+        public string currentSceneName;
+        
         // Inventory data
         public List<string> questItems = new List<string>();
         public List<string> puzzleItems = new List<string>();
