@@ -81,6 +81,7 @@ public class SaveSlotUI : MonoBehaviour
         if (!isEmpty)
         {
             SaveLoadSystem.LoadGame(slotIndex);
+            MenuManager.Instance.CloseAllPanels();
         }
     }
 }

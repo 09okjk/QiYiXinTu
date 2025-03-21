@@ -140,7 +140,7 @@ public class SaveLoadSystem : MonoBehaviour
 
     public static void LoadGame(int slotIdx)
     {
-        // 保存当前使用的存档槽
+        // 加载当前使用的存档槽
         slotIndex = slotIdx;
 
         string savePath = SaveDirectory + "save_" + slotIndex + ".sav";
@@ -212,6 +212,18 @@ public class SaveLoadSystem : MonoBehaviour
             {
                 health.SetHealth(saveData.playerHealth);
                 health.SetMana(saveData.playerMana);
+            }
+            
+            // Player skills
+            if (player.GetComponent<PlayerCombat>() != null)
+            {
+                foreach (var kvp in saveData.PlayerSkills)
+                {
+                    for (int i = 0; i < kvp.Value; i++)
+                    {
+                        player.GetComponent<PlayerCombat>().AddSkill(kvp.Key);
+                    }
+                }
             }
         }
 

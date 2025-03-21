@@ -112,8 +112,8 @@ public class MenuManager : MonoBehaviour
         savePanel.SetActive(true);
         PopulateSaveSlots();
     }
-    
-    private void CloseAllPanels()
+
+    internal void CloseAllPanels()
     {
         mainMenuPanel.SetActive(false);
         settingsPanel.SetActive(false);
@@ -212,17 +212,17 @@ public class MenuManager : MonoBehaviour
     }
     
     // Save/Load functions
-    public void SaveGame(int slotIndex)
-    {
-        SaveLoadSystem.SaveGame(slotIndex);
-        PopulateSaveSlots();
-    }
-    
-    public void LoadGame(int slotIndex)
-    {
-        SaveLoadSystem.LoadGame(slotIndex);
-        CloseMenu();
-    }
+    // public void SaveGame(int slotIndex)
+    // {
+    //     SaveLoadSystem.SaveGame(slotIndex);
+    //     PopulateSaveSlots();
+    // }
+    //
+    // public void LoadGame(int slotIndex)
+    // {
+    //     SaveLoadSystem.LoadGame(slotIndex);
+    //     CloseMenu();
+    // }
     // 返回主菜单
     public void ReturnToMainMenu()
     {
