@@ -599,6 +599,7 @@ MonoBehaviour:
   moveSpeed: 8
   jumpForce: 15
   wallJumpForce: 5
+  idleToMoveTransitionTime: 0.02
   dashCoolDown: 1
   dashUsageTimer: 0
   dashSpeed: 25

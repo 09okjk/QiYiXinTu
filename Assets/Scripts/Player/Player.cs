@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     public float moveSpeed = 8f;
     public float jumpForce = 12f;
     public float wallJumpForce = 5f;
-    public float idleToMoveTransitionTime;
+    public float idleToMoveTransitionTime = 0.1f;
     
     [Header("Dash Info")]
     [SerializeField] private float dashCoolDown = 1f;

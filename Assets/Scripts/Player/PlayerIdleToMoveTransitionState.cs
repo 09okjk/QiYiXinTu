@@ -17,7 +17,7 @@
         
         // 可以在这里添加过渡动画相关逻辑
         // 例如根据过渡时间调整速度
-        float transitionSpeed = Player.moveSpeed * (1 - (StateTimer / 0.2f));
+        float transitionSpeed = Player.moveSpeed * (1 - (StateTimer / 2f));
         Player.SetVelocity(xInput * transitionSpeed, Rb.linearVelocity.y);
         
         // 当过渡时间结束，切换到移动状态
