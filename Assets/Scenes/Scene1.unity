@@ -555,6 +555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 120691993}
   - component: {fileID: 120691994}
+  - component: {fileID: 120691998}
   - component: {fileID: 120691996}
   - component: {fileID: 120691995}
   - component: {fileID: 120691997}
@@ -710,6 +711,28 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &120691998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120691992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c4f0c0babc42b0ab3d51ffe9f03f3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 0
+  maxMana: 100
+  currentMana: 0
+  manaRegenRate: 5
+  healthSlider: {fileID: 2045774731}
+  manaSlider: {fileID: 2087185190}
+  invincibilityDuration: 1
+  flashInterval: 0.1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &124883146
 GameObject:
   m_ObjectHideFlags: 0

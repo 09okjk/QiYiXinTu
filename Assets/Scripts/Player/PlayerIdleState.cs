@@ -22,7 +22,7 @@ public class PlayerIdleState : PlayerGroundState
         
         if (xInput != 0 && !Player.isBusy)
         {
-            StateMachine.ChangeState(Player.MoveState);
+            StateMachine.ChangeState(Player.IdleToMoveTransitionState);
         }
     }
 
