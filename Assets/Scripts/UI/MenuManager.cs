@@ -100,10 +100,38 @@ public class MenuManager : MonoBehaviour
         settingsPanel.SetActive(true);
     }
     
+    public void CloseSettings()
+    {
+        settingsPanel.SetActive(false);
+        // 如果当前场景是主菜单，则显示主菜单面板
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            mainMenuPanel.SetActive(true);
+        }
+        else
+        {
+            CloseMenu();
+        }
+    }
+    
     public void OpenControls()
     {
         CloseAllPanels();
         controlsPanel.SetActive(true);
+    }
+    
+    public void CloseControls()
+    {
+        controlsPanel.SetActive(false);       
+        // 如果当前场景是主菜单，则显示主菜单面板
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            mainMenuPanel.SetActive(true);
+        }
+        else
+        {
+            CloseMenu();
+        }
     }
     
     public void OpenSavePanel()
@@ -111,6 +139,20 @@ public class MenuManager : MonoBehaviour
         CloseAllPanels();
         savePanel.SetActive(true);
         PopulateSaveSlots();
+    }
+    
+    public void CloseSavePanel()
+    {
+        savePanel.SetActive(false);
+        // 如果当前场景是主菜单，则显示主菜单面板
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            mainMenuPanel.SetActive(true);
+        }
+        else
+        {
+            CloseMenu();
+        }
     }
 
     internal void CloseAllPanels()
@@ -211,18 +253,6 @@ public class MenuManager : MonoBehaviour
         SetAudioMixerVolume("SFXVolume", sfxVolume);
     }
     
-    // Save/Load functions
-    // public void SaveGame(int slotIndex)
-    // {
-    //     SaveLoadSystem.SaveGame(slotIndex);
-    //     PopulateSaveSlots();
-    // }
-    //
-    // public void LoadGame(int slotIndex)
-    // {
-    //     SaveLoadSystem.LoadGame(slotIndex);
-    //     CloseMenu();
-    // }
     // 返回主菜单
     public void ReturnToMainMenu()
     {

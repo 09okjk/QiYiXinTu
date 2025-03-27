@@ -146,7 +146,7 @@ public class PlayerHealth : MonoBehaviour
         isDead = true;
         
         // Disable player control 
-        GetComponent<PlayerController>().enabled = false;
+        GetComponent<Player>().enabled = false;
         GetComponent<PlayerCombat>().enabled = false;
         
         // Trigger death animation
