@@ -664,7 +664,7 @@ MonoBehaviour:
   wallCheckDistance: 0.3
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!1 &120691992
 GameObject:
   m_ObjectHideFlags: 0
