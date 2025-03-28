@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : Entity
 {
     
     [Header("Move Info")]
@@ -20,13 +20,6 @@ public class Player : MonoBehaviour
     public float dashDuration = 0.2f;
     public float DashDir { get; private set; }  
     
-    [Header("Collision Info")]
-    public Transform groundCheck;
-    public float groundCheckDistance = 0.3f;
-    public Transform wallCheck;
-    public float wallCheckDistance = 0.3f;
-    public LayerMask whatIsGround;
-    
     [Header("Attack Info")]
     public float comboTimeWindow = .2f;
 
@@ -37,15 +30,8 @@ public class Player : MonoBehaviour
     [SerializeField] private InputActionReference menuAction;
     
     public bool isBusy {get; private set;}
-    public int FacingDirection { get; private set; } = 1;
-    private bool _facingRight = true;
 
-    #region Components
 
-    public Animator Anim { get; private set; }
-    public Rigidbody2D Rb { get; private set; }
-    
-    #endregion
     
     #region States
     
@@ -61,8 +47,9 @@ public class Player : MonoBehaviour
     public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
     
     #endregion
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         StateMachine = new PlayerStateMachine();
         
         IdleState = new PlayerIdleState(this, StateMachine, "Idle");
@@ -76,11 +63,9 @@ public class Player : MonoBehaviour
         PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
     }
 
-    private void Start()
+    protected override void Start()
     {
-        Anim = GetComponentInChildren<Animator>();
-        Rb = GetComponent<Rigidbody2D>();
-        
+        base.Start();
         StateMachine.Initialize(IdleState);
     }
     
@@ -102,8 +87,9 @@ public class Player : MonoBehaviour
         menuAction.action.performed -= OnMenuToggle;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         StateMachine.CurrentState.Update();
         
         CheckForDashInput();
@@ -155,7 +141,6 @@ public class Player : MonoBehaviour
         }
     }
         
-    #region Keyboards Input 键盘输入
     private void OnInventoryToggle(InputAction.CallbackContext context)
     {
         InventoryManager.Instance.ToggleInventory();
@@ -165,70 +150,4 @@ public class Player : MonoBehaviour
     {
         MenuManager.Instance.ToggleMenu();
     }
-    #endregion
-    
-    #region Velocity Control 速度控制
-    
-    /// <summary>
-    /// 设置速度 0
-    /// </summary>
-    public void ZeroVelocity() => Rb.linearVelocity = Vector2.zero;
-    
-    /// <summary>
-    /// 设置速度 x y
-    /// </summary>
-    /// <param name="xVelocity"> x 速度 </param>
-    /// <param name="yVelocity"> y 速度</param>
-    public void SetVelocity(float xVelocity,float yVelocity)
-    {
-        Rb.linearVelocity = new Vector2(xVelocity, yVelocity);
-        FlipController(xVelocity);
-    }
-    #endregion
-    
-    #region Collision Checks 碰撞检测
-
-    /// <summary>
-    /// 是否检测到地面
-    /// </summary>
-    /// <returns> 是否检测到地面 </returns>
-    public bool IsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
-    
-    /// <summary>
-    /// 是否检测到墙壁
-    /// </summary>
-    /// <returns> 是否检测到墙壁 </returns>
-    public bool IsWallDetected() => Physics2D.Raycast(wallCheck.position, Vector2.right * FacingDirection, wallCheckDistance, whatIsGround);
-    
-    /// <summary>
-    /// 绘制碰撞检测线
-    /// </summary>
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(groundCheck.position, new Vector3(groundCheck.position.x, groundCheck.position.y - groundCheckDistance, groundCheck.position.z));
-        Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y, wallCheck.position.z));
-    }
-    #endregion
-    
-    #region Flip Control 翻转控制
-    public void Flip()
-    {
-        FacingDirection *= -1;
-        _facingRight = !_facingRight;
-        transform.Rotate(0.0f, 180.0f, 0.0f);
-    }
-    
-    public void FlipController(float x)
-    {
-        if (x > 0 && !_facingRight)
-        {
-            Flip();
-        }
-        else if (x < 0 && _facingRight)
-        {
-            Flip();
-        }
-    }
-    #endregion
 }
