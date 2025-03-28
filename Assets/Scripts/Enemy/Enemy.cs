@@ -1,20 +1,20 @@
 using System;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Entity
 {
-    public Rigidbody2D rb { get; private set; }
-    public Animator animator { get; private set; }
     
     public EnemyStateMachine stateMachine { get; private set; }
 
     private void Awake()
     {
+        base.Awake();
         stateMachine = new EnemyStateMachine();
     }
 
     private void Update()
     {
+        base.Update();
         stateMachine.currentState.Update();
     }
 }
