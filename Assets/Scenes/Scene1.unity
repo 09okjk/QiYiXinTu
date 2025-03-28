@@ -659,7 +659,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundCheck: {fileID: 963178684}
-  groundCheckDistance: 0.3
+  groundCheckDistance: 0.42
   wallCheck: {fileID: 137442635}
   wallCheckDistance: 0.3
   whatIsGround:
@@ -6090,7 +6090,7 @@ Animator:
   m_GameObject: {fileID: 1097954042}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 834a79e39ad0d3045ad26ae0abdaf190, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
