@@ -13,7 +13,7 @@ public class PlayerIdleState : PlayerGroundState
     {
         base.Enter();
         
-        Player.ZeroVelocity();
+        Player.SetZeroVelocity();
     }
 
     public override void Update()

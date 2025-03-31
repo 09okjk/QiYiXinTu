@@ -40,7 +40,7 @@ public class Entity:MonoBehaviour
     /// <summary>
     /// 设置速度 0
     /// </summary>
-    public void ZeroVelocity() => Rb.linearVelocity = Vector2.zero;
+    public void SetZeroVelocity() => Rb.linearVelocity = Vector2.zero;
     
     /// <summary>
     /// 设置速度 x y
@@ -96,7 +96,7 @@ public class Entity:MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(groundCheck.position, new Vector3(groundCheck.position.x, groundCheck.position.y - groundCheckDistance, groundCheck.position.z));
-        Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y, wallCheck.position.z));
+        Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance * FacingDirection, wallCheck.position.y, wallCheck.position.z));
     }
     #endregion
 }

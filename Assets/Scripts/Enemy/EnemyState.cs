@@ -3,7 +3,8 @@
 public class EnemyState
 {
     protected EnemyStateMachine stateMachine;
-    protected Enemy enemy;
+    protected Enemy enemyBase;
+    protected Rigidbody2D rb;
     
     private string animBoolName;
     
@@ -11,9 +12,9 @@ public class EnemyState
     protected bool triggerCalled;
     
     
-    public EnemyState(Enemy enemy, EnemyStateMachine stateMachine, string animBoolName)
+    public EnemyState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName)
     {
-        this.enemy = enemy;
+        this.enemyBase = enemyBase;
         this.stateMachine = stateMachine;
         this.animBoolName = animBoolName;
     }
@@ -21,7 +22,8 @@ public class EnemyState
     public virtual void Enter()
     {
         triggerCalled = false;
-        enemy.Anim.SetBool(animBoolName, true);
+        rb = enemyBase.Rb;
+        enemyBase.Anim.SetBool(animBoolName, true);
     }
     
     public virtual void Update()
@@ -31,6 +33,11 @@ public class EnemyState
     
     public virtual void Exit()
     {
-        enemy.Anim.SetBool(animBoolName, false);
+        enemyBase.Anim.SetBool(animBoolName, false);
+    }
+
+    public virtual void AnimationFinishTrigger()
+    {
+        triggerCalled = true;
     }
 }
