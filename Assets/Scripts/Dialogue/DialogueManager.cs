@@ -11,8 +11,10 @@ public class DialogueManager : MonoBehaviour
     
     [Header("UI References")]
     [SerializeField] private GameObject dialoguePanel;
-    [SerializeField] private TextMeshProUGUI speakerNameText; // 新增：显示说话者姓名
-    [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private TextMeshProUGUI playerNameText; // 新增：Player姓名
+    [SerializeField] private TextMeshProUGUI playerDialogueText;
+    [SerializeField] private TextMeshProUGUI nPCNameText; // 新增：Player姓名
+    [SerializeField] private TextMeshProUGUI nPCDialogueText;
     [SerializeField] private GameObject choiceButtonPrefab;
     [SerializeField] private Transform choiceButtonContainer;
     [SerializeField] private GameObject role1;
@@ -32,6 +34,8 @@ public class DialogueManager : MonoBehaviour
     private Coroutine typingCoroutine;
     // 存储对话完成后的回调
     private Action onDialogueCompleteCallback;
+    // 当前对话文本
+    private TextMeshProUGUI currentDialogueText;
     
     private void Awake()
     {
@@ -75,15 +79,33 @@ public class DialogueManager : MonoBehaviour
         // 获取当前节点
         DialogueNode node = currentDialogue.nodes[currentNodeIndex];
         
-        // 设置说话者名称
-        if (speakerNameText != null)
-        {
-            speakerNameText.text = string.IsNullOrEmpty(node.speakerName) ? node.speakerID : node.speakerName;
-        }
-        
         // 设置角色显示
-        role1.SetActive(node.speakerPosition == "left");
-        role2.SetActive(node.speakerPosition == "right");
+        if (node.speakerPosition == "left")
+        {
+            playerNameText.text = string.IsNullOrEmpty(node.speakerName) ? node.speakerID : node.speakerName;
+            // playerDialogueText.text = node.text;
+            role1.SetActive(true);
+            playerNameText.gameObject.SetActive(true);
+            playerDialogueText.gameObject.SetActive(true);
+            role2.SetActive(false);
+            nPCNameText.gameObject.SetActive(false);
+            nPCDialogueText.gameObject.SetActive(false);
+            
+            currentDialogueText = playerDialogueText;
+        }
+        else
+        {
+            nPCNameText.text = string.IsNullOrEmpty(node.speakerName) ? node.speakerID : node.speakerName;
+            // nPCDialogueText.text = node.text;
+            role1.SetActive(false);
+            playerNameText.gameObject.SetActive(false);
+            playerDialogueText.gameObject.SetActive(false);
+            role2.SetActive(true);
+            nPCNameText.gameObject.SetActive(true);
+            nPCDialogueText.gameObject.SetActive(true);
+            
+            currentDialogueText = nPCDialogueText;
+        }
         
         // 清除任何现有的选择按钮
         foreach (Transform child in choiceButtonContainer)
@@ -101,19 +123,19 @@ public class DialogueManager : MonoBehaviour
         if (node.choices.Count == 0 && node.nextNodeIndex >= 0)
         {
             // 开始打字
-            typingCoroutine = StartCoroutine(TypeText(node.text, () => {
+            typingCoroutine = StartCoroutine(TypeText(currentDialogueText,node.text, () => {
                 // 文本打字完成后，等待玩家点击继续
             }));
         }
         else
         {
             // 开始打字
-            typingCoroutine = StartCoroutine(TypeText(node.text, DisplayChoices));
+            typingCoroutine = StartCoroutine(TypeText(currentDialogueText,node.text, DisplayChoices));
         }
     }
     
     // 打字机效果，完成后调用回调
-    private IEnumerator TypeText(string text, Action onComplete = null)
+    private IEnumerator TypeText(TextMeshProUGUI dialogueText,string text, Action onComplete = null)
     {
         isTyping = true;
         dialogueText.text = "";
@@ -219,7 +241,7 @@ public class DialogueManager : MonoBehaviour
         {
             // 跳过打字动画并显示完整文本
             StopCoroutine(typingCoroutine);
-            dialogueText.text = currentDialogue.nodes[currentNodeIndex].text;
+            currentDialogueText.text = currentDialogue.nodes[currentNodeIndex].text;
             isTyping = false;
             DisplayChoices();
         }
