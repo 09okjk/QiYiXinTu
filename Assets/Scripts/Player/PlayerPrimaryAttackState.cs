@@ -45,7 +45,7 @@ public class PlayerPrimaryAttackState : PlayerState
 
         if (StateTimer < 0)
         {
-            Player.ZeroVelocity();
+            Player.SetZeroVelocity();
         }
 
         if (TriggerCalled)
