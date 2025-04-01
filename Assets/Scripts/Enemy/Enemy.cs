@@ -79,6 +79,16 @@ public class Enemy : Entity
         counterImage.SetActive(false);
     }
     
+    public virtual bool CanBeStunned()
+    {
+        if (canBeStunned)
+        {
+            CloseCounterAttackWindow();
+            return true;
+        }
+        return false;
+    }
+    
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();

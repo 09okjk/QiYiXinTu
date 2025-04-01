@@ -24,6 +24,7 @@ public class Player : Entity
     public float comboTimeWindow = .2f;
     public LayerMask whatIsEnemy;
     public Vector2[] attackMovements;
+    public float counterAttackDuration = 2f;
     
     [Header("Input Actions")]
     [SerializeField] private InputActionReference inventoryAction;
@@ -45,6 +46,7 @@ public class Player : Entity
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
+    public PlayerConterAttackState CounterAttackState { get; private set; }
     
     #endregion
     protected override void Awake()
@@ -61,6 +63,7 @@ public class Player : Entity
         WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
         WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
         PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
+        CounterAttackState = new PlayerConterAttackState(this, StateMachine, "CounterAttack");
     }
 
     protected override void Start()
