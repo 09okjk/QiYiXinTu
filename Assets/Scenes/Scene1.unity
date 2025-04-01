@@ -780,6 +780,7 @@ MonoBehaviour:
   - {x: 2, y: 1}
   - {x: 1, y: 1}
   - {x: 10, y: 3}
+  counterAttackDuration: 0.5
   inventoryAction: {fileID: 3919005359502956819, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   menuAction: {fileID: -3574777650702515924, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!50 &120691995
