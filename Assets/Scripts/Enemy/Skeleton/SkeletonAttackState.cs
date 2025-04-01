@@ -2,8 +2,8 @@
 
 public class SkeletonAttackState: EnemyState
 {
-    Enemy_Skeleton skeleton;
-    public SkeletonAttackState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName,Enemy_Skeleton skeleton) : base(enemyBase, stateMachine, animBoolName)
+    Skeleton skeleton;
+    public SkeletonAttackState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName,Skeleton skeleton) : base(enemyBase, stateMachine, animBoolName)
     {
         this.skeleton = skeleton;
     }

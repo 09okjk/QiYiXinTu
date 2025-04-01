@@ -1,7 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Entity:MonoBehaviour
 {
+    [Header("Knockback Info")]
+    [SerializeField] private Vector2 knockbackDirection;
+    [SerializeField] private float knockbackDuration = 0f;
+    protected bool isKnocked;
+    
     [Header("Collision Info")]
     public Transform attackCheck;
     public float attackCheckRadius = 0.5f;
@@ -15,6 +21,7 @@ public class Entity:MonoBehaviour
 
     public Animator Anim { get; protected set; }
     public Rigidbody2D Rb { get; protected set; }
+    public EntityFX EntityFX { get; protected set; }
     
     #endregion
     
@@ -30,6 +37,7 @@ public class Entity:MonoBehaviour
     {
         Anim = GetComponentInChildren<Animator>();
         Rb = GetComponent<Rigidbody2D>();
+        EntityFX = GetComponent<EntityFX>();
     }
     
     protected virtual void Update()
@@ -39,7 +47,20 @@ public class Entity:MonoBehaviour
 
     public virtual void Damage()
     {
+        EntityFX.StartCoroutine("FlashFX");
+        StartCoroutine(nameof(HitKnockback));
         Debug.Log(gameObject.name + " was damage");
+    }
+
+    protected virtual IEnumerator HitKnockback()
+    {
+        isKnocked = true;
+        
+        Rb.linearVelocity = new Vector2(knockbackDirection.x * -FacingDirection, knockbackDirection.y);
+        
+        yield return new WaitForSeconds(knockbackDuration);
+        
+        isKnocked = false;
     }
     
     
@@ -48,7 +69,12 @@ public class Entity:MonoBehaviour
     /// <summary>
     /// 设置速度 0
     /// </summary>
-    public void SetZeroVelocity() => Rb.linearVelocity = Vector2.zero;
+    public void SetZeroVelocity()
+    {
+        if (isKnocked)
+            return;
+        Rb.linearVelocity = Vector2.zero;
+    }
     
     /// <summary>
     /// 设置速度 x y
@@ -57,6 +83,9 @@ public class Entity:MonoBehaviour
     /// <param name="yVelocity"> y 速度</param>
     public void SetVelocity(float xVelocity,float yVelocity)
     { 
+        if (isKnocked)
+            return;
+        
         Rb.linearVelocity = new Vector2(xVelocity, yVelocity);
         FlipController(xVelocity);
     }

@@ -2,7 +2,7 @@
 
 public class SkeletonAnimationTriggers:MonoBehaviour
 {
-    private Enemy_Skeleton skeleton => GetComponentInParent<Enemy_Skeleton>();
+    private Skeleton skeleton => GetComponentInParent<Skeleton>();
     
     private void AnimationTrigger()
     {
@@ -20,4 +20,7 @@ public class SkeletonAnimationTriggers:MonoBehaviour
             }
         }
     }
+    
+    private void OpenCounterWindow() => skeleton.OpenCounterAttackWindow();
+    private void CloseCounterWindow() => skeleton.CloseCounterAttackWindow();
 }

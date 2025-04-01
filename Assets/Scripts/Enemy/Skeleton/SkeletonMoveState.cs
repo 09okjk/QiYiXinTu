@@ -1,6 +1,6 @@
 ﻿public class SkeletonMoveState: SkeletonGroundState
 {
-    public SkeletonMoveState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName, Enemy_Skeleton skeleton) : base(enemyBase, stateMachine, animBoolName, skeleton)
+    public SkeletonMoveState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName, Skeleton skeleton) : base(enemyBase, stateMachine, animBoolName, skeleton)
     {
     }
 

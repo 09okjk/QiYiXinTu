@@ -3,9 +3,9 @@
 public class SkeletonBattleState: EnemyState
 {
     private Transform player;
-    private Enemy_Skeleton skeleton;
+    private Skeleton skeleton;
     private int moveDir = -1;
-    public SkeletonBattleState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName,Enemy_Skeleton skeleton) 
+    public SkeletonBattleState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName,Skeleton skeleton) 
         : base(enemyBase, stateMachine, animBoolName)
     {
         this.skeleton = skeleton;
@@ -22,23 +22,6 @@ public class SkeletonBattleState: EnemyState
     {
         base.Update();
 
-        if (skeleton.IsPlayerDetected())
-        {
-            stateTimer = skeleton.battleTime;
-            
-            if (skeleton.IsPlayerInAttackRange() && CanAttack())
-            {
-                stateMachine.ChangeState(skeleton.AttackState);
-            }
-        }
-        else
-        {
-            if (stateTimer < 0)
-            {
-                stateMachine.ChangeState(skeleton.IdleState);
-            }
-        }
-        
         if (player.position.x < skeleton.transform.position.x)
         {
             moveDir = -1;
@@ -47,7 +30,30 @@ public class SkeletonBattleState: EnemyState
         {
             moveDir = 1;
         }
-        skeleton.SetVelocity(skeleton.moveSpeed * moveDir, rb.linearVelocity.y);
+        
+        if (skeleton.IsPlayerDetected())
+        {
+            stateTimer = skeleton.battleTime;
+            
+            if (skeleton.IsPlayerInAttackRange())
+            {
+                if (CanAttack())
+                    stateMachine.ChangeState(skeleton.AttackState);
+            }
+            else
+            {
+                skeleton.SetVelocity(skeleton.moveSpeed * moveDir, rb.linearVelocity.y);
+            }
+        }
+        else
+        {
+            if (stateTimer < 0)
+            {
+                stateMachine.ChangeState(skeleton.IdleState);
+            }
+            skeleton.SetVelocity(skeleton.moveSpeed * moveDir, rb.linearVelocity.y);
+        }
+        
     }
 
     public override void Exit()

@@ -5,6 +5,13 @@ public class Enemy : Entity
 {
     [SerializeField] public LayerMask whatIsPlayer;
     [SerializeField] protected BoxCollider2D playerCheck;
+    
+    [Header("Stunned Info")]
+    public float stunnedDuration = 1f;
+    public Vector2 stunnedDirection;
+    protected bool canBeStunned;
+    [SerializeField] protected GameObject counterImage; 
+    
     [Header("Move Info")]
     public float moveSpeed = 2f;
     public float idleTime = 1f;
@@ -31,6 +38,7 @@ public class Enemy : Entity
     
     public virtual void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();
     
+    # region Check Functions 检查函数
     /// <summary>
     /// 检测是否有Player在检测范围内
     /// </summary>
@@ -55,6 +63,20 @@ public class Enemy : Entity
             new Vector2(attackDistance, 2), 
             0f, 
             whatIsPlayer);
+    }
+    
+    # endregion
+    
+    public virtual void OpenCounterAttackWindow()
+    {
+        canBeStunned = true;
+        counterImage.SetActive(true);
+    }
+    
+    public virtual void CloseCounterAttackWindow()
+    {
+        canBeStunned = false;
+        counterImage.SetActive(false);
     }
     
     protected override void OnDrawGizmos()

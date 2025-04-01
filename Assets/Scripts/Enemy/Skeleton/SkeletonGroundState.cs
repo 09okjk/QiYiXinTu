@@ -1,7 +1,7 @@
 ﻿public class SkeletonGroundState: EnemyState
 {
-    protected Enemy_Skeleton skeleton;
-    public SkeletonGroundState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName,Enemy_Skeleton skeleton) : base(enemyBase, stateMachine, animBoolName)
+    protected Skeleton skeleton;
+    public SkeletonGroundState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName,Skeleton skeleton) : base(enemyBase, stateMachine, animBoolName)
     {
         this.skeleton = skeleton;
     }

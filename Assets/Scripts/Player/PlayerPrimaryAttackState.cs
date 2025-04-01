@@ -25,11 +25,16 @@ public class PlayerPrimaryAttackState : PlayerState
 
         #region Choose Attack Direction
         
-        float attackDir = Player.FacingDirection;
 
+        float attackDir;
+        
         if (xInput != 0)
         {
             attackDir = xInput;
+        }
+        else
+        {
+            attackDir = Player.FacingDirection;
         }
 
         #endregion
