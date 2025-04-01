@@ -25,16 +25,14 @@ public class PlayerPrimaryAttackState : PlayerState
 
         #region Choose Attack Direction
         
+        xInput = Input.GetAxisRaw("Horizontal");
 
-        float attackDir;
+        float attackDir = Player.FacingDirection;
         
         if (xInput != 0)
         {
             attackDir = xInput;
-        }
-        else
-        {
-            attackDir = Player.FacingDirection;
+            Debug.Log("Attack Direction: " + attackDir);
         }
 
         #endregion

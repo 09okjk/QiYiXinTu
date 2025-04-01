@@ -24,10 +24,10 @@ public class PlayerAirState : PlayerState
         }
 
         // 检测到墙壁时切换到墙壁滑行状态
-        if (Player.IsWallDetected())
-        {
-            StateMachine.ChangeState(Player.WallSlideState);
-        }
+        // if (Player.IsWallDetected())
+        // {
+        //     StateMachine.ChangeState(Player.WallSlideState);
+        // }
         
         // 空中移动控制
         if (xInput != 0)

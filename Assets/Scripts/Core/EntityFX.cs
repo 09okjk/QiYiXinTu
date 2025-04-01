@@ -23,6 +23,10 @@ public class EntityFX: MonoBehaviour
         sr.material = hitMaterial;
         yield return new WaitForSeconds(flashDuration);
         sr.material = originalMaterial;
+        
+        // sr.material.color = new Color32(221, 160, 160, 255);
+        // yield return new WaitForSeconds(flashDuration);
+        // sr.material.color = new Color32(255, 255, 255, 255);
     }
     
     private void RedColorBlink()

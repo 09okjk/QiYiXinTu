@@ -16,7 +16,7 @@ public class SkeletonStunnedState:EnemyState
         skeleton.EntityFX.InvokeRepeating("RedColorBlink", 0, 0.1f);
         
         stateTimer = skeleton.stunnedDuration;
-        rb.linearVelocity = new Vector2(skeleton.FacingDirection * skeleton.stunnedDirection.x, skeleton.stunnedDirection.y);
+        rb.linearVelocity = new Vector2(-skeleton.FacingDirection * skeleton.stunnedDirection.x, skeleton.stunnedDirection.y);
     }
 
     public override void Update()
