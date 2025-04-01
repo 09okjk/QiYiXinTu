@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Enemy : Entity
 {
-    [SerializeField] protected LayerMask whatIsPlayer;
+    [SerializeField] public LayerMask whatIsPlayer;
     [SerializeField] protected BoxCollider2D playerCheck;
     [Header("Move Info")]
     public float moveSpeed = 2f;
@@ -51,7 +51,7 @@ public class Enemy : Entity
     public virtual bool IsPlayerInAttackRange()
     {
         return Physics2D.OverlapBox(
-            transform.position, 
+            transform.position+attackDistance/2*transform.right, 
             new Vector2(attackDistance, 2), 
             0f, 
             whatIsPlayer);
@@ -70,6 +70,6 @@ public class Enemy : Entity
         
         // 绘制攻击范围
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(transform.position, new Vector3(attackDistance, 2, 0));
+        Gizmos.DrawWireCube(transform.position+attackDistance/2*transform.right, new Vector3(attackDistance, 2, 0));
     }
 }

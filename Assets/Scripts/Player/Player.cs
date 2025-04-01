@@ -22,7 +22,7 @@ public class Player : Entity
     
     [Header("Attack Info")]
     public float comboTimeWindow = .2f;
-
+    public LayerMask whatIsEnemy;
     public Vector2[] attackMovements;
     
     [Header("Input Actions")]

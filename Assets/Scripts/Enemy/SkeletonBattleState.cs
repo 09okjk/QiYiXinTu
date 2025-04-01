@@ -62,7 +62,6 @@ public class SkeletonBattleState: EnemyState
             skeleton.lastAttackTime = Time.time;
             return true;
         }
-        Debug.Log("attack cool down");
         return false;
     }
 }

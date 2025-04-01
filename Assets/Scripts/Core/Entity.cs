@@ -3,6 +3,8 @@
 public class Entity:MonoBehaviour
 {
     [Header("Collision Info")]
+    public Transform attackCheck;
+    public float attackCheckRadius = 0.5f;
     [SerializeField] protected Transform groundCheck;
     [SerializeField] protected float groundCheckDistance = 0.3f;
     [SerializeField] protected Transform wallCheck;
@@ -34,6 +36,12 @@ public class Entity:MonoBehaviour
     {
         
     }
+
+    public virtual void Damage()
+    {
+        Debug.Log(gameObject.name + " was damage");
+    }
+    
     
     #region Velocity Control 速度控制
     
@@ -97,6 +105,8 @@ public class Entity:MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawLine(groundCheck.position, new Vector3(groundCheck.position.x, groundCheck.position.y - groundCheckDistance, groundCheck.position.z));
         Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance * FacingDirection, wallCheck.position.y, wallCheck.position.z));
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(attackCheck.position, attackCheckRadius);
     }
     #endregion
 }
