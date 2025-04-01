@@ -23,7 +23,7 @@ public class PlayerConterAttackState: PlayerState
         Collider2D[] colliders = Physics2D.OverlapCircleAll(Player.attackCheck.position, Player.attackCheckRadius, Player.whatIsEnemy);
         foreach (Collider2D collider in colliders)
         {
-            if (collider.TryGetComponent<Enemy>(out Enemy enemy))
+            if (collider.TryGetComponent<Skeleton>(out Skeleton enemy))
             {
                 if(enemy.CanBeStunned())
                 {
