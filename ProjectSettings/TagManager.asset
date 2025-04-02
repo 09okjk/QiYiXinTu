@@ -17,7 +17,7 @@ TagManager:
   - Enemy
   - PopWindow
   - Player
-  - 
+  - Weapon
   - 
   - 
   - 
@@ -51,6 +51,9 @@ TagManager:
     locked: 0
   - name: Enemy
     uniqueID: 3111673891
+    locked: 0
+  - name: Weapon
+    uniqueID: 2624463411
     locked: 0
   m_RenderingLayers:
   - Default

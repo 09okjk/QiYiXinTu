@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Manager;
 using UnityEngine;
 
 public class PlayerDashState : PlayerState
@@ -11,7 +12,7 @@ public class PlayerDashState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        StateTimer = Player.dashDuration;
+        StateTimer = Player.skillManager.dashSkill.dashDuration;
     }
 
     public override void Update()
@@ -23,7 +24,7 @@ public class PlayerDashState : PlayerState
         //     StateMachine.ChangeState(Player.WallSlideState);
         // }
         
-        Player.SetVelocity(Player.dashSpeed * Player.DashDir, 0);
+        Player.SetVelocity(Player.skillManager.dashSkill.dashSpeed * Player.DashDir, 0);
         
         if (StateTimer < 0)
         {

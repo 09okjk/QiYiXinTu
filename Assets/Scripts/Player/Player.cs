@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Manager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : Entity
 {
-    
+    public Transform swordPoint;
     [Header("Move Info")]
     public float moveSpeed = 8f;
     public float jumpForce = 12f;
     public float wallJumpForce = 5f;
     public float idleToMoveTransitionTime = 0.0001f;
-    
-    [Header("Dash Info")]
-    [SerializeField] private float dashCoolDown = 1f;
-    [SerializeField] private float dashUsageTimer;
-    public float dashSpeed = 30f;
-    public float dashDuration = 0.2f;
+
     public float DashDir { get; private set; }  
     
     [Header("Attack Info")]
@@ -31,7 +27,7 @@ public class Player : Entity
     [SerializeField] private InputActionReference menuAction;
     
     public bool isBusy {get; private set;}
-
+    public SkillManager skillManager { get; private set; }
 
     
     #region States
@@ -47,6 +43,9 @@ public class Player : Entity
     public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
     public PlayerConterAttackState CounterAttackState { get; private set; }
+    public PlayerAimSwordState AimSwordState { get; private set; }
+    public PlayerThrowSwordState ThrowSwordState { get; private set; }
+    public PlayerCatchSwordState CatchSwordState { get; private set; }
     
     #endregion
     protected override void Awake()
@@ -64,12 +63,16 @@ public class Player : Entity
         WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
         PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
         CounterAttackState = new PlayerConterAttackState(this, StateMachine, "CounterAttack");
+        AimSwordState = new PlayerAimSwordState(this, StateMachine, "AimSword");
+        ThrowSwordState = new PlayerThrowSwordState(this, StateMachine, "ThrowSword");
+        CatchSwordState = new PlayerCatchSwordState(this, StateMachine, "CatchSword");
     }
 
     protected override void Start()
     {
         base.Start();
         StateMachine.Initialize(IdleState);
+        skillManager = SkillManager.Instance;
     }
     
     private void OnEnable()
@@ -123,16 +126,14 @@ public class Player : Entity
     /// </summary>
     private void CheckForDashInput()
     {
-        dashUsageTimer -= Time.deltaTime;
-
         if (IsWallDetected())
         {
             return;
         }
         
-        if (Input.GetKeyDown(KeyCode.LeftShift) && dashUsageTimer < 0)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && skillManager.dashSkill.CanUseSkill())
         {
-            dashUsageTimer = dashCoolDown;
+            SkillManager.Instance.dashSkill.UseSkill();
             DashDir = Input.GetAxisRaw("Horizontal");
             
             if (DashDir == 0)
