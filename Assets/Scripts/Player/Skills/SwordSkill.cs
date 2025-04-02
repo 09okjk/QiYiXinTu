@@ -60,15 +60,16 @@
                 SwordSkillController swordSkillController = newSword.GetComponent<SwordSkillController>();
                 
                 swordSkillController.SetUpSword(finalDirection, swordGravity);
+                swordSkillController.ShowSwordAnimation();
             }
-            
-            public Vector2 AimDirection()
+
+            # region Draw Aim Line
+            private Vector2 AimDirection()
             {
                 Vector2 playerPosition = player.swordPoint.transform.position;
                 Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 
                 Vector2 direction = mousePosition - playerPosition;
-                Debug.DrawRay(playerPosition, direction);
                 return direction.normalized;
             }
         
@@ -101,4 +102,5 @@
                     
                 return position;
             }
+            #endregion
         }

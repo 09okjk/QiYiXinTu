@@ -25,5 +25,15 @@ namespace Skills
             rb.linearVelocity = new Vector2(dir.x * player.FacingDirection, dir.y);            
             rb.gravityScale = gravity;
         }
+        
+        public void ShowSwordAnimation()
+        {
+            animator.SetBool("Routation", true);
+        }
+        
+        public void StopSwordAnimation()
+        {
+            animator.SetBool("Routation", false);
+        }
     }
 }
