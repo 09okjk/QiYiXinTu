@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Entity:MonoBehaviour
 {
+    [Header("Hurt Info")]
+    [SerializeField] protected internal float InvincibleTime = 0.5f;
+    
     [Header("Knockback Info")]
     [SerializeField] private Vector2 knockbackDirection;
     [SerializeField] private float knockbackDuration = 0f;
@@ -47,9 +50,10 @@ public class Entity:MonoBehaviour
 
     public virtual void Damage()
     {
-        EntityFX.StartCoroutine("FlashFX");
+        //EntityFX.StartCoroutine("FlashFX");
         StartCoroutine(nameof(HitKnockback));
         Debug.Log(gameObject.name + " was damage");
+        
     }
 
     protected virtual IEnumerator HitKnockback()

@@ -22,7 +22,7 @@ public class SkeletonAttackState: EnemyState
 
         if (triggerCalled)
         {
-            stateMachine.ChangeState(skeleton.BattleState);
+            stateMachine.ChangeState(skeleton.IdleState);
         }
     }
 

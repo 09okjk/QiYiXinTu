@@ -20,6 +20,7 @@ public class PlayerAnimationTriggers : MonoBehaviour
             if (collider.TryGetComponent<Enemy>(out Enemy enemy))
             {
                 enemy.Damage();
+                enemy.BeHurt();
             }
         }
     }

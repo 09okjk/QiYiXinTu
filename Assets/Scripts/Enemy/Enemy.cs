@@ -70,13 +70,13 @@ public class Enemy : Entity
     public virtual void OpenCounterAttackWindow()
     {
         canBeStunned = true;
-        counterImage.SetActive(true);
+        //counterImage.SetActive(true);
     }
     
     public virtual void CloseCounterAttackWindow()
     {
         canBeStunned = false;
-        counterImage.SetActive(false);
+        //counterImage.SetActive(false);
     }
     
     public virtual bool CanBeStunned()
@@ -88,7 +88,11 @@ public class Enemy : Entity
         }
         return false;
     }
-    
+
+    public virtual void BeHurt()
+    {
+        
+    }
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();

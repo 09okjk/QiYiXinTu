@@ -21,7 +21,7 @@ public class SkeletonGroundState: EnemyState
     {
         base.Update();
         
-        if (skeleton.IsPlayerDetected())
+        if (skeleton.IsPlayerDetected() && !skeleton.IsPlayerInAttackRange() )
         {
             stateMachine.ChangeState(skeleton.BattleState);
         }
