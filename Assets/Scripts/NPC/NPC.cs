@@ -1,17 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class NPCController : MonoBehaviour
+public class NPC : MonoBehaviour
 {
     [Header("NPC Data")]
     [SerializeField] private NPCData npcData;
-    [SerializeField] private float interactionDistance = 2f;
     
     [Header("交互设置")]
-    [SerializeField] private GameObject interactionIndicator;
+    [SerializeField] private float interactionDistance = 2f; // 交互距离
+    [SerializeField] private GameObject interactionIndicator;// 交互提示UI
     
-    private bool canInteract = false;
-    private DialogueData cachedDialogue;
+    private bool canInteract = false; // 是否可以交互
+    private DialogueData cachedDialogue; // 缓存对话数据
     
     private void Start()
     {

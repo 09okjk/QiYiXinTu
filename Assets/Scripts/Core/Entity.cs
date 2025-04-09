@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Entity:MonoBehaviour
 {
+    [Header("Base Info")]
+    
+    
     [Header("Hurt Info")]
     [SerializeField] protected internal float InvincibleTime = 0.5f;
     

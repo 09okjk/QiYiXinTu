@@ -15,7 +15,7 @@
     {
         base.Update();
         
-        if (StateTimer < 0 && TriggerCalled)
+        if (StateTimer < 0 || TriggerCalled)
         {
             StateMachine.ChangeState(Player.IdleState);
         }

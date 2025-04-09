@@ -24,4 +24,9 @@ public class PlayerAnimationTriggers : MonoBehaviour
             }
         }
     }
+    
+    private void DefendTrigger()
+    {
+        
+    }
 }

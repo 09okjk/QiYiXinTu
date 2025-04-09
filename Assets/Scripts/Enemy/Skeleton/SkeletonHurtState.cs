@@ -16,7 +16,7 @@
     {
         base.Update();
         
-        if (stateTimer < 0 && triggerCalled)
+        if (stateTimer < 0 || triggerCalled)
         {
             stateMachine.ChangeState(skeleton.IdleState);
         }
