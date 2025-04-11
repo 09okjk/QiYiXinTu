@@ -8,7 +8,7 @@ public enum ItemType
 {
     QuestItem,
     PuzzleItem,
-    SkillItem
+    Consumable
 }
 
 public class InventoryManager : MonoBehaviour

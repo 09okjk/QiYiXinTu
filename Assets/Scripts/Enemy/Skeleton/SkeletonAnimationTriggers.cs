@@ -16,7 +16,7 @@ public class SkeletonAnimationTriggers:MonoBehaviour
         {
             if (collider.TryGetComponent<Player>(out Player player))
             {
-                player.Damage();
+                player.Damage(skeleton.enemyData.attackDamage);
                 player.StateMachine.ChangeState(player.HurtState);
             }
         }

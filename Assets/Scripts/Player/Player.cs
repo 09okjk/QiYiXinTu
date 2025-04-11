@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core;
 using Manager;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,19 +9,20 @@ using UnityEngine.InputSystem;
 public class Player : Entity
 {
     public Transform swordPoint;
-    [Header("Move Info")]
-    public float moveSpeed = 8f;
-    public float jumpForce = 12f;
-    public float wallJumpForce = 5f;
-    public float idleToMoveTransitionTime = 0.0001f;
+    
+    public PlayerData playerData => (PlayerData)baseData;
+    public float moveSpeed => playerData.moveSpeed;
+    public float jumpForce => playerData.jumpForce;
+    public float wallJumpForce => playerData.wallJumpForce;
+    public float idleToMoveTransitionTime => playerData.idleToMoveTransitionTime;
 
     public float DashDir { get; private set; }  
     
     [Header("Attack Info")]
-    public float comboTimeWindow = .2f;
+    public float comboTimeWindow => playerData.comboTimeWindow;
+    public float counterAttackDuration => playerData.counterAttackDuration;
     public LayerMask whatIsEnemy;
     public Vector2[] attackMovements;
-    public float counterAttackDuration = 2f;
     
     [Header("Input Actions")]
     [SerializeField] private InputActionReference inventoryAction;
@@ -28,7 +30,6 @@ public class Player : Entity
     
     public bool isBusy {get; private set;}
     public SkillManager skillManager { get; private set; }
-
     
     #region States
     

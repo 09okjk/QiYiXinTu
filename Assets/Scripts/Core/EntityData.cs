@@ -11,7 +11,15 @@ namespace Core
         public float CurrentHealth;
         public float MaxMana;
         public float CurrentMana;
+
+        [Header("Hurt Info")]
+        public float InvincibleTime;
         
-        [SerializeField] private List<ItemData> items = new List<ItemData>();
+        [Header("Knockback Info")]
+        public Vector2 knockbackDirection;
+        public float KnockbackDuration;
+        
+        [Header("Inventory Info")]
+        [SerializeField] public List<ItemData> items = new List<ItemData>();
     }
 }

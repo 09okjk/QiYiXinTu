@@ -1,17 +1,16 @@
 ﻿using System.Collections;
+using Core;
 using UnityEngine;
 
 public class Entity:MonoBehaviour
 {
-    [Header("Base Info")]
-    
-    
-    [Header("Hurt Info")]
-    [SerializeField] protected internal float InvincibleTime = 0.5f;
-    
-    [Header("Knockback Info")]
-    [SerializeField] private Vector2 knockbackDirection;
-    [SerializeField] private float knockbackDuration = 0f;
+    [Header("Basic Info")]
+    public EntityData baseData;
+
+    protected internal float InvincibleTime => baseData.InvincibleTime;
+    private Vector2 knockbackDirection => baseData.knockbackDirection;
+    private float knockbackDuration => baseData.KnockbackDuration;
+
     protected bool isKnocked;
     
     [Header("Collision Info")]
@@ -51,12 +50,28 @@ public class Entity:MonoBehaviour
         
     }
 
-    public virtual void Damage()
+    public virtual void Damage(float damage)
     {
         //EntityFX.StartCoroutine("FlashFX");
         StartCoroutine(nameof(HitKnockback));
         Debug.Log(gameObject.name + " was damage");
-        
+        baseData.CurrentHealth -= damage;
+    }
+    
+    public virtual void Heal(float heal)
+    {
+        baseData.CurrentHealth += heal;
+        if (baseData.CurrentHealth > baseData.MaxHealth)
+        {
+            baseData.CurrentHealth = baseData.MaxHealth;
+        }
+    }
+    
+    public virtual void Die()
+    {
+        //EntityFX.StartCoroutine("DieFX");
+        Debug.Log(gameObject.name + " was die");
+        Destroy(gameObject);
     }
 
     protected virtual IEnumerator HitKnockback()

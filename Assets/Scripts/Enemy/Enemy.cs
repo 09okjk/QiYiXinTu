@@ -1,25 +1,32 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+public enum EnemyType
+{
+    Skeleton,
+    Ranged,
+    Magic,
+    Boss
+}
 
 public class Enemy : Entity
 {
+    public EnemyData enemyData => (EnemyData)baseData;
+    
     [SerializeField] public LayerMask whatIsPlayer;
     [SerializeField] protected BoxCollider2D playerCheck;
     
-    [Header("Stunned Info")]
-    public float stunnedDuration = 1f;
-    public Vector2 stunnedDirection;
-    protected bool canBeStunned;
+    [Header("Enemy Info")]
     [SerializeField] protected GameObject counterImage; 
-    
-    [Header("Move Info")]
-    public float moveSpeed = 2f;
-    public float idleTime = 1f;
-    public float battleTime = 1f;
-    
-    [Header("Attack Info")]
-    public float attackDistance = 1f;
-    public float attackCoolDown = 1f;
+    public bool canBeStunned;
+    public GameObject itemPrefab;
+    public float stunnedDuration => enemyData.stunnedDuration;
+    public Vector2 stunnedDirection => enemyData.stunnedDirection;
+    public float moveSpeed => enemyData.moveSpeed;
+    public float idleTime => enemyData.idleTime;
+    public float battleTime => enemyData.battleTime;
+    public float attackDistance => enemyData.attackDistance;
+    public float attackCoolDown => enemyData.attackCooldown;
     [HideInInspector] public float lastAttackTime;
     
     public EnemyStateMachine stateMachine { get; private set; }
@@ -88,11 +95,100 @@ public class Enemy : Entity
         }
         return false;
     }
-
-    public virtual void BeHurt()
+    
+    
+    public void DropItem()
     {
+        // 检查是否有可掉落物品
+        if (enemyData.items == null || enemyData.items.Count == 0)
+            return;
+            
+        // 分类物品
+        List<ItemData> questItems = new List<ItemData>();
+        List<ItemData> puzzleItems = new List<ItemData>();
+        List<ItemData> consumables = new List<ItemData>();
         
+        foreach (var item in enemyData.items)
+        {
+            switch (item.itemType)
+            {
+                case ItemType.QuestItem:
+                    questItems.Add(item);
+                    break;
+                case ItemType.PuzzleItem:
+                    puzzleItems.Add(item);
+                    break;
+                case ItemType.Consumable:
+                    consumables.Add(item);
+                    break;
+            }
+        }
+        
+        // 处理必掉落物品 (任务和谜题物品)
+        if (questItems.Count > 0)
+        {
+            // 随机选择一个任务物品
+            ItemData selectedQuest = questItems[UnityEngine.Random.Range(0, questItems.Count)];
+            SpawnItem(selectedQuest);
+        }
+        
+        if (puzzleItems.Count > 0)
+        {
+            // 随机选择一个谜题物品
+            ItemData selectedPuzzle = puzzleItems[UnityEngine.Random.Range(0, puzzleItems.Count)];
+            SpawnItem(selectedPuzzle);
+        }
+        
+        // 处理消耗品掉落
+        if (consumables.Count > 0)
+        {
+            // 基础掉落数量
+            int baseDropCount = UnityEngine.Random.Range(0, 2);
+            int finalDropCount = baseDropCount;
+            
+            // 根据敌人类型调整掉落数量
+            switch (enemyData.enemyType)
+            {
+                case EnemyType.Magic:
+                    finalDropCount += UnityEngine.Random.Range(0, 2);
+                    break;
+                case EnemyType.Ranged:
+                    if (UnityEngine.Random.value < 0.3f)
+                        finalDropCount += 1;
+                    break;
+                case EnemyType.Boss:
+                    finalDropCount += 2; // Boss至少多掉落2个物品
+                    break;
+            }
+            
+            // 掉落随机消耗品
+            for (int i = 0; i < finalDropCount; i++)
+            {
+                // 概率掉落 (70%几率)
+                if (UnityEngine.Random.value <= 0.7f)
+                {
+                    ItemData selectedConsumable = consumables[UnityEngine.Random.Range(0, consumables.Count)];
+                    SpawnItem(selectedConsumable);
+                }
+            }
+        }
     }
+
+    // 生成物品实例的辅助方法
+    private void SpawnItem(ItemData itemData)
+    {
+        // 获取物品预制体(需要实现物品预制体获取逻辑)
+        GameObject itemPrefab = this.itemPrefab;
+        itemPrefab.GetComponent<Item>().SetItemData(itemData);
+        
+        if (itemPrefab != null)
+        {
+            // 在敌人周围随机位置生成物品，避免堆叠
+            Vector2 dropPosition = (Vector2)transform.position + UnityEngine.Random.insideUnitCircle * 0.5f;
+            Instantiate(itemPrefab, dropPosition, Quaternion.identity);
+        }
+    }
+    
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();

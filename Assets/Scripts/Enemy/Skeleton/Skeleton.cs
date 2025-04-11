@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Skeleton: Enemy
+public class Skeleton : Enemy
 {
 
     #region States
@@ -11,21 +11,23 @@ public class Skeleton: Enemy
     public SkeletonAttackState AttackState { get; private set; }
     public SkeletonStunnedState StunnedState { get; private set; }
     public SkeletonHurtState HurtState { get; private set; }
+    public SkeletonDeathState DeathState { get; private set; }
 
     #endregion
-    
-    
-    
+
+
+
     protected override void Awake()
     {
         base.Awake();
-        
+
         IdleState = new SkeletonIdleState(this, stateMachine, "Idle", this);
         MoveState = new SkeletonMoveState(this, stateMachine, "Move", this);
         BattleState = new SkeletonBattleState(this, stateMachine, "Move", this);
         AttackState = new SkeletonAttackState(this, stateMachine, "Attack", this);
         StunnedState = new SkeletonStunnedState(this, stateMachine, "Stunned", this);
         HurtState = new SkeletonHurtState(this, stateMachine, "Hurt", this);
+        DeathState = new SkeletonDeathState(this, stateMachine, "Death", this);
     }
 
     protected override void Start()
@@ -51,16 +53,26 @@ public class Skeleton: Enemy
             stateMachine.ChangeState(StunnedState);
             return true;
         }
+
         return false;
     }
 
-    public override void BeHurt()
+    public override void Damage(float damage)
     {
-        base.BeHurt();
+        base.Damage(damage);
+
+        if (baseData.CurrentHealth <= 0)
+        {
+            baseData.CurrentHealth = 0;
+            stateMachine.ChangeState(DeathState);
+            return;
+        }
+        
         if (stateMachine.currentState == HurtState)
         {
             return;
         }
+
         stateMachine.ChangeState(HurtState);
     }
 }
