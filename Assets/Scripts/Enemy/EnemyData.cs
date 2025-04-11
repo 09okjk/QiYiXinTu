@@ -16,7 +16,6 @@ public class EnemyData:EntityData
     public float idleTime = 2f;
     public float battleTime = 1f;
     
-    
     [Header("Attack Info")]
     public float attackDistance =1.8f;
     public float attackCooldown = 2f;

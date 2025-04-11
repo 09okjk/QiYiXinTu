@@ -169,7 +169,6 @@ public class Player : Entity
         stateMachine.ChangeState(HurtState);
     }
 
-
     public override void Die()
     {
         base.Die();
