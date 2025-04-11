@@ -33,7 +33,7 @@ public class Player : Entity
     
     #region States
     
-    public PlayerStateMachine StateMachine { get; private set; }
+    public PlayerStateMachine stateMachine { get; private set; }
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
     public PlayerIdleToMoveTransitionState IdleToMoveTransitionState { get; private set; }
@@ -48,33 +48,35 @@ public class Player : Entity
     public PlayerThrowSwordState ThrowSwordState { get; private set; }
     public PlayerCatchSwordState CatchSwordState { get; private set; }
     public PlayerHurtState HurtState { get; private set; }
+    public PlayerDeathState DeathState { get; private set; }
     
     #endregion
     protected override void Awake()
     {
         base.Awake();
-        StateMachine = new PlayerStateMachine();
+        stateMachine = new PlayerStateMachine();
         
-        IdleState = new PlayerIdleState(this, StateMachine, "Idle");
-        MoveState = new PlayerMoveState(this, StateMachine, "Move");
-        IdleToMoveTransitionState = new PlayerIdleToMoveTransitionState(this, StateMachine, "IdleToMove");
-        JumpState = new PlayerJumpState(this, StateMachine, "Jump");
-        AirState = new PlayerAirState(this, StateMachine, "Jump");
-        DashState = new PlayerDashState(this, StateMachine, "Dash");
-        WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
-        WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
-        PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
-        CounterAttackState = new PlayerConterAttackState(this, StateMachine, "CounterAttack");
-        AimSwordState = new PlayerAimSwordState(this, StateMachine, "AimSword");
-        ThrowSwordState = new PlayerThrowSwordState(this, StateMachine, "ThrowSword");
-        CatchSwordState = new PlayerCatchSwordState(this, StateMachine, "CatchSword");
-        HurtState = new PlayerHurtState(this, StateMachine, "Hurt");
+        IdleState = new PlayerIdleState(this, stateMachine, "Idle");
+        MoveState = new PlayerMoveState(this, stateMachine, "Move");
+        IdleToMoveTransitionState = new PlayerIdleToMoveTransitionState(this, stateMachine, "IdleToMove");
+        JumpState = new PlayerJumpState(this, stateMachine, "Jump");
+        AirState = new PlayerAirState(this, stateMachine, "Jump");
+        DashState = new PlayerDashState(this, stateMachine, "Dash");
+        WallSlideState = new PlayerWallSlideState(this, stateMachine, "WallSlide");
+        WallJumpState = new PlayerWallJumpState(this, stateMachine, "Jump");
+        PrimaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
+        CounterAttackState = new PlayerConterAttackState(this, stateMachine, "CounterAttack");
+        AimSwordState = new PlayerAimSwordState(this, stateMachine, "AimSword");
+        ThrowSwordState = new PlayerThrowSwordState(this, stateMachine, "ThrowSword");
+        CatchSwordState = new PlayerCatchSwordState(this, stateMachine, "CatchSword");
+        HurtState = new PlayerHurtState(this, stateMachine, "Hurt");
+        DeathState = new PlayerDeathState(this, stateMachine, "Death");
     }
 
     protected override void Start()
     {
         base.Start();
-        StateMachine.Initialize(IdleState);
+        stateMachine.Initialize(IdleState);
         skillManager = SkillManager.Instance;
     }
     
@@ -99,7 +101,7 @@ public class Player : Entity
     protected override void Update()
     {
         base.Update();
-        StateMachine.CurrentState.Update();
+        stateMachine.CurrentState.Update();
         
         CheckForDashInput();
         StartCoroutine(nameof(BusyFor), 0.1f);
@@ -122,7 +124,7 @@ public class Player : Entity
     /// <summary>
     /// 动画触发，用于状态机，通知状态机动画播放完毕，可以进行下一步操作
     /// </summary>
-    public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+    public void AnimationTrigger() => stateMachine.CurrentState.AnimationFinishTrigger();
 
     /// <summary>
     /// 检查是否可以进行冲刺
@@ -144,10 +146,37 @@ public class Player : Entity
                 DashDir = FacingDirection;
             }
             
-            StateMachine.ChangeState(DashState);
+            stateMachine.ChangeState(DashState);
         }
     }
+    
+    public override void Damage(float damage)
+    {
+        base.Damage(damage);
+
+        if (baseData.CurrentHealth <= 0)
+        {
+            baseData.CurrentHealth = 0;
+            stateMachine.ChangeState(DeathState);
+            return;
+        }
         
+        if (stateMachine.CurrentState == HurtState)
+        {
+            return;
+        }
+
+        stateMachine.ChangeState(HurtState);
+    }
+
+
+    public override void Die()
+    {
+        base.Die();
+        // GameManager.Instance.GameOver();
+        
+    }
+
     private void OnInventoryToggle(InputAction.CallbackContext context)
     {
         InventoryManager.Instance.ToggleInventory();
