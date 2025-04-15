@@ -169,10 +169,24 @@ public class Player : Entity
         stateMachine.ChangeState(HurtState);
     }
 
+    public override void AddHealth(float amount)
+    {
+        base.AddHealth(amount);
+        float maxHealth = playerData.MaxHealth;
+        playerData.CurrentHealth = Mathf.Min(playerData.CurrentHealth + amount, maxHealth);
+    }
+
+    public override void AddMana(float amount)
+    {
+        base.AddMana(amount);
+        float maxMana = playerData.MaxMana;
+        playerData.CurrentMana = Mathf.Min(playerData.CurrentMana + amount, maxMana);
+    }
+
     public override void Die()
     {
         base.Die();
-        // GameManager.Instance.GameOver();
+        //TODO: GameManager.Instance.GameOver();
         
     }
 

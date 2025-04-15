@@ -66,6 +66,16 @@ public class Entity:MonoBehaviour
             baseData.CurrentHealth = baseData.MaxHealth;
         }
     }
+
+    public virtual void AddHealth(float amount)
+    {
+        
+    }
+
+    public virtual void AddMana(float amount)
+    {
+        
+    }
     
     public virtual void Die()
     {

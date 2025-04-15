@@ -9,6 +9,8 @@ public class ItemData : ScriptableObject
     public Sprite icon;
     public ItemType itemType;
     
+
+    
     [Tooltip("Additional properties specific to this item")]
     public ItemProperty[] properties;
 }

@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f741c0af46ec4c83a7046555c9eef973, type: 3}
   m_Name: leader
   m_EditorClassIdentifier: 
-  MaxHealth: 0
-  CurrentHealth: 0
-  MaxMana: 0
-  CurrentMana: 0
+  MaxHealth: 1000
+  CurrentHealth: 1000
+  MaxMana: 1
+  CurrentMana: 1
+  InvincibleTime: 0
+  knockbackDirection: {x: 0, y: 0}
+  KnockbackDuration: 0
   items: []
   npcID: leader
   npcName: "\u9886\u5BFC"
