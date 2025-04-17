@@ -2,6 +2,7 @@
 {
     Skeleton skeleton;
     
+    
     public SkeletonDeathState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName, Skeleton skeleton) : base(enemyBase, stateMachine, animBoolName)
     {
         this.skeleton = skeleton;
@@ -17,11 +18,6 @@
     {
         base.Update();
         
-        if (stateTimer < 0 || triggerCalled)
-        {
-            skeleton.DropItem();
-            skeleton.Die();
-        }
     }
 
     public override void Exit()

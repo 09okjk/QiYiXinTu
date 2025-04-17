@@ -30,11 +30,15 @@ public class Enemy : Entity
     [HideInInspector] public float lastAttackTime;
     
     public EnemyStateMachine stateMachine { get; private set; }
+    
+    private bool hasExecuted;
+
 
     protected override void Awake()
     {
         base.Awake();
         stateMachine = new EnemyStateMachine();
+        hasExecuted = false;
     }
 
     protected override void Update()
@@ -99,6 +103,9 @@ public class Enemy : Entity
     
     public void DropItem()
     {
+        if (hasExecuted)
+            return;
+        hasExecuted = true;
         // 检查是否有可掉落物品
         if (enemyData.items == null || enemyData.items.Count == 0)
             return;
@@ -160,32 +167,40 @@ public class Enemy : Entity
                     finalDropCount += 2; // Boss至少多掉落2个物品
                     break;
             }
-            
+            Debug.Log("掉落数量: " + finalDropCount);
             // 掉落随机消耗品
             for (int i = 0; i < finalDropCount; i++)
             {
+                Debug.Log("第" + (i + 1) + "次掉落");
                 // 概率掉落 (70%几率)
                 if (UnityEngine.Random.value <= 0.7f)
                 {
-                    ItemData selectedConsumable = consumables[UnityEngine.Random.Range(0, consumables.Count)];
+                    Debug.Log("成功掉落消耗品");
+                    ItemData selectedConsumable = consumables[UnityEngine.Random.Range(0, consumables.Count)];// 随机选择一个消耗品
                     SpawnItem(selectedConsumable);
+                }
+                else
+                {
+                    Debug.Log("掉落失败");
                 }
             }
         }
+        Die();
     }
 
     // 生成物品实例的辅助方法
     private void SpawnItem(ItemData itemData)
     {
+        Debug.Log("掉落物品: " + itemData.itemName);
         // 获取物品预制体(需要实现物品预制体获取逻辑)
         GameObject itemPrefab = this.itemPrefab;
-        itemPrefab.GetComponent<Item>().SetItemData(itemData);
         
         if (itemPrefab != null)
         {
             // 在敌人周围随机位置生成物品，避免堆叠
             Vector2 dropPosition = (Vector2)transform.position + UnityEngine.Random.insideUnitCircle * 0.5f;
             Instantiate(itemPrefab, dropPosition, Quaternion.identity);
+            itemPrefab.GetComponent<Item>().SetItemData(itemData);
         }
     }
     

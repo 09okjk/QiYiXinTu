@@ -3930,8 +3930,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 09okjk
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 61a78650f5dd6b64791510f8f92b120d, type: 2}
+  m_sharedMaterial: {fileID: 4643883771616551909, guid: 61a78650f5dd6b64791510f8f92b120d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5404,10 +5404,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: DalogueTextDialogueTextDialogueTextDialogueTextDialogueTextDialogueTextDialogueTextDialogueTextDialogueDalogueTextDialogueTextDialogueTextDialogueTextDialogueTextDi
+  m_text: "\u4F60\u597D"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 61a78650f5dd6b64791510f8f92b120d, type: 2}
+  m_sharedMaterial: {fileID: 4643883771616551909, guid: 61a78650f5dd6b64791510f8f92b120d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5647,7 +5647,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 2140318163}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:

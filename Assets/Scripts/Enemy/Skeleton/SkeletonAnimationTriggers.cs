@@ -20,6 +20,11 @@ public class SkeletonAnimationTriggers:MonoBehaviour
             }
         }
     }
+
+    private void DeathTrigger()
+    {
+        skeleton.DropItem();
+    }
     
     private void OpenCounterWindow() => skeleton.OpenCounterAttackWindow();
     private void CloseCounterWindow() => skeleton.CloseCounterAttackWindow();

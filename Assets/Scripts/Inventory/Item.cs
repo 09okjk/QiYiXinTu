@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-public class Item:MonoBehaviour
+public class Item : MonoBehaviour
 {   
-    private ItemData _itemData;
+    public ItemData _itemData;
     
     public SpriteRenderer icon; 
     
@@ -15,7 +15,12 @@ public class Item:MonoBehaviour
 
     public void SetItemData(ItemData itemData)
     {
+        Debug.Log("设置物品数据: " + itemData.itemName);
         _itemData = itemData;
+        if (icon == null)
+        {
+            icon = GetComponent<SpriteRenderer>();
+        }
         icon.sprite = itemData.icon;
     }
     public void PickUp(Player player)
@@ -102,15 +107,12 @@ public class Item:MonoBehaviour
     private void OnValidate()
     {
         // 自动设置碰撞器为触发器
-        Collider2D col = GetComponent<Collider2D>();
+        Collider2D col = GetComponent<CircleCollider2D>();
         if (col == null)
         {
             col = gameObject.AddComponent<CircleCollider2D>();
-            col.isTrigger = true;
         }
-        else
-        {
-            col.isTrigger = true;
-        }
+        col.isTrigger = true;
+        
     }
 }
