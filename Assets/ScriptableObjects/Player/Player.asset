@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   MaxHealth: 500
-  CurrentHealth: 0
+  CurrentHealth: 500
   MaxMana: 5
   CurrentMana: 5
   InvincibleTime: 1

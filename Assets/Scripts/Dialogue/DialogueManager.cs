@@ -280,9 +280,9 @@ public class DialogueManager : MonoBehaviour
     {
         dialoguePanel.SetActive(false);
         // 对话结束时的回调或事件
-        OnDialogueEnd?.Invoke();
+        OnDialogueEnd?.Invoke();// 全局事件
         
-        // 执行对话完成后的回调
+        // 执行对话完成后的回调 一次性回调，只针对特定对话，在对话结束后自动清除
         if (onDialogueCompleteCallback != null)
         {
             Action tempCallback = onDialogueCompleteCallback;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class NPC : MonoBehaviour
+public class NPC : Entity
 {
     [Header("NPC Data")]
     [SerializeField] private NPCData npcData;
@@ -12,6 +12,12 @@ public class NPC : MonoBehaviour
     
     private bool canInteract = false; // 是否可以交互
     private DialogueData cachedDialogue; // 缓存对话数据
+    
+    #region State
+
+    NPCStateMachine stateMachine { get; set; }
+
+    #endregion
     
     private void Start()
     {
@@ -48,6 +54,8 @@ public class NPC : MonoBehaviour
             }
         }
     }
+    
+    public void AnimationTrigger()=> stateMachine.CurrentState.AnimationFinishTrigger();
     
     private void SetupNPCBasedOnType()
     {
