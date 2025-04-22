@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Manager;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,11 +14,11 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] GameObject gameUIPanel;
 
     [Header("Player Status")]
-    [SerializeField] private Image playerPortrait;
-    [SerializeField] private Slider healthSlider;
-    [SerializeField] private Slider manaSlider;
-    [SerializeField] private TextMeshProUGUI healthText;
-    [SerializeField] private TextMeshProUGUI manaText;
+    [SerializeField] private Image playerPortrait; // 玩家头像
+    [SerializeField] private Slider healthSlider; // 生命值滑块
+    [SerializeField] private Slider manaSlider; // 魔法值滑块
+    [SerializeField] private TextMeshProUGUI healthText; // 生命值文本
+    [SerializeField] private TextMeshProUGUI manaText; // 魔法值文本
     
     [Header("Skill Bar")]
     [SerializeField] private Transform skillBarContainer;
@@ -28,10 +29,11 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI sceneNameText;
     [SerializeField] private Button menuButton;
     
-    private PlayerHealth playerHealth;
-    private PlayerCombat playerCombat;
+    // private PlayerHealth playerHealth; 
+    // private PlayerCombat playerCombat;
     private List<SkillSlotUI> skillSlotList = new List<SkillSlotUI>();
 
+    private Player player;
     private void Awake()
     {
         if (Instance == null)
@@ -66,17 +68,16 @@ public class GameUIManager : MonoBehaviour
         
         // 显示任务日志面板
         QuestManager.Instance.ToggleQuestLog();
+        
+        player = PlayerManager.Instance.player;
     }
 
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
         
-        if (playerHealth != null)
-        {
-            playerHealth.OnHealthChanged -= UpdateHealth;
-            playerHealth.OnManaChanged -= UpdateMana;
-        }
+        player.OnHealthChanged -= UpdateHealth;
+        player.OnManaChanged -= UpdateMana;
     }
     
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -95,29 +96,21 @@ public class GameUIManager : MonoBehaviour
 
     private void FindAndConnectPlayer()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        
         if (player != null)
         {
-            playerHealth = player.GetComponent<PlayerHealth>();
-            playerCombat = player.GetComponent<PlayerCombat>();
+            // 注册事件
+            player.OnHealthChanged += UpdateHealth;
+            player.OnManaChanged += UpdateMana;
             
-            if (playerHealth != null)
-            {
-                // 注册事件
-                playerHealth.OnHealthChanged += UpdateHealth;
-                playerHealth.OnManaChanged += UpdateMana;
-                
-                // 初始化数值
-                UpdateHealth(playerHealth.GetHealthPercentage() * 100, 100);
-                UpdateMana(playerHealth.GetManaPercentage() * 100, 100);
-            }
+            // 初始化数值
+            UpdateHealth(player.GetHealthPercentage() * 100, 100);
+            UpdateMana(player.GetManaPercentage() * 100, 100);
             
             // 更新技能栏
-            if (playerCombat != null)
-            {
-                UpdateSkillBar();
-            }
+            // if (playerCombat != null)
+            // {
+            //     UpdateSkillBar();
+            // }
         }
     }
 
@@ -167,9 +160,9 @@ public class GameUIManager : MonoBehaviour
     
     public void UpdateSkillBar()
     {
-        if (playerCombat == null) return;
+        // if (playerCombat == null) return;
         
-        Dictionary<ItemData, int> skills = playerCombat.GetSkills();
+        // Dictionary<ItemData, int> skills = playerCombat.GetSkills();
         int index = 0;
         
         // 重置所有技能槽
@@ -180,17 +173,17 @@ public class GameUIManager : MonoBehaviour
         }
         
         // 填充技能槽
-        foreach (var skillPair in skills)
-        {
-            if (index >= skillSlotList.Count) break;
-            
-            SkillSlotUI slot = skillSlotList[index];
-            slot.SkillIcon.sprite = skillPair.Key.icon;
-            slot.SkillIcon.gameObject.SetActive(true);
-            slot.CountText.text = skillPair.Value.ToString();
-            
-            index++;
-        }
+        // foreach (var skillPair in skills)
+        // {
+        //     if (index >= skillSlotList.Count) break;
+        //     
+        //     SkillSlotUI slot = skillSlotList[index];
+        //     slot.SkillIcon.sprite = skillPair.Key.icon;
+        //     slot.SkillIcon.gameObject.SetActive(true);
+        //     slot.CountText.text = skillPair.Value.ToString();
+        //     
+        //     index++;
+        // }
     }
     
     private void OpenMenu()

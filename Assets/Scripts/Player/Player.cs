@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core;
 using Manager;
+using Skills;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -50,6 +51,13 @@ public class Player : Entity
     public PlayerHurtState HurtState { get; private set; }
     public PlayerDeathState DeathState { get; private set; }
     
+    #endregion
+
+    #region Events
+
+    public event Action<float, float> OnHealthChanged;
+    public event Action<float, float> OnManaChanged;
+
     #endregion
     protected override void Awake()
     {
@@ -160,7 +168,7 @@ public class Player : Entity
             stateMachine.ChangeState(DeathState);
             return;
         }
-        
+        OnHealthChanged?.Invoke(baseData.CurrentHealth, baseData.MaxHealth);
         if (stateMachine.CurrentState == HurtState)
         {
             return;
@@ -169,11 +177,20 @@ public class Player : Entity
         stateMachine.ChangeState(HurtState);
     }
 
+    public void SpendMana(float amount)
+    {
+        if (playerData.CurrentMana >= amount)
+        {
+            playerData.CurrentMana -= amount;
+            OnManaChanged?.Invoke(playerData.CurrentMana, playerData.MaxMana);
+        }
+    }
     public override void AddHealth(float amount)
     {
         base.AddHealth(amount);
         float maxHealth = playerData.MaxHealth;
         playerData.CurrentHealth = Mathf.Min(playerData.CurrentHealth + amount, maxHealth);
+        OnHealthChanged?.Invoke(playerData.CurrentHealth, playerData.MaxHealth);
     }
 
     public override void AddMana(float amount)
@@ -181,12 +198,14 @@ public class Player : Entity
         base.AddMana(amount);
         float maxMana = playerData.MaxMana;
         playerData.CurrentMana = Mathf.Min(playerData.CurrentMana + amount, maxMana);
+        OnManaChanged?.Invoke(playerData.CurrentMana, playerData.MaxMana);
     }
 
     public override void Die()
     {
         base.Die();
-        //TODO: GameManager.Instance.GameOver();
+        // 触发游戏事件
+        GameManager.Instance.OnGameEvent("PlayerDied");
         
     }
 

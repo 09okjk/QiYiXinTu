@@ -57,15 +57,6 @@ public class Entity:MonoBehaviour
         Debug.Log(gameObject.name + " was damage");
         baseData.CurrentHealth -= damage;
     }
-    
-    public virtual void Heal(float heal)
-    {
-        baseData.CurrentHealth += heal;
-        if (baseData.CurrentHealth > baseData.MaxHealth)
-        {
-            baseData.CurrentHealth = baseData.MaxHealth;
-        }
-    }
 
     public virtual void AddHealth(float amount)
     {
@@ -75,6 +66,16 @@ public class Entity:MonoBehaviour
     public virtual void AddMana(float amount)
     {
         
+    }
+
+    public virtual float GetHealthPercentage()
+    {
+        return baseData.CurrentHealth / baseData.MaxHealth;
+    }
+    
+    public virtual float GetManaPercentage()
+    {
+        return baseData.CurrentMana / baseData.MaxMana;
     }
     
     public virtual void Die()
