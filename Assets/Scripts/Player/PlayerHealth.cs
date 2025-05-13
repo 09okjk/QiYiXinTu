@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Health Settings")]
+    /*[Header("Health Settings")]
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float currentHealth;
     [SerializeField] private float maxMana = 100f;
@@ -182,5 +182,6 @@ public class PlayerHealth : MonoBehaviour
         // 假设传入的是百分比值，如在SaveData中保存的playerMana
         currentMana = (manaValue / 100f) * maxMana;
     }
+    */
     
 }

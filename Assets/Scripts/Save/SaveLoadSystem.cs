@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Manager;
 
 public class SaveLoadSystem : MonoBehaviour
 {
@@ -83,16 +84,11 @@ public class SaveLoadSystem : MonoBehaviour
             saveData.playerPosition[1] = position.y;
             saveData.playerPosition[2] = position.z;
 
-            // Player health/mana
-            PlayerHealth health = player.GetComponent<PlayerHealth>();
-            if (health != null)
-            {
-                saveData.playerHealth = health.GetHealthPercentage() * 100;
-                saveData.playerMana = health.GetManaPercentage() * 100;
-            }
+            saveData.playerHealth = PlayerManager.Instance.player.GetHealthPercentage() * 100;
+            saveData.playerMana = PlayerManager.Instance.player.GetManaPercentage() * 100;
             
             // Player skills
-            saveData.PlayerSkills = player.GetComponent<PlayerCombat>().GetSkills();
+            // saveData.PlayerSkills = player.GetComponent<PlayerCombat>().GetSkills();
         }
 
         // Current scene
@@ -205,26 +201,21 @@ public class SaveLoadSystem : MonoBehaviour
                 saveData.playerPosition[2]
             );
             player.transform.position = position;
-
-            // Player health/mana
-            PlayerHealth health = player.GetComponent<PlayerHealth>();
-            if (health != null)
-            {
-                health.SetHealth(saveData.playerHealth);
-                health.SetMana(saveData.playerMana);
-            }
+            
+            PlayerManager.Instance.player.playerData.CurrentHealth = saveData.playerHealth;
+            PlayerManager.Instance.player.playerData.CurrentMana = saveData.playerMana;
             
             // Player skills
-            if (player.GetComponent<PlayerCombat>() != null)
-            {
-                foreach (var kvp in saveData.PlayerSkills)
-                {
-                    for (int i = 0; i < kvp.Value; i++)
-                    {
-                        player.GetComponent<PlayerCombat>().AddSkill(kvp.Key);
-                    }
-                }
-            }
+            // if (player.GetComponent<PlayerCombat>() != null)
+            // {
+            //     foreach (var kvp in saveData.PlayerSkills)
+            //     {
+            //         for (int i = 0; i < kvp.Value; i++)
+            //         {
+            //             player.GetComponent<PlayerCombat>().AddSkill(kvp.Key);
+            //         }
+            //     }
+            // }
         }
 
         // Inventory data

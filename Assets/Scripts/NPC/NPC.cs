@@ -1,10 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class NPC : MonoBehaviour
+public class NPC : Entity
 {
     [Header("NPC Data")]
     [SerializeField] private NPCData npcData;
+    [SerializeField] private float followDistance = 1.5f; // 跟随距离
+    [SerializeField] private float followSpeed = 2f; // 跟随速度
     
     [Header("交互设置")]
     [SerializeField] private float interactionDistance = 2f; // 交互距离
@@ -12,6 +14,21 @@ public class NPC : MonoBehaviour
     
     private bool canInteract = false; // 是否可以交互
     private DialogueData cachedDialogue; // 缓存对话数据
+    private bool isFollowing = false; // 是否跟随玩家
+    private GameObject player; // 玩家引用
+    private SpriteRenderer spriteRenderer;    
+    private float defaultSpeed; // 当前速度
+    #region State
+
+    NPCStateMachine stateMachine { get; set; }
+
+    #endregion
+    
+    private void Awake()
+    {
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+    }
     
     private void Start()
     {
@@ -19,18 +36,23 @@ public class NPC : MonoBehaviour
         if (interactionIndicator != null)
             interactionIndicator.SetActive(false);
             
+        if (npcData != null && npcData.avatar != null && spriteRenderer != null)
+            spriteRenderer.sprite = npcData.avatar;
+        
         // 根据NPC类型设置外观或行为
         SetupNPCBasedOnType();
         
         // 预加载对话数据
         if (!string.IsNullOrEmpty(npcData.dialogueID))
             cachedDialogue = Resources.Load<DialogueData>($"Dialogues/{npcData.dialogueID}");
+        
+        defaultSpeed = followSpeed;
     }
     
     private void Update()
     {
         // 检查玩家是否在交互距离内
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
             float distance = Vector2.Distance(transform.position, player.transform.position);
@@ -48,6 +70,17 @@ public class NPC : MonoBehaviour
             }
         }
     }
+    
+    private void FixedUpdate()
+    {
+        // 如果NPC处于跟随状态，则更新位置
+        if (isFollowing)
+        {
+            FollowPlayer();
+        }
+    }
+
+    public void AnimationTrigger()=> stateMachine.CurrentState.AnimationFinishTrigger();
     
     private void SetupNPCBasedOnType()
     {
@@ -159,6 +192,69 @@ public class NPC : MonoBehaviour
             }
         }
     }
+
+    #region Follow Player
+    
+    public void FollowTargetPlayer(GameObject target)
+    {
+        // 设置目标玩家
+        player = target;
+        // 使NPC跟随玩家
+        isFollowing = true;
+        
+        // 初始化朝向
+        UpdateFacingDirection();
+    }
+    
+    private void FollowPlayer()
+    {
+        followSpeed = defaultSpeed;
+        if (player != null)
+        {
+            // 更新面朝方向
+            UpdateFacingDirection();
+            
+            // 计算NPC与玩家之间的距离
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+            
+            // 如果距离小于跟随距离，则停止跟随
+            if (distance < followDistance)
+            {
+                followSpeed = 0;
+                return;
+            }
+            
+            // NPC跟随玩家
+            Vector2 direction = (player.transform.position - transform.position).normalized;
+            Rb.MovePosition(Rb.position + direction * followSpeed * Time.deltaTime);
+        }
+    }
+    
+    private void UpdateFacingDirection()
+    {
+        if (player != null && spriteRenderer != null)
+        {
+            // 根据玩家位置设置朝向
+            float xDirection = player.transform.position.x - transform.position.x;
+        
+            // 大于0表示玩家在NPC右侧，需要面朝右；小于0表示玩家在NPC左侧，需要面朝左
+            spriteRenderer.flipX = xDirection < 0;
+        }
+    }
+    
+    public void StopFollowing()
+    {
+        // 停止跟随玩家
+        isFollowing = false;
+        followSpeed = 0;
+        
+        // 重置朝向
+        if (spriteRenderer != null)
+            spriteRenderer.flipX = false;
+    }
+
+    #endregion
+    
     
     private void OnDrawGizmosSelected()
     {

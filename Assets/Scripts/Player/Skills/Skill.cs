@@ -7,6 +7,7 @@ namespace Skills
     public class Skill:MonoBehaviour
     {
         [SerializeField] protected float coolDown;
+        [SerializeField] protected float manaCost;
         protected float coolDownTimer;
 
         protected Player player;
@@ -36,6 +37,7 @@ namespace Skills
             if (CanUseSkill())
             {
                 coolDownTimer = coolDown;
+                player.SpendMana(manaCost);
                 Debug.Log("Using skill");
             }
             else
