@@ -6671,6 +6671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coolDown: 2
+  manaCost: 0
   dashSpeed: 20
   dashDuration: 0.5
 --- !u!114 &1230889072
@@ -6698,6 +6699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coolDown: 0
+  manaCost: 0
   swordPrefab: {fileID: 4744417363703927232, guid: 54bc1f5e450831d4387c8f07eff78da8, type: 3}
   launchForce: {x: 15, y: 20}
   swordGravity: 4
@@ -6870,7 +6872,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc13ab114416b74baa821e85c7a84bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseData: {fileID: 0}
+  attackCheck: {fileID: 0}
+  attackCheckRadius: 0.5
+  groundCheck: {fileID: 0}
+  groundCheckDistance: 0.3
+  wallCheck: {fileID: 0}
+  wallCheckDistance: 0.3
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
   npcData: {fileID: 11400000, guid: 2f2c301169e4a354da0a49911a80cef5, type: 2}
+  followDistance: 1.5
+  followSpeed: 2
   interactionDistance: 2
   interactionIndicator: {fileID: 271461950}
 --- !u!212 &1288462658
