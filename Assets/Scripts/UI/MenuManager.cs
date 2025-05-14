@@ -274,6 +274,6 @@ public class MenuManager : MonoBehaviour
     {
         // 重置游戏数据
         GameManager.Instance.OnGameEvent("GameStarted");
-        SceneManager.LoadScene("Scene1");
+        SceneManager.LoadScene("Room1");
     }
 }

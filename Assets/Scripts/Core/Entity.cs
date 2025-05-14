@@ -50,7 +50,7 @@ public class Entity:MonoBehaviour
         
     }
 
-    public virtual void Damage(float damage)
+    public virtual void Damage(int damage)
     {
         //EntityFX.StartCoroutine("FlashFX");
         StartCoroutine(nameof(HitKnockback));
@@ -68,10 +68,10 @@ public class Entity:MonoBehaviour
         
     }
 
-    public virtual float GetHealthPercentage()
-    {
-        return baseData.CurrentHealth / baseData.MaxHealth;
-    }
+    // public virtual float GetHealthPercentage()
+    // {
+    //     return baseData.CurrentHealth / baseData.MaxHealth;
+    // }
     
     public virtual float GetManaPercentage()
     {

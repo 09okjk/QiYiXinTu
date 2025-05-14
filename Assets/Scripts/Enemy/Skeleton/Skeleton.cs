@@ -57,7 +57,7 @@ public class Skeleton : Enemy
         return false;
     }
 
-    public override void Damage(float damage)
+    public override void Damage(int damage)
     {
         base.Damage(damage);
 

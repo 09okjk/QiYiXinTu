@@ -15,10 +15,11 @@ public class GameUIManager : MonoBehaviour
 
     [Header("Player Status")]
     [SerializeField] private Image playerPortrait; // 玩家头像
-    [SerializeField] private Slider healthSlider; // 生命值滑块
-    [SerializeField] private Slider manaSlider; // 魔法值滑块
-    [SerializeField] private TextMeshProUGUI healthText; // 生命值文本
-    [SerializeField] private TextMeshProUGUI manaText; // 魔法值文本
+    [SerializeField] private HealthBarManager healthBarManager;
+    // [SerializeField] private Slider healthSlider; // 生命值滑块
+    //[SerializeField] private Slider manaSlider; // 魔法值滑块
+    // [SerializeField] private TextMeshProUGUI healthText; // 生命值文本
+    //[SerializeField] private TextMeshProUGUI manaText; // 魔法值文本
     
     [Header("Skill Bar")]
     [SerializeField] private Transform skillBarContainer;
@@ -60,27 +61,28 @@ public class GameUIManager : MonoBehaviour
         // 更新场景名称
         UpdateSceneName();
         
-        // 场景加载事件注册
-        SceneManager.sceneLoaded += OnSceneLoaded;
         
         // 查找并连接玩家
-        FindAndConnectPlayer();
+        // FindAndConnectPlayer();
         
         // 显示任务日志面板
-        QuestManager.Instance.ToggleQuestLog();
         
         player = PlayerManager.Instance.player;
+
+        OnSceneLoaded();
+        
+        QuestManager.Instance.ToggleQuestLog();
     }
 
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        //SceneManager.sceneLoaded -= OnSceneLoaded;
         
         player.OnHealthChanged -= UpdateHealth;
         player.OnManaChanged -= UpdateMana;
     }
     
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded()
     {
         UpdateSceneName();
         
@@ -96,6 +98,7 @@ public class GameUIManager : MonoBehaviour
 
     private void FindAndConnectPlayer()
     {
+        Debug.Log("Finding Player...");
         if (player != null)
         {
             // 注册事件
@@ -103,7 +106,7 @@ public class GameUIManager : MonoBehaviour
             player.OnManaChanged += UpdateMana;
             
             // 初始化数值
-            UpdateHealth(player.GetHealthPercentage() * 100, 100);
+            UpdateHealth(5, false);
             UpdateMana(player.GetManaPercentage() * 100, 100);
             
             // 更新技能栏
@@ -119,16 +122,25 @@ public class GameUIManager : MonoBehaviour
         sceneNameText.text = SceneManager.GetActiveScene().name;
     }
     
-    private void UpdateHealth(float current, float max)
+    private void UpdateHealth(int current, bool isHit)
     {
-        healthSlider.value = current / max;
-        healthText.text = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
+        //Debug.Log("Current Health: " + current);
+        if (isHit)
+        {
+            // 生命值减少
+            healthBarManager.ChangeHealthBar(current, true);
+        }
+        else
+        {
+            // 生命值增加
+            healthBarManager.ChangeHealthBar(current, false);
+        }
     }
     
     private void UpdateMana(float current, float max)
     {
-        manaSlider.value = current / max;
-        manaText.text = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
+        // manaSlider.value = current / max;
+        // manaText.text = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
     }
     
     private void InitializeSkillBar()

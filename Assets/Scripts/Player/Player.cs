@@ -55,7 +55,7 @@ public class Player : Entity
 
     #region Events
 
-    public event Action<float, float> OnHealthChanged;
+    public event Action<int, bool> OnHealthChanged;
     public event Action<float, float> OnManaChanged;
 
     #endregion
@@ -158,17 +158,18 @@ public class Player : Entity
         }
     }
     
-    public override void Damage(float damage)
+    public override void Damage(int damage)
     {
         base.Damage(damage);
 
         if (baseData.CurrentHealth <= 0)
         {
             baseData.CurrentHealth = 0;
+            OnHealthChanged?.Invoke(baseData.CurrentHealth, true);
             stateMachine.ChangeState(DeathState);
             return;
         }
-        OnHealthChanged?.Invoke(baseData.CurrentHealth, baseData.MaxHealth);
+        OnHealthChanged?.Invoke(baseData.CurrentHealth, true);
         if (stateMachine.CurrentState == HurtState)
         {
             return;
@@ -189,8 +190,8 @@ public class Player : Entity
     {
         base.AddHealth(amount);
         float maxHealth = playerData.MaxHealth;
-        playerData.CurrentHealth = Mathf.Min(playerData.CurrentHealth + amount, maxHealth);
-        OnHealthChanged?.Invoke(playerData.CurrentHealth, playerData.MaxHealth);
+        playerData.CurrentHealth = (int)Math.Min(playerData.CurrentHealth + amount, maxHealth);
+        OnHealthChanged?.Invoke(playerData.CurrentHealth, false);
     }
 
     public override void AddMana(float amount)

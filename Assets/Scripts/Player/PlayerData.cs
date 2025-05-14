@@ -17,5 +17,5 @@ public class PlayerData: EntityData
     [Header("Attack Info")] 
     public float comboTimeWindow = 0.2f;
     public float counterAttackDuration = 2f;
-    public float attackDamage = 10f;
+    public int attackDamage = 1;
 }

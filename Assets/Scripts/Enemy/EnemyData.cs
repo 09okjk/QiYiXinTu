@@ -19,7 +19,7 @@ public class EnemyData:EntityData
     [Header("Attack Info")]
     public float attackDistance =1.8f;
     public float attackCooldown = 2f;
-    public float attackDamage = 10f;
+    public int attackDamage = 1;
     public float stunnedDuration = 1f;
     public Vector2 stunnedDirection;
 }

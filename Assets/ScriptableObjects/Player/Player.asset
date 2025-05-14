@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ec65821a654b1483d819957a9f7ce3, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  MaxHealth: 500
-  CurrentHealth: 500
+  MaxHealth: 5
+  CurrentHealth: 2
   MaxMana: 5
   CurrentMana: 5
   InvincibleTime: 1
@@ -28,4 +28,4 @@ MonoBehaviour:
   idleToMoveTransitionTime: 0.0001
   comboTimeWindow: 0.5
   counterAttackDuration: 2
-  attackDamage: 10
+  attackDamage: 1

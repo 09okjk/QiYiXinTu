@@ -7,8 +7,8 @@ namespace Core
     public class EntityData : ScriptableObject
     {
         [Header("Basic Info")]
-        public float MaxHealth;
-        public float CurrentHealth;
+        public int MaxHealth;
+        public int CurrentHealth;
         public float MaxMana;
         public float CurrentMana;
 

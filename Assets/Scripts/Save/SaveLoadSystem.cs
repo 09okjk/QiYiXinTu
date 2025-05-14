@@ -20,7 +20,7 @@ public class SaveLoadSystem : MonoBehaviour
     public class SaveData
     {
         // Player data
-        public float playerHealth;
+        public int playerHealth;
         public float playerMana;
         public float[] playerPosition = new float[3];
         public Dictionary<ItemData,int> PlayerSkills = new Dictionary<ItemData, int>();
@@ -84,8 +84,8 @@ public class SaveLoadSystem : MonoBehaviour
             saveData.playerPosition[1] = position.y;
             saveData.playerPosition[2] = position.z;
 
-            saveData.playerHealth = PlayerManager.Instance.player.GetHealthPercentage() * 100;
-            saveData.playerMana = PlayerManager.Instance.player.GetManaPercentage() * 100;
+            saveData.playerHealth = PlayerManager.Instance.player.playerData.CurrentHealth;
+            saveData.playerMana = PlayerManager.Instance.player.playerData.CurrentMana;
             
             // Player skills
             // saveData.PlayerSkills = player.GetComponent<PlayerCombat>().GetSkills();
