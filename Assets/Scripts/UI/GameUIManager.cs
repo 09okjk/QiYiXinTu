@@ -106,7 +106,7 @@ public class GameUIManager : MonoBehaviour
             player.OnManaChanged += UpdateMana;
             
             // 初始化数值
-            UpdateHealth(5, false);
+            // UpdateHealth(player.playerData.CurrentHealth, false);
             UpdateMana(player.GetManaPercentage() * 100, 100);
             
             // 更新技能栏

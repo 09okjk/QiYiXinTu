@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Skeleton
   m_EditorClassIdentifier: 
   MaxHealth: 100
-  CurrentHealth: 100
+  CurrentHealth: 90
   MaxMana: 0
   CurrentMana: 0
   InvincibleTime: 0
@@ -33,6 +33,6 @@ MonoBehaviour:
   battleTime: 1
   attackDistance: 1.8
   attackCooldown: 2
-  attackDamage: 2
+  attackDamage: 1
   stunnedDuration: 1
   stunnedDirection: {x: 7, y: 5}
