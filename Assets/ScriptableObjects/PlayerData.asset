@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25ec65821a654b1483d819957a9f7ce3, type: 3}
+  m_Name: PlayerData
+  m_EditorClassIdentifier: 
+  MaxHealth: 100
+  CurrentHealth: 100
+  MaxMana: 5
+  CurrentMana: 5
+  InvincibleTime: 0.5
+  knockbackDirection: {x: 2, y: 0}
+  KnockbackDuration: 0.8
+  items: []
+  playerID: 
+  playerName: 
+  moveSpeed: 8
+  jumpForce: 12
+  wallJumpForce: 5
+  idleToMoveTransitionTime: 0.0001
