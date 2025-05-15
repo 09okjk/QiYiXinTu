@@ -28,6 +28,7 @@ public class Enemy : Entity
     public float attackDistance => enemyData.attackDistance;
     public float attackCoolDown => enemyData.attackCooldown;
     [HideInInspector] public float lastAttackTime;
+    [SerializeField] private List<ItemData> items = new List<ItemData>();
     
     public EnemyStateMachine stateMachine { get; private set; }
     
@@ -40,6 +41,25 @@ public class Enemy : Entity
         stateMachine = new EnemyStateMachine();
         hasExecuted = false;
     }
+    
+    protected override void Start()
+    {
+        base.Start();
+
+        foreach (string itemID in enemyData.itemIDs)
+        {
+            ItemData itemData = Resources.Load<ItemData>("ScriptableObjects/Items/" + itemID);
+            if (itemData != null)
+            {
+                items.Add(itemData);
+            }
+            else
+            {
+                Debug.LogError("Item not found: " + itemID);
+            }
+        }
+    }
+    
 
     protected override void Update()
     {
@@ -107,7 +127,7 @@ public class Enemy : Entity
             return;
         hasExecuted = true;
         // 检查是否有可掉落物品
-        if (enemyData.items == null || enemyData.items.Count == 0)
+        if (items == null || items.Count == 0)
             return;
             
         // 分类物品
@@ -115,7 +135,7 @@ public class Enemy : Entity
         List<ItemData> puzzleItems = new List<ItemData>();
         List<ItemData> consumables = new List<ItemData>();
         
-        foreach (var item in enemyData.items)
+        foreach (var item in items)
         {
             switch (item.itemType)
             {

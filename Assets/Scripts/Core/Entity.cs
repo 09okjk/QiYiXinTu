@@ -42,7 +42,7 @@ public class Entity:MonoBehaviour
     {
         Anim = GetComponentInChildren<Animator>();
         Rb = GetComponent<Rigidbody2D>();
-        EntityFX = GetComponent<EntityFX>();
+        //EntityFX = GetComponent<EntityFX>();
     }
     
     protected virtual void Update()

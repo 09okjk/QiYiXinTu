@@ -20,6 +20,6 @@ namespace Core
         public float KnockbackDuration;
         
         [Header("Inventory Info")]
-        [SerializeField] public List<ItemData> items = new List<ItemData>();
+        [SerializeField] public List<string> itemIDs = new List<string>();
     }
 }

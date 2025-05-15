@@ -2,13 +2,14 @@
 using Core;
 using UnityEngine;
 
-public enum NPCType
+public enum NpcEmotion
 {
-    Villager,
-    Merchant,
-    QuestGiver,
-    Enemy,
-    Companion
+    Neutral, // 中立
+    Happy, // 高兴
+    Sad, // 伤心
+    Angry, // 生气
+    Surprised, // 惊讶
+    Scared // 害怕
 }
 
 [CreateAssetMenu(fileName = "New NPC", menuName = "Characters/NPC Data")]
@@ -17,19 +18,11 @@ public class NPCData : EntityData
     [Header("基本信息")]
     public string npcID;
     public string npcName;
-    [TextArea] public string description;
-    public Sprite avatar;
-    public NPCType npcType;
+    public string spriteID;
+    public NpcEmotion npcEmotion = NpcEmotion.Neutral; // NPC情绪状态
     
-    [Header("对话信息")]
-    public string dialogueID; // 对话ID，用于动态加载对话数据
-    
-    [Header("任务信息")]
-    public List<string> availableQuestIDs = new List<string>(); // 该NPC可提供的任务ID列表
-    
-    [Header("仓库信息")]
-    public bool isMerchant;
-    public List<string> soldItemIDs = new List<string>(); // 仓库物品ID列表 inventory
+    [Header("对话ID列表")]
+    public List<string> dialogueIDs; // 对话ID，用于动态加载对话数据
     
     [Header("额外属性")]
     public NPCProperty[] properties; // 与ItemData类似的扩展属性

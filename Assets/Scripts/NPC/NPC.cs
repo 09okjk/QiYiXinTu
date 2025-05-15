@@ -12,6 +12,9 @@ public class NPC : Entity
     [SerializeField] private float interactionDistance = 2f; // 交互距离
     [SerializeField] private GameObject interactionIndicator;// 交互提示UI
     
+    [Header("对话数据")]
+    [SerializeField] private List<DialogueData> dialogueDataList; // 对话数据列表
+    
     private bool canInteract = false; // 是否可以交互
     private DialogueData cachedDialogue; // 缓存对话数据
     private bool isFollowing = false; // 是否跟随玩家
@@ -23,9 +26,11 @@ public class NPC : Entity
     NPCStateMachine stateMachine { get; set; }
 
     #endregion
-    
-    private void Awake()
+
+    protected override void Awake()
     {
+        base.Awake();
+        
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
         
@@ -33,42 +38,40 @@ public class NPC : Entity
             npcData = baseData as NPCData;
     }
     
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+        
         // 初始设置
-        if (interactionIndicator != null)
+        if (interactionIndicator)
             interactionIndicator.SetActive(false);
-            
-        if (npcData != null && npcData.avatar != null && spriteRenderer != null)
-            spriteRenderer.sprite = npcData.avatar;
         
-        // 根据NPC类型设置外观或行为
-        SetupNPCBasedOnType();
-        
-        // 预加载对话数据
-        if (!string.IsNullOrEmpty(npcData.dialogueID))
-            cachedDialogue = Resources.Load<DialogueData>($"Dialogues/{npcData.dialogueID}");
+        // 初始化Npc
+        SetupNpc();
         
         defaultSpeed = followSpeed;
     }
     
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+        
         // 检查玩家是否在交互距离内
         player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        if (player)
         {
             float distance = Vector2.Distance(transform.position, player.transform.position);
             bool wasInteractable = canInteract;
             canInteract = distance <= interactionDistance;
             
             // 更新交互提示
-            if (interactionIndicator != null && wasInteractable != canInteract)
+            if (interactionIndicator && wasInteractable != canInteract)
                 interactionIndicator.SetActive(canInteract);
             
             // 处理交互输入
             if (canInteract && Input.GetKeyDown(KeyCode.E))
             {
+                Debug.Log($"与{npcData.npcName}交互");
                 Interact();
             }
         }
@@ -85,117 +88,76 @@ public class NPC : Entity
 
     public void AnimationTrigger()=> stateMachine.CurrentState.AnimationFinishTrigger();
     
-    private void SetupNPCBasedOnType()
+    private void SetupNpc()
     {
-        // 根据NPC类型设置组件或行为
-        switch (npcData.npcType)
+        if (npcData)
         {
-            case NPCType.Merchant:
-                // 可能添加商店组件
-                break;
-            case NPCType.QuestGiver:
-                // 可能添加任务指示器
-                break;
-            // 添加其他类型的处理...
+            Sprite avatar = Resources.Load<Sprite>($"Art/NPCs/{npcData.spriteID}");
+            if (avatar == null)
+            {
+                Debug.LogWarning($"NPC {npcData.npcName} 的头像未找到，使用默认头像");
+                avatar = Resources.Load<Sprite>("Art/NPCs/default_avatar");
+            }
+            spriteRenderer.sprite = avatar;
+            
+            foreach (string dialogueID in npcData.dialogueIDs)
+            {
+                DialogueData dialogue = Resources.Load<DialogueData>($"Dialogues/{dialogueID}");
+                if (dialogue != null)
+                {
+                    dialogueDataList.Add(dialogue);
+                }
+                else
+                {
+                    Debug.LogWarning($"无法找到对话数据: {dialogueID}");
+                }
+            }
         }
     }
     
+    // 交互方法
     private void Interact()
     {
-        // 根据NPC类型执行不同的交互
-        switch (npcData.npcType)
-        {
-            case NPCType.Merchant:
-                OpenShop();
-                break;
-            case NPCType.QuestGiver:
-                CheckAndOfferQuests();
-                break;
-            default:
-                // 默认交互是对话
-                TriggerDialogue();
-                break;
-        }
+        // 对话交互
+        TriggerDialogue();
     }
     
-    private void TriggerDialogue()
+    private void TriggerDialogue(string dialogueID = null)
     {
-        if (cachedDialogue != null)
+        if (cachedDialogue)
         {
             DialogueManager.Instance.StartDialogue(cachedDialogue);
+            return;
         }
-        else if (!string.IsNullOrEmpty(npcData.dialogueID))
+        
+        if (dialogueDataList == null || dialogueDataList.Count == 0)
         {
-            // 尝试加载对话
-            DialogueData dialogue = Resources.Load<DialogueData>($"Dialogues/{npcData.dialogueID}");
-            if (dialogue != null)
+            Debug.LogWarning("对话数据列表为空");
+            return;
+        }
+        
+        if (dialogueID != null)
+        {
+            DialogueData dialogue = dialogueDataList.Find(d => d.dialogueID == dialogueID);
+            if (dialogue)
             {
                 cachedDialogue = dialogue;
-                DialogueManager.Instance.StartDialogue(dialogue);
+                DialogueManager.Instance.StartDialogue(cachedDialogue);
             }
             else
             {
-                Debug.LogWarning($"无法找到对话数据: {npcData.dialogueID}");
+                Debug.LogWarning($"对话数据 {dialogueID} 未找到");
             }
         }
-    }
-    
-    private void OpenShop()
-    {
-        // 实现打开商店界面的逻辑
-        Debug.Log($"打开{npcData.npcName}的商店");
-        // ShopManager.Instance.OpenShop(npcData);
-    }
-    
-    private void CheckAndOfferQuests()
-    {
-        // 检查是否有可用任务
-        bool hasQuests = false;
-        
-        foreach (string questID in npcData.availableQuestIDs)
+        else
         {
-            // 检查任务是否可以提供（既不是活跃的也不是已完成的）
-            if (CanOfferQuest(questID))
-            {
-                hasQuests = true;
-                break;
-            }
-        }
-        
-        // 首先进行对话，然后在对话结束时提供任务
-        TriggerDialogue();
-        
-        if (hasQuests)
-        {
-            // 在对话结束后提供任务，使用正确的事件名称
-            DialogueManager.Instance.OnDialogueEnd += OfferAvailableQuests;
+            // 随机选择一个对话数据
+            int randomIndex = Random.Range(0, dialogueDataList.Count);
+            cachedDialogue = dialogueDataList[randomIndex];
+            DialogueManager.Instance.StartDialogue(cachedDialogue);
         }
     }
     
-    // 新增辅助方法：检查任务是否可以提供
-    private bool CanOfferQuest(string questID)
-    {
-        // 任务可以提供的条件：既不是活跃的也不是已完成的
-        return !QuestManager.Instance.IsQuestActive(questID) && 
-               !QuestManager.Instance.IsQuestCompleted(questID);
-    }
-    
-    private void OfferAvailableQuests()
-    {
-        // 解除事件订阅，使用正确的事件名称
-        DialogueManager.Instance.OnDialogueEnd -= OfferAvailableQuests;
-        
-        // 提供可用任务
-        foreach (string questID in npcData.availableQuestIDs)
-        {
-            if (CanOfferQuest(questID))
-            {
-                QuestManager.Instance.StartQuest(questID);
-                break; // 一次只提供一个任务
-            }
-        }
-    }
-
     #region Follow Player
     
     public void FollowTargetPlayer(GameObject target)
