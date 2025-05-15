@@ -234,13 +234,13 @@ public class DialogueManager : MonoBehaviour
         // 跳过打字动画并显示完整文本
         StopCoroutine(typingCoroutine);
         isTyping = false;
+        currentDialogueText.text = currentDialogueNode.text;
         if (currentDialogueNode.choices.Count > 0)
         {
             // 如果有选择，显示选择按钮
             DisplayChoices();
             return;
         }
-        currentDialogueText.text = currentDialogueNode.text;
         currentNodeID = currentDialogueNode.nextNodeID;
         DisplayCurrentNode();
     }
