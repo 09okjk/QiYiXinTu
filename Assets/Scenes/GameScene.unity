@@ -4312,12 +4312,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialoguePanel: {fileID: 133648698}
-  speakerNameText: {fileID: 1781527648}
-  dialogueText: {fileID: 1231185346}
   choiceButtonPrefab: {fileID: 2044209210}
   choiceButtonContainer: {fileID: 985722109}
-  role1: {fileID: 0}
-  role2: {fileID: 0}
+  playerDialoguePanel: {fileID: 0}
+  playerNameText: {fileID: 0}
+  playerDialogueText: {fileID: 0}
+  nPCDialoguePanel: {fileID: 0}
+  nPCNameText: {fileID: 0}
+  nPCDialogueText: {fileID: 0}
+  systemDialoguePanel: {fileID: 0}
+  systemDialogueText: {fileID: 0}
   typewriterSpeed: 0.05
   dialogueAudioSource: {fileID: 0}
 --- !u!1 &985722108
@@ -5849,8 +5853,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc13ab114416b74baa821e85c7a84bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogue: {fileID: 11400000, guid: d4d1f8bf9a2c6264cba29eafe678c1b7, type: 2}
+  baseData: {fileID: 0}
+  attackCheck: {fileID: 0}
+  attackCheckRadius: 0.5
+  groundCheck: {fileID: 0}
+  groundCheckDistance: 0.3
+  wallCheck: {fileID: 0}
+  wallCheckDistance: 0.3
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  followDistance: 1.5
+  followSpeed: 2
   interactionDistance: 2
+  interactionIndicator: {fileID: 0}
 --- !u!212 &1288462658
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6279,17 +6295,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7186cd373bff4bb6bd824994300af90e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  jumpForce: 12
+  baseData: {fileID: 0}
+  attackCheck: {fileID: 0}
+  attackCheckRadius: 0.5
   groundCheck: {fileID: 406162350}
-  groundLayer:
+  groundCheckDistance: 0.3
+  wallCheck: {fileID: 0}
+  wallCheckDistance: 0.3
+  whatIsGround:
     serializedVersion: 2
-    m_Bits: 8
-  groundCheckRadius: 0.2
-  animator: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  moveAction: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+    m_Bits: 0
+  swordPoint: {fileID: 0}
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 0
+  attackMovements: []
   inventoryAction: {fileID: 3919005359502956819, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   menuAction: {fileID: -3574777650702515924, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!212 &1359717122
@@ -6376,16 +6396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c4f0c0babc42b0ab3d51ffe9f03f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
-  maxMana: 100
-  currentMana: 0
-  manaRegenRate: 5
-  healthSlider: {fileID: 0}
-  manaSlider: {fileID: 0}
-  invincibilityDuration: 1
-  flashInterval: 0.1
-  spriteRenderer: {fileID: 0}
 --- !u!114 &1359717125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8971,19 +8981,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2143782590}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 981096073}
-        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
-        m_MethodName: OnDialoguePanelClicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!224 &46633061833934562
 RectTransform:
   m_ObjectHideFlags: 0

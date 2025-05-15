@@ -11,14 +11,17 @@ public class DialogueManager : MonoBehaviour
     
     [Header("UI References")]
     [SerializeField] private GameObject dialoguePanel;
-    [SerializeField] private TextMeshProUGUI playerNameText; // 新增：Player姓名
-    [SerializeField] private TextMeshProUGUI playerDialogueText;
-    [SerializeField] private TextMeshProUGUI nPCNameText; // 新增：Player姓名
-    [SerializeField] private TextMeshProUGUI nPCDialogueText;
+    [SerializeField] private Button continueButton;
     [SerializeField] private GameObject choiceButtonPrefab;
     [SerializeField] private Transform choiceButtonContainer;
-    [SerializeField] private GameObject role1;
-    [SerializeField] private GameObject role2;
+    [SerializeField] private GameObject playerDialoguePanel; // 新增：Player对话面板
+    [SerializeField] private TextMeshProUGUI playerNameText; // 新增：Player姓名
+    [SerializeField] private TextMeshProUGUI playerDialogueText;
+    [SerializeField] private GameObject nPCDialoguePanel; // 新增：NPC对话面板
+    [SerializeField] private TextMeshProUGUI nPCNameText; // 新增：Player姓名
+    [SerializeField] private TextMeshProUGUI nPCDialogueText;
+    [SerializeField] private GameObject systemDialoguePanel; // 新增：系统对话面板
+    [SerializeField] private TextMeshProUGUI systemDialogueText; // 新增：系统对话文本
     [SerializeField] private float typewriterSpeed = 0.05f;
     
     [Header("Audio")]
@@ -26,8 +29,10 @@ public class DialogueManager : MonoBehaviour
     
     // 当前对话数据和节点索引
     private DialogueData currentDialogue;
+    // 当前对话节点
+    private DialogueNode currentDialogueNode;
     // 当前对话节点索引
-    private int currentNodeIndex;
+    private string currentNodeID;
     // 是否正在打字
     private bool isTyping = false;
     // 打字协程
@@ -59,8 +64,22 @@ public class DialogueManager : MonoBehaviour
             return;
         }
         
+        if (dialogue.state == DialogueState.Finished)
+        {
+            Debug.LogError("对话已结束，无法重新开始");
+            return;
+        }
+        
         currentDialogue = dialogue;
-        currentNodeIndex = 0;
+        if (currentDialogue.state == DialogueState.WithOutStart)
+        {
+            currentNodeID = currentDialogue.nodes[0].nodeID;
+            currentDialogue.state = DialogueState.Ongoing;
+        }
+        else
+        {
+            currentNodeID = currentDialogue.currentNodeID;
+        }
         onDialogueCompleteCallback = onComplete;
         dialoguePanel.SetActive(true);
         DisplayCurrentNode();
@@ -70,42 +89,51 @@ public class DialogueManager : MonoBehaviour
     private void DisplayCurrentNode()
     {
         // 检查节点索引是否有效
-        if (currentNodeIndex < 0 || currentNodeIndex >= currentDialogue.nodes.Count) 
+        if (currentNodeID == null )
         {
             EndDialogue();
             return;
         }
         
         // 获取当前节点
-        DialogueNode node = currentDialogue.nodes[currentNodeIndex];
+        currentDialogueNode = currentDialogue.nodes.Find(n => n.nodeID == currentNodeID);
+        // 记录当前节点ID，保存到对话数据中
+        currentDialogue.currentNodeID = currentNodeID;
+        
+        // 获取说话者类型
+        SpeakerType speakerType = currentDialogueNode.speaker.speakerType;
         
         // 设置角色显示
-        if (node.speakerPosition == "left")
+        ChangeSpeaker(speakerType);
+    }
+
+    private void ChangeSpeaker(SpeakerType speakerType)
+    {
+        playerDialoguePanel.SetActive(false);
+        nPCDialoguePanel.SetActive(false);
+        systemDialoguePanel.SetActive(false);
+        
+        switch (speakerType)
         {
-            playerNameText.text = string.IsNullOrEmpty(node.speakerName) ? node.speakerID : node.speakerName;
-            // playerDialogueText.text = node.text;
-            role1.SetActive(true);
-            playerNameText.gameObject.SetActive(true);
-            playerDialogueText.gameObject.SetActive(true);
-            role2.SetActive(false);
-            nPCNameText.gameObject.SetActive(false);
-            nPCDialogueText.gameObject.SetActive(false);
-            
-            currentDialogueText = playerDialogueText;
+            case SpeakerType.PlayerChoice:
+            case SpeakerType.Player:
+                playerNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
+                currentDialogueText = playerDialogueText;
+                playerDialoguePanel.SetActive(true);
+                break;
+            case SpeakerType.NPC:
+                nPCNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
+                currentDialogueText = nPCDialogueText;
+                nPCDialoguePanel.SetActive(true);
+                break;
+            case SpeakerType.System:
+                currentDialogueText = systemDialogueText;
+                systemDialoguePanel.SetActive(true);
+                break;
         }
-        else
-        {
-            nPCNameText.text = string.IsNullOrEmpty(node.speakerName) ? node.speakerID : node.speakerName;
-            // nPCDialogueText.text = node.text;
-            role1.SetActive(false);
-            playerNameText.gameObject.SetActive(false);
-            playerDialogueText.gameObject.SetActive(false);
-            role2.SetActive(true);
-            nPCNameText.gameObject.SetActive(true);
-            nPCDialogueText.gameObject.SetActive(true);
-            
-            currentDialogueText = nPCDialogueText;
-        }
+        
+        if (speakerType == SpeakerType.PlayerChoice)
+            return;
         
         // 清除任何现有的选择按钮
         foreach (Transform child in choiceButtonContainer)
@@ -118,20 +146,10 @@ public class DialogueManager : MonoBehaviour
         {
             StopCoroutine(typingCoroutine);
         }
-        
-        // 处理对话分支逻辑 - 根据 nextNodeIndex 检查是否应自动前进
-        if (node.choices.Count == 0 && node.nextNodeIndex >= 0)
-        {
-            // 开始打字
-            typingCoroutine = StartCoroutine(TypeText(currentDialogueText,node.text, () => {
-                // 文本打字完成后，等待玩家点击继续
-            }));
-        }
-        else
-        {
-            // 开始打字
-            typingCoroutine = StartCoroutine(TypeText(currentDialogueText,node.text, DisplayChoices));
-        }
+        typingCoroutine = StartCoroutine(TypeText(currentDialogueText,currentDialogueNode.text, () => {
+            // 文本打字完成后，等待玩家点击继续
+            continueButton.onClick.AddListener(OnDialoguePanelClicked);
+        }));
     }
     
     // 打字机效果，完成后调用回调
@@ -162,31 +180,10 @@ public class DialogueManager : MonoBehaviour
     // 显示选择按钮
     private void DisplayChoices()
     {
-        // 获取当前节点
-        DialogueNode currentNode = currentDialogue.nodes[currentNodeIndex];
-        
-        if (currentNode.choices.Count == 0)
-        {
-            // 如果没有选择，但有下一个节点，创建一个"继续"按钮
-            if (currentNode.nextNodeIndex >= 0)
-            {
-                GameObject buttonGO = Instantiate(choiceButtonPrefab, choiceButtonContainer);
-                Button button = buttonGO.GetComponent<Button>();
-                TextMeshProUGUI buttonText = buttonGO.GetComponentInChildren<TextMeshProUGUI>();
-                
-                buttonText.text = "继续";
-                button.onClick.AddListener(() => {
-                    currentNodeIndex = currentNode.nextNodeIndex;
-                    DisplayCurrentNode();
-                });
-            }
-            return;
-        }
-        
         // 创建选择按钮，每个按钮对应一个选择
-        for (int i = 0; i < currentNode.choices.Count; i++)
+        for (int i = 0; i < currentDialogueNode.choices.Count; i++)
         {
-            DialogueChoice choice = currentNode.choices[i];
+            DialogueChoice choice = currentDialogueNode.choices[i];
             GameObject buttonGO = Instantiate(choiceButtonPrefab, choiceButtonContainer);
             
             // 设置按钮文本和点击事件
@@ -203,16 +200,21 @@ public class DialogueManager : MonoBehaviour
     // 选择按钮点击事件，移动到下一个节点，并显示文本或选择
     private void OnChoiceSelected(int choiceIndex)
     {
-        DialogueNode currentNode = currentDialogue.nodes[currentNodeIndex];
+        // DialogueNode currentNode = currentDialogue.nodes.Find(n => n.nodeID == currentNodeID);
         
         // 检查是否有有效的选项索引
-        if (choiceIndex < 0 || choiceIndex >= currentNode.choices.Count)
+        if (choiceIndex < 0 || choiceIndex >= currentDialogueNode.choices.Count)
         {
             Debug.LogError($"选择索引无效: {choiceIndex}");
             return;
         }
         
-        int nextNodeIndex = currentNode.choices[choiceIndex].nextNodeIndex;
+        // 获取按钮文本，并显示打字效果在对话框上
+        DialogueChoice selectedChoice = currentDialogueNode.choices[choiceIndex];
+        ChangeSpeaker(SpeakerType.PlayerChoice);
+        typingCoroutine = StartCoroutine(TypeText(currentDialogueText,selectedChoice.text, () => { }));
+        
+        string nextNodeID = currentDialogueNode.choices[choiceIndex].nextNodeID;
         
         // 清除选择
         foreach (Transform child in choiceButtonContainer)
@@ -220,16 +222,8 @@ public class DialogueManager : MonoBehaviour
             Destroy(child.gameObject);
         }
         
-        // 检查nextNodeIndex是否有效
-        if (nextNodeIndex < 0 || nextNodeIndex >= currentDialogue.nodes.Count)
-        {
-            // 选择结束对话
-            EndDialogue();
-            return;
-        }
-        
         // 移动到下一个对话节点
-        currentNodeIndex = nextNodeIndex;
+        currentNodeID = nextNodeID;
         // 显示下一个节点
         DisplayCurrentNode();
     }
@@ -237,42 +231,18 @@ public class DialogueManager : MonoBehaviour
     // 点击对话面板事件
     public void OnDialoguePanelClicked()
     {
-        if (isTyping)
+        // 跳过打字动画并显示完整文本
+        StopCoroutine(typingCoroutine);
+        isTyping = false;
+        if (currentDialogueNode.choices.Count > 0)
         {
-            // 跳过打字动画并显示完整文本
-            StopCoroutine(typingCoroutine);
-            currentDialogueText.text = currentDialogue.nodes[currentNodeIndex].text;
-            isTyping = false;
+            // 如果有选择，显示选择按钮
             DisplayChoices();
+            return;
         }
-        else if (currentDialogue.nodes[currentNodeIndex].choices.Count == 0)
-        {
-            // 获取当前节点
-            DialogueNode currentNode = currentDialogue.nodes[currentNodeIndex];
-            
-            if (currentNode.nextNodeIndex >= 0)
-            {
-                // 如果有下一个节点，前进到该节点
-                currentNodeIndex = currentNode.nextNodeIndex;
-                DisplayCurrentNode();
-            }
-            else
-            {
-                // 如果没有下一个节点，结束对话
-                EndDialogue();
-            }
-        }
-        // 另外，什么都不做（等待玩家选择）
-    }
-    
-    // 获取当前说话者ID
-    public string GetCurrentSpeakerID()
-    {
-        if (currentDialogue != null && currentNodeIndex >= 0 && currentNodeIndex < currentDialogue.nodes.Count)
-        {
-            return currentDialogue.nodes[currentNodeIndex].speakerID;
-        }
-        return string.Empty;
+        currentDialogueText.text = currentDialogueNode.text;
+        currentNodeID = currentDialogueNode.nextNodeID;
+        DisplayCurrentNode();
     }
     
     // 结束对话

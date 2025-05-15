@@ -25,9 +25,8 @@ MonoBehaviour:
   description: "\u8FD9\u662F\u6211\u4EEC\u516C\u53F8\u7684\u9886\u5BFC"
   avatar: {fileID: 0}
   npcType: 0
-  dialogueID: firstDialogue
-  availableQuestIDs:
-  - quest_001
+  dialogueID: quest_001
+  availableQuestIDs: []
   isMerchant: 0
   soldItemIDs: []
   properties: []

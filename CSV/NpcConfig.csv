@@ -1,0 +1,2 @@
+﻿NpcID,NpcName,Description,AvatarFileName(头像文件名，不含扩展名),NpcType(数字或枚举名称：Villager/Merchant/QuestGiver/Enemy/Companion),DialogueID,QuestIDs(用英文分号分隔),IsMerchant(true/false),SoldItemIDs(用英文分号分隔)
+leader,领导,这是我们公司的领导,,Villager,firstDialogue,quest_001,0,

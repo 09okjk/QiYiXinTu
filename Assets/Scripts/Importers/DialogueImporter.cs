@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text;
 using UnityEditor;
-using System.Linq;
 
 #if UNITY_EDITOR
 public class DialogueImporter : EditorWindow
@@ -45,23 +43,19 @@ public class DialogueImporter : EditorWindow
 
             ImportDialogue(csvFilePath);
         }
-        // 添加使用说明
+        
         EditorGUILayout.Space(10);
         EditorGUILayout.HelpBox("CSV格式要求：\n" +
-                                "列1: dialogueTitle (对话标题)\n" +
-                                "列2: nodeID (节点ID，必须是整数)\n" +
+                                "列1: dialogueID (对话ID)\n" +
+                                "列2: nodeID (节点ID)\n" +
                                 "列3: speakerID (说话者ID)\n" +
                                 "列4: speakerName (说话者名称)\n" +
-                                "列5: text (对话文本)\n" +
-                                "列6: nextNodeIndex (下一节点ID，-1表示结束)\n" +
-                                "列7: speakerPosition (说话者位置，'left'或'right')\n" +
+                                "列5: speakerType (说话者类型：Player/NPC/System)\n" +
+                                "列6: text (对话文本)\n" +
+                                "列7: nextNodeID (下一节点ID，空表示结束)\n" +
                                 "其后的列: 每两列为一组，分别是选项文本和目标节点ID", MessageType.Info);
     }
 
-    /// <summary>
-    /// 导入对话数据
-    /// </summary>
-    /// <param name="filePath">文件路径</param>
     private void ImportDialogue(string filePath)
     {
         try
@@ -73,19 +67,20 @@ public class DialogueImporter : EditorWindow
                 return;
             }
 
-            // 解析标题行，了解列的含义
+            // 解析标题行
             string[] headers = lines[0].Split(',');
             
             // 检查标题行是否符合预期格式
-            if (headers.Length < 7) // 至少需要 dialogueTitle, nodeID, speakerID,speaker,text,nextNodeIndex,speakerPosition
+            if (headers.Length < 7) // 至少需要 7 个基本列
             {
-                EditorUtility.DisplayDialog("错误", "CSV格式不正确。至少需要包含以下列：dialogueTitle, nodeID, speakerID, text", "确定");
+                EditorUtility.DisplayDialog("错误", "CSV格式不正确。至少需要包含：dialogueID, nodeID, speakerID, speakerName, speakerType, text, nextNodeID", "确定");
                 return;
             }
+            
             // 确保保存目录存在
             EnsureDirectoryExists(SAVE_PATH);
             
-            // 按对话标题分组数据
+            // 按对话ID分组数据
             Dictionary<string, List<string[]>> dialogueGroups = new Dictionary<string, List<string[]>>();
 
             // 从第二行开始处理数据
@@ -101,19 +96,19 @@ public class DialogueImporter : EditorWindow
                     continue;
                 }
 
-                string dialogueTitle = values[0].Trim();
-                if (string.IsNullOrEmpty(dialogueTitle))
+                string dialogueID = values[0].Trim();
+                if (string.IsNullOrEmpty(dialogueID))
                 {
-                    Debug.LogWarning($"第 {i+1} 行: 缺少对话标题，已跳过");
+                    Debug.LogWarning($"第 {i+1} 行: 缺少对话ID，已跳过");
                     continue;
                 }
 
-                if (!dialogueGroups.ContainsKey(dialogueTitle))
+                if (!dialogueGroups.ContainsKey(dialogueID))
                 {
-                    dialogueGroups[dialogueTitle] = new List<string[]>();
+                    dialogueGroups[dialogueID] = new List<string[]>();
                 }
                 
-                dialogueGroups[dialogueTitle].Add(values);
+                dialogueGroups[dialogueID].Add(values);
             }
 
             int successCount = 0;
@@ -133,71 +128,57 @@ public class DialogueImporter : EditorWindow
                 
                 currentGroup++;
                 
-                string dialogueTitle = group.Key;
+                string dialogueID = group.Key;
                 List<string[]> dialogueLines = group.Value;
                 
                 // 创建对话数据资源
                 DialogueData dialogueData = ScriptableObject.CreateInstance<DialogueData>();
-                dialogueData.dialogueID = dialogueTitle;
+                dialogueData.dialogueID = dialogueID;
+                dialogueData.state = DialogueState.WithOutStart;
                 dialogueData.nodes = new List<DialogueNode>();
-
-                Dictionary<int, int> nodeIDToIndex = new Dictionary<int, int>();
-                int nodeIndex = 0;
 
                 // 处理每一行数据
                 foreach (var values in dialogueLines)
                 {
-                    // 尝试解析节点ID (values[1]是nodeID，因为values[0]是dialogueTitle)
-                    if (!int.TryParse(values[1], out int nodeID))
+                    string nodeID = values[1].Trim();
+                    if (string.IsNullOrEmpty(nodeID))
                     {
-                        Debug.LogError($"对话 '{dialogueTitle}': 无法将 '{values[1]}' 解析为节点ID。必须是整数。");
+                        Debug.LogError($"对话 '{dialogueID}': 节点ID不能为空。");
                         continue;
                     }
+
+                    // 创建对话角色
+                    DialogueSpeaker speaker = new DialogueSpeaker()
+                    {
+                        speakerID = values[2], // 第三列是speakerID
+                        speakerName = values[3], // 第四列是speakerName
+                        speakerType = ParseSpeakerType(values[4]) // 第五列是speakerType
+                    };
 
                     // 创建新节点
                     DialogueNode node = new DialogueNode
                     {
-                        speakerID = values[2], // 第三列是speakerID
-                        speakerName = values[3], // 第四列是speakerName
-                        text = values[4], // 第五列是文本内容
-                        speakerPosition = values[6], // 第七列是speakerPosition
+                        nodeID = nodeID,
+                        speaker = speaker,
+                        text = values[5], // 第六列是文本内容
+                        nextNodeID = values[6].Trim(), // 第七列是nextNodeID
                         choices = new List<DialogueChoice>()
                     };
-                    
-                    // 解析nextNodeIndex
-                    if (int.TryParse(values[5], out int nextNodeIndex))
-                    {
-                        node.nextNodeIndex = nextNodeIndex; // 暂时存储原始nodeID，稍后更新
-                    }
-                    else
-                    {
-                        node.nextNodeIndex = -1; // 默认为-1表示没有下一个节点
-                        Debug.LogWarning($"对话 '{dialogueTitle}', 节点 {nodeID}: 无法解析nextNodeIndex '{values[5]}'，已设为-1");
-                    }
-                    
-                    // 记录节点ID到数组索引的映射
-                    nodeIDToIndex[nodeID] = nodeIndex;
-                    nodeIndex++;
                     
                     // 处理选择项
                     for (int c = 7; c < values.Length; c += 2)
                     {
                         if (c + 1 >= values.Length) break;
 
-                        string choiceText = values[c].Trim();// 选项文本
+                        string choiceText = values[c].Trim();
+                        string nextNodeID = values[c + 1].Trim();
+                        
                         if (!string.IsNullOrEmpty(choiceText))
                         {
-                            int nextNodeID;
-                            if (!int.TryParse(values[c + 1], out nextNodeID))
-                            {
-                                Debug.LogWarning($"对话 '{dialogueTitle}': 选项 '{choiceText}' 的目标节点ID '{values[c + 1]}' 无效，已跳过");
-                                continue;
-                            }
-
                             node.choices.Add(new DialogueChoice
                             {
                                 text = choiceText,
-                                nextNodeIndex = nextNodeID // 暂时存储原始nodeID，稍后更新
+                                nextNodeID = nextNodeID
                             });
                         }
                     }
@@ -205,21 +186,14 @@ public class DialogueImporter : EditorWindow
                     dialogueData.nodes.Add(node);
                 }
                 
-                // 更新选项中的nextNodeIndex为数组索引
-                for (int i = 0; i < dialogueData.nodes.Count; i++)
+                // 如果有节点，设置当前节点为第一个节点
+                if (dialogueData.nodes.Count > 0)
                 {
-                    for (int j = 0; j < dialogueData.nodes[i].choices.Count; j++)
-                    {
-                        int targetNodeID = dialogueData.nodes[i].choices[j].nextNodeIndex;
-                        if (targetNodeID >= 0 && nodeIDToIndex.ContainsKey(targetNodeID))
-                        {
-                            dialogueData.nodes[i].choices[j].nextNodeIndex = nodeIDToIndex[targetNodeID];
-                        }
-                    }
+                    dialogueData.currentNodeID = dialogueData.nodes[0].nodeID;
                 }
 
-                // 使用对话标题作为文件名，移除非法字符
-                string safeTitleName = string.Join("", dialogueTitle.Split(Path.GetInvalidFileNameChars()));
+                // 使用对话ID作为文件名，移除非法字符
+                string safeTitleName = string.Join("", dialogueID.Split(Path.GetInvalidFileNameChars()));
                 string savePath = Path.Combine(SAVE_PATH, safeTitleName + ".asset");
                 
                 AssetDatabase.CreateAsset(dialogueData, savePath);
@@ -244,6 +218,20 @@ public class DialogueImporter : EditorWindow
         }
     }
 
+    // 解析说话者类型
+    private SpeakerType ParseSpeakerType(string typeString)
+    {
+        typeString = typeString.Trim();
+        
+        if (Enum.TryParse(typeString, true, out SpeakerType speakerType))
+        {
+            return speakerType;
+        }
+        
+        Debug.LogWarning($"无法解析说话者类型: {typeString}，使用默认值NPC");
+        return SpeakerType.NPC;
+    }
+
     // 确保目录存在
     private void EnsureDirectoryExists(string path)
     {
@@ -262,7 +250,7 @@ public class DialogueImporter : EditorWindow
         }
     }
     
-    // 更强大的CSV行解析，处理引号中的逗号
+    // CSV行解析，处理引号中的逗号
     private string[] ParseCSVLine(string line)
     {
         List<string> result = new List<string>();

@@ -1,5 +1,11 @@
-﻿DialogueTitle,NodeID,SpeakerID,Speaker,Text,NextNodeID,SpeakerPosition,ChoiceText1,ChoiceNextNodeID1,ChoiceText2,ChoiceNextNodeID2,ChoiceText3,ChoiceNextNodeID3,ChoiceText4,ChoiceNextNodeID4
-firstDialogue,0,1,前台,欢迎来到我们公司,1,right,,,,,,,,
-firstDialogue,1,1,前台,下面让我来为你进行介绍,-1,right,,,,,,,,
-secondDialogue,0,2,老板,你好,1,right,,,,,,,,
-secondDialogue,1,2,老板,好好工作,-1,right,,,,,,,,
+﻿dialogueID,nodeID,speakerID,speakerName,speakerType,text,nextNodeID,choice1,target1,choice2,target2
+quest_001,start,npc_001,村长,NPC,你好旅行者！欢迎来到我们的村庄。,node_002,,,,
+quest_001,node_002,npc_001,村长,NPC,最近我们村遇到了一些麻烦，怪物在夜间袭击我们。,,你需要什么帮助？,node_003,我对此不感兴趣。,
+quest_001,node_003,npc_001,村长,NPC,我需要你去消灭在村子东边森林中的怪物首领。,node_004,,,,
+quest_001,node_004,npc_001,村长,NPC,你愿意帮助我们吗？,,我愿意帮忙。,node_accept,抱歉，我还有其他事情。,node_decline
+quest_001,node_accept,npc_001,村长,NPC,太感谢了！完成任务后回来找我领取奖励。,,,,,
+quest_001,node_decline,npc_001,村长,NPC,我理解。如果你改变主意，随时来找我。,,,,,
+quest_002,start,player_001,玩家,Player,你好，我来报告任务完成情况。,node_002,,,,
+quest_002,node_002,npc_001,村长,NPC,你成功了？太棒了！这是你应得的奖励。,,谢谢你。,node_003,这报酬太少了！,node_004
+quest_002,node_003,npc_001,村长,NPC,不客气，这是村子的一点心意。,,,,,
+quest_002,node_004,npc_001,村长,NPC,抱歉，这是我们能给的全部了。村子并不富裕。,,,,,
