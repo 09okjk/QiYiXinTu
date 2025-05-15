@@ -16,7 +16,7 @@ public class NPC : Entity
     private DialogueData cachedDialogue; // 缓存对话数据
     private bool isFollowing = false; // 是否跟随玩家
     private GameObject player; // 玩家引用
-    private SpriteRenderer spriteRenderer;    
+    private SpriteRenderer spriteRenderer;
     private float defaultSpeed; // 当前速度
     #region State
 

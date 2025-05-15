@@ -9,7 +9,7 @@ using UnityEditor;
 public class DialogueImporter : EditorWindow
 {
     private string csvFilePath = "";
-    private const string SAVE_PATH = "Assets/ScriptableObjects/Dialogues";
+    private const string SAVE_PATH = "Assets/Resources/ScriptableObjects/Dialogues";
 
     [MenuItem("Tools/Dialogue System/Import Dialogue CSV")]
     public static void ShowWindow()

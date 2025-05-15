@@ -269,4 +269,27 @@ public class DialogueManager : MonoBehaviour
     
     // 对话结束事件
     public event Action OnDialogueEnd;
+    
+    
+    
+    // 获取对话数据
+    public DialogueData GetDialogueData(string dialogueID)
+    {
+        if (string.IsNullOrEmpty(dialogueID))
+        {
+            Debug.LogWarning("传入的dialogueID为空");
+            return null;
+        }
+        
+        // 从指定路径加载对话数据
+        DialogueData dialogue = Resources.Load<DialogueData>($"ScriptableObjects/Dialogues/{dialogueID}");
+        
+        if (dialogue == null)
+        {
+            Debug.LogWarning($"无法找到对话数据: {dialogueID}");
+            return null;
+        }
+        
+        return dialogue;
+    }
 }
