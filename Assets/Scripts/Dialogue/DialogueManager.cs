@@ -89,7 +89,7 @@ public class DialogueManager : MonoBehaviour
     private void DisplayCurrentNode()
     {
         // 检查节点索引是否有效
-        if (currentNodeID == null )
+        if (string.IsNullOrEmpty(currentNodeID) )
         {
             EndDialogue();
             return;

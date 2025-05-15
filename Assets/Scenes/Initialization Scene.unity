@@ -1688,7 +1688,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &656315310
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2539,6 +2539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialoguePanel: {fileID: 656315309}
+  continueButton: {fileID: 2140318159}
   choiceButtonPrefab: {fileID: 6641843056130978658, guid: 60a976475df35df45a7039a740ab44a8, type: 3}
   choiceButtonContainer: {fileID: 1792393490}
   playerDialoguePanel: {fileID: 1083379506}
@@ -4081,10 +4082,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 09okjk
+  m_text: "\u5218\u660A\u745C"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 468d2739ed1037343a8a103a72ba277f, type: 2}
+  m_sharedMaterial: {fileID: 7474709694416765274, guid: 468d2739ed1037343a8a103a72ba277f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4114,7 +4115,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

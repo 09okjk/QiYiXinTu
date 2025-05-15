@@ -7,6 +7,7 @@ public class NPC : Entity
     private NPCData npcData;
     [SerializeField] private float followDistance = 1.5f; // 跟随距离
     [SerializeField] private float followSpeed = 2f; // 跟随速度
+    public SpriteRenderer spriteRenderer;
     
     [Header("交互设置")]
     [SerializeField] private float interactionDistance = 2f; // 交互距离
@@ -19,7 +20,6 @@ public class NPC : Entity
     private DialogueData cachedDialogue; // 缓存对话数据
     private bool isFollowing = false; // 是否跟随玩家
     private GameObject player; // 玩家引用
-    private SpriteRenderer spriteRenderer;
     private float defaultSpeed; // 当前速度
     #region State
 
@@ -30,9 +30,6 @@ public class NPC : Entity
     protected override void Awake()
     {
         base.Awake();
-        
-        if (spriteRenderer == null)
-            spriteRenderer = GetComponent<SpriteRenderer>();
         
         if (npcData == null)
             npcData = baseData as NPCData;
@@ -102,7 +99,7 @@ public class NPC : Entity
             
             foreach (string dialogueID in npcData.dialogueIDs)
             {
-                DialogueData dialogue = Resources.Load<DialogueData>($"Dialogues/{dialogueID}");
+                DialogueData dialogue = Resources.Load<DialogueData>($"ScriptableObjects/Dialogues/{dialogueID}");
                 if (dialogue != null)
                 {
                     dialogueDataList.Add(dialogue);
