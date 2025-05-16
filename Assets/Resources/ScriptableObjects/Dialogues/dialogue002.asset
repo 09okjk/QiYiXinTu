@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: dialogue002
+  m_EditorClassIdentifier: 
+  dialogueID: dialogue002
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u6B22\u8FCE\u5149\u4E34\uFF01\u9700\u8981\u4E9B\u4EC0\u4E48\u5417\uFF1F"
+    speaker:
+      speakerID: npc002
+      speakerName: "\u5546\u4EBA"
+      speakerType: 1
+      emotion: 1
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
+  - nodeID: node002
+    text: "\u6211\u60F3\u770B\u770B\u4F60\u6709\u4EC0\u4E48\u8D27\u7269\u3002"
+    speaker:
+      speakerID: player001
+      speakerName: "\u73A9\u5BB6"
+      speakerType: 0
+      emotion: 0
+    nextNodeID: 
+    choices:
+    - text: node003
+      nextNodeID: "\u770B\u62A4\u7532"
+    - text: node004
+      nextNodeID: "\u4E0D\u4E70\u4E86"
+    - text: node005
+      nextNodeID: 
+    questID: 
+    rewardIDs:
+    - "\u770B\u6B66\u5668"
+  - nodeID: node003
+    text: "\u8FD9\u662F\u6211\u4EEC\u6700\u597D\u7684\u5251\uFF0C\u53EA\u8981100\u91D1\u5E01\uFF01"
+    speaker:
+      speakerID: npc002
+      speakerName: "\u5546\u4EBA"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node006
+    choices: []
+    questID: 
+    rewardIDs: []
+  - nodeID: node004
+    text: "\u8FD9\u4EF6\u62A4\u7532\u53EF\u4EE5\u62B5\u6321\u6700\u5F3A\u7684\u653B\u51FB\uFF0C\u552E\u4EF7150\u91D1\u5E01\u3002"
+    speaker:
+      speakerID: npc002
+      speakerName: "\u5546\u4EBA"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node006
+    choices: []
+    questID: 
+    rewardIDs: []
+  - nodeID: node005
+    text: "\u90A3\u597D\u5427\uFF0C\u4E0B\u6B21\u518D\u6765\uFF01"
+    speaker:
+      speakerID: npc002
+      speakerName: "\u5546\u4EBA"
+      speakerType: 1
+      emotion: 2
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+  - nodeID: node006
+    text: "\u8FD8\u9700\u8981\u4E9B\u4EC0\u4E48\u5417\uFF1F"
+    speaker:
+      speakerID: npc002
+      speakerName: "\u5546\u4EBA"
+      speakerType: 1
+      emotion: 1
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
