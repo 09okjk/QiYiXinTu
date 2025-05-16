@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dialogue;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue/Dialogue Data")]
@@ -19,6 +20,8 @@ public class DialogueNode
     public DialogueSpeaker speaker;
     public string nextNodeID; // 新增：下一个对话节点的索引
     public List<DialogueChoice> choices = new List<DialogueChoice>();
+    public string questID ; // 新增：任务ID
+    public List<string> rewardIDs = new List<string>(); // 新增：奖励ID列表
 }
 
 [Serializable]
@@ -33,7 +36,8 @@ public class DialogueSpeaker
 {
     public string speakerID;
     public string speakerName ; // 新增：说话者名称
-    public SpeakerType speakerType = SpeakerType.NPC;
+    public SpeakerType speakerType = SpeakerType.Npc;
+    public Emotion emotion = Emotion.Neutral; // 新增：说话者情绪
 }
 
 [Serializable]
@@ -48,7 +52,7 @@ public enum DialogueState
 public enum SpeakerType
 {
     Player, // 0 玩家
-    NPC, // 1 非玩家角色
+    Npc, // 1 非玩家角色
     System, // 2 系统
     PlayerChoice // 3 玩家选择
 }

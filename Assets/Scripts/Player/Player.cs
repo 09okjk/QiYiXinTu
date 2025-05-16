@@ -109,10 +109,15 @@ public class Player : Entity
     protected override void Update()
     {
         base.Update();
+        
+        if (DialogueManager.Instance.IsDialogueActive())
+            return;
+        
         stateMachine.CurrentState.Update();
         
         CheckForDashInput();
         StartCoroutine(nameof(BusyFor), 0.1f);
+        
     }
 
     /// <summary>

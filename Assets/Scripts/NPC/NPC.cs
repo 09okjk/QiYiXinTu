@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 public class NPC : Entity
 {
-    [Header("NPC Data")]
-    private NPCData npcData;
+    [Header("NPC Data")] internal NPCData npcData;
     [SerializeField] private float followDistance = 1.5f; // 跟随距离
     [SerializeField] private float followSpeed = 2f; // 跟随速度
     public SpriteRenderer spriteRenderer;

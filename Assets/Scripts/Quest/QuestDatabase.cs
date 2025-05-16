@@ -32,7 +32,7 @@ public class QuestDatabase : MonoBehaviour
     private void AutoLoadQuests()
     {
         quests.Clear();
-        string[] guids = AssetDatabase.FindAssets("t:QuestData", new[] {"Assets/ScriptableObjects/Quests"});
+        string[] guids = AssetDatabase.FindAssets("t:QuestData", new[] {"Assets/Resources/ScriptableObjects/Quests"});
         foreach (string guid in guids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);

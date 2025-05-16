@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -15,10 +16,12 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject choiceButtonPrefab;
     [SerializeField] private Transform choiceButtonContainer;
     [SerializeField] private GameObject playerDialoguePanel; // 新增：Player对话面板
+    [SerializeField] private Image playerImage; // 新增：Player头像
     [SerializeField] private TextMeshProUGUI playerNameText; // 新增：Player姓名
     [SerializeField] private TextMeshProUGUI playerDialogueText;
     [SerializeField] private GameObject nPCDialoguePanel; // 新增：NPC对话面板
-    [SerializeField] private TextMeshProUGUI nPCNameText; // 新增：Player姓名
+    [SerializeField] private Image nPCImage; // 新增：NPC头像
+    [SerializeField] private TextMeshProUGUI nPCNameText; // 新增：NPC姓名
     [SerializeField] private TextMeshProUGUI nPCDialogueText;
     [SerializeField] private GameObject systemDialoguePanel; // 新增：系统对话面板
     [SerializeField] private TextMeshProUGUI systemDialogueText; // 新增：系统对话文本
@@ -80,9 +83,9 @@ public class DialogueManager : MonoBehaviour
         {
             currentNodeID = currentDialogue.currentNodeID;
         }
-        onDialogueCompleteCallback = onComplete;
         dialoguePanel.SetActive(true);
         DisplayCurrentNode();
+        onDialogueCompleteCallback = onComplete;
     }
     
     // 显示当前对话节点
@@ -119,11 +122,13 @@ public class DialogueManager : MonoBehaviour
             case SpeakerType.Player:
                 playerNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
                 currentDialogueText = playerDialogueText;
+                playerImage.sprite = Resources.Load<Sprite>($"Art/Player/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
                 playerDialoguePanel.SetActive(true);
                 break;
-            case SpeakerType.NPC:
+            case SpeakerType.Npc:
                 nPCNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
                 currentDialogueText = nPCDialogueText;
+                nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
                 nPCDialoguePanel.SetActive(true);
                 break;
             case SpeakerType.System:
@@ -131,6 +136,7 @@ public class DialogueManager : MonoBehaviour
                 systemDialoguePanel.SetActive(true);
                 break;
         }
+        
         
         if (speakerType == SpeakerType.PlayerChoice)
             return;
@@ -148,6 +154,27 @@ public class DialogueManager : MonoBehaviour
         }
         typingCoroutine = StartCoroutine(TypeText(currentDialogueText,currentDialogueNode.text, () => {
             // 文本打字完成后，等待玩家点击继续
+            
+            //TODO: 提供奖励
+            if (currentDialogueNode.rewardIDs.Count > 0)
+            {
+                foreach (string rewardID in currentDialogueNode.rewardIDs)
+                {
+                    ItemData itemData = ItemManager.Instance.GetItem(rewardID);
+                    if (itemData != null)
+                    {
+                        InventoryManager.Instance.AddItem(itemData);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"无法找到奖励物品: {rewardID}");
+                    }
+                }
+            }
+            //TODO: 提供任务
+            
+            
+            
             continueButton.onClick.AddListener(OnDialoguePanelClicked);
         }));
     }
@@ -180,6 +207,11 @@ public class DialogueManager : MonoBehaviour
     // 显示选择按钮
     private void DisplayChoices()
     {
+        // 清除任何现有的选择按钮
+        foreach (Transform child in choiceButtonContainer)
+        {
+            Destroy(child.gameObject);
+        }
         // 创建选择按钮，每个按钮对应一个选择
         for (int i = 0; i < currentDialogueNode.choices.Count; i++)
         {
@@ -212,16 +244,17 @@ public class DialogueManager : MonoBehaviour
         // 获取按钮文本，并显示打字效果在对话框上
         DialogueChoice selectedChoice = currentDialogueNode.choices[choiceIndex];
         ChangeSpeaker(SpeakerType.PlayerChoice);
-        typingCoroutine = StartCoroutine(TypeText(currentDialogueText,selectedChoice.text, () => { }));
-        
+        typingCoroutine = StartCoroutine(TypeText(currentDialogueText,selectedChoice.text, () =>
+        {
+        }));
         string nextNodeID = currentDialogueNode.choices[choiceIndex].nextNodeID;
-        
+    
         // 清除选择
         foreach (Transform child in choiceButtonContainer)
         {
             Destroy(child.gameObject);
         }
-        
+    
         // 移动到下一个对话节点
         currentNodeID = nextNodeID;
         // 显示下一个节点

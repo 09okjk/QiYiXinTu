@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text;
+using Dialogue;
 using UnityEditor;
 
 #if UNITY_EDITOR
@@ -50,9 +51,12 @@ public class DialogueImporter : EditorWindow
                                 "列2: nodeID (节点ID)\n" +
                                 "列3: speakerID (说话者ID)\n" +
                                 "列4: speakerName (说话者名称)\n" +
-                                "列5: speakerType (说话者类型：Player/NPC/System)\n" +
-                                "列6: text (对话文本)\n" +
-                                "列7: nextNodeID (下一节点ID，空表示结束)\n" +
+                                "列5: speakerType (说话者类型：Player/Npc/System)\n" +
+                                "列6: emotion (说话者情绪：Neutral/Happy/Sad等)\n" +
+                                "列7: text (对话文本)\n" +
+                                "列8: nextNodeID (下一节点ID，空表示结束)\n" +
+                                "列9: questID (任务ID，可空)\n" +
+                                "列10: rewardIDs (奖励ID列表，用分号分隔)\n" +
                                 "其后的列: 每两列为一组，分别是选项文本和目标节点ID", MessageType.Info);
     }
 
@@ -71,9 +75,9 @@ public class DialogueImporter : EditorWindow
             string[] headers = lines[0].Split(',');
             
             // 检查标题行是否符合预期格式
-            if (headers.Length < 7) // 至少需要 7 个基本列
+            if (headers.Length < 10) // 至少需要 10 个基本列
             {
-                EditorUtility.DisplayDialog("错误", "CSV格式不正确。至少需要包含：dialogueID, nodeID, speakerID, speakerName, speakerType, text, nextNodeID", "确定");
+                EditorUtility.DisplayDialog("错误", "CSV格式不正确。至少需要包含：dialogueID, nodeID, speakerID, speakerName, speakerType, emotion, text, nextNodeID, questID, rewardIDs", "确定");
                 return;
             }
             
@@ -90,9 +94,9 @@ public class DialogueImporter : EditorWindow
 
                 string[] values = ParseCSVLine(lines[i]);
                 
-                if (values.Length < 7)
+                if (values.Length < 10)
                 {
-                    Debug.LogWarning($"第 {i+1} 行: 数据不完整，至少需要7列，已跳过");
+                    Debug.LogWarning($"第 {i+1} 行: 数据不完整，至少需要10列，已跳过");
                     continue;
                 }
 
@@ -152,7 +156,8 @@ public class DialogueImporter : EditorWindow
                     {
                         speakerID = values[2], // 第三列是speakerID
                         speakerName = values[3], // 第四列是speakerName
-                        speakerType = ParseSpeakerType(values[4]) // 第五列是speakerType
+                        speakerType = ParseSpeakerType(values[4]), // 第五列是speakerType
+                        emotion = ParseEmotion(values[5]) // 第六列是emotion
                     };
 
                     // 创建新节点
@@ -160,13 +165,15 @@ public class DialogueImporter : EditorWindow
                     {
                         nodeID = nodeID,
                         speaker = speaker,
-                        text = values[5], // 第六列是文本内容
-                        nextNodeID = values[6].Trim(), // 第七列是nextNodeID
+                        text = values[6], // 第七列是文本内容
+                        nextNodeID = values[7].Trim(), // 第八列是nextNodeID
+                        questID = values[8].Trim(), // 第九列是questID
+                        rewardIDs = ParseRewardIDs(values[9]), // 第十列是rewardIDs
                         choices = new List<DialogueChoice>()
                     };
                     
                     // 处理选择项
-                    for (int c = 7; c < values.Length; c += 2)
+                    for (int c = 10; c < values.Length; c += 2)
                     {
                         if (c + 1 >= values.Length) break;
 
@@ -228,8 +235,41 @@ public class DialogueImporter : EditorWindow
             return speakerType;
         }
         
-        Debug.LogWarning($"无法解析说话者类型: {typeString}，使用默认值NPC");
-        return SpeakerType.NPC;
+        Debug.LogWarning($"无法解析说话者类型: {typeString}，使用默认值Npc");
+        return SpeakerType.Npc;
+    }
+
+    // 解析情绪类型
+    private Emotion ParseEmotion(string emotionString)
+    {
+        emotionString = emotionString.Trim();
+        
+        if (Enum.TryParse(emotionString, true, out Emotion emotion))
+        {
+            return emotion;
+        }
+        
+        Debug.LogWarning($"无法解析情绪类型: {emotionString}，使用默认值Neutral");
+        return Emotion.Neutral;
+    }
+
+    // 解析奖励ID列表
+    private List<string> ParseRewardIDs(string rewardIDsString)
+    {
+        List<string> rewardIDs = new List<string>();
+        if (!string.IsNullOrEmpty(rewardIDsString))
+        {
+            string[] ids = rewardIDsString.Split(';');
+            foreach (string id in ids)
+            {
+                string trimmedId = id.Trim();
+                if (!string.IsNullOrEmpty(trimmedId))
+                {
+                    rewardIDs.Add(trimmedId);
+                }
+            }
+        }
+        return rewardIDs;
     }
 
     // 确保目录存在

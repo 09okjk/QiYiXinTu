@@ -26,9 +26,9 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Button questTabButton;
     [SerializeField] private Button puzzleTabButton;
 
-    private List<ItemData> questItems = new List<ItemData>();
-    private List<ItemData> puzzleItems = new List<ItemData>();
-    private ItemType currentTab = ItemType.QuestItem;
+    [SerializeField] private List<ItemData> questItems = new List<ItemData>();
+    [SerializeField] private List<ItemData> puzzleItems = new List<ItemData>();
+    [SerializeField] private ItemType currentTab = ItemType.QuestItem;
 
     private void Awake()
     {

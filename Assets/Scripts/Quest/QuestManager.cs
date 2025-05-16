@@ -221,7 +221,7 @@ public class QuestManager : MonoBehaviour
             switch (reward.rewardType)
             {
                 case QuestRewardType.Item:
-                    ItemData item = ItemDatabase.Instance.GetItem(reward.rewardID);
+                    ItemData item = ItemManager.Instance.GetItem(reward.rewardID);
                     if (item != null)
                     {
                         InventoryManager.Instance.AddItem(item);

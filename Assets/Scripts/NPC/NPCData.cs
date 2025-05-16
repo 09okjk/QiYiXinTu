@@ -2,16 +2,6 @@
 using Core;
 using UnityEngine;
 
-public enum NpcEmotion
-{
-    Neutral, // 中立
-    Happy, // 高兴
-    Sad, // 伤心
-    Angry, // 生气
-    Surprised, // 惊讶
-    Scared // 害怕
-}
-
 [CreateAssetMenu(fileName = "New NPC", menuName = "Characters/NPC Data")]
 public class NPCData : EntityData
 {
@@ -19,7 +9,6 @@ public class NPCData : EntityData
     public string npcID;
     public string npcName;
     public string spriteID;
-    public NpcEmotion npcEmotion = NpcEmotion.Neutral; // NPC情绪状态
     
     [Header("对话ID列表")]
     public List<string> dialogueIDs; // 对话ID，用于动态加载对话数据
