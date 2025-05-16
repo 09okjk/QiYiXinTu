@@ -418,6 +418,9 @@ MonoBehaviour:
   itemImage: {fileID: 1761846216}
   questTabButton: {fileID: 175446592}
   puzzleTabButton: {fileID: 1848758509}
+  questItems: []
+  puzzleItems: []
+  currentTab: 0
 --- !u!114 &160279491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -427,11 +430,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 160279488}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f825c68317cf482f8d2e4fec15c259f9, type: 3}
+  m_Script: {fileID: 11500000, guid: 51c264c1bd3e0d945a0da95433c3625e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allItems:
-  - {fileID: 11400000, guid: f92fcb84f4691d842bec865cba61f20c, type: 2}
+  allItems: []
 --- !u!1 &165886508
 GameObject:
   m_ObjectHideFlags: 0
@@ -2543,9 +2545,11 @@ MonoBehaviour:
   choiceButtonPrefab: {fileID: 6641843056130978658, guid: 60a976475df35df45a7039a740ab44a8, type: 3}
   choiceButtonContainer: {fileID: 1792393490}
   playerDialoguePanel: {fileID: 1083379506}
+  playerImage: {fileID: 1512855194}
   playerNameText: {fileID: 1589928304}
   playerDialogueText: {fileID: 990591734}
   nPCDialoguePanel: {fileID: 1690412382}
+  nPCImage: {fileID: 397844521}
   nPCNameText: {fileID: 1705641267}
   nPCDialogueText: {fileID: 2117984659}
   systemDialoguePanel: {fileID: 581828089}
@@ -4968,6 +4972,7 @@ GameObject:
   - component: {fileID: 1792393493}
   - component: {fileID: 1792393492}
   - component: {fileID: 1792393491}
+  - component: {fileID: 1792393494}
   m_Layer: 5
   m_Name: ChoiceButtonContainer
   m_TagString: Untagged
@@ -5052,6 +5057,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1792393489}
   m_CullTransparentMesh: 1
+--- !u!114 &1792393494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1792393489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1803857829
 GameObject:
   m_ObjectHideFlags: 0

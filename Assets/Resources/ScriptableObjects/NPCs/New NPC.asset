@@ -24,7 +24,6 @@ MonoBehaviour:
   npcID: npc001
   npcName: 123
   spriteID: npc_001
-  npcEmotion: 0
   dialogueIDs:
-  - quest_001
+  - dialogue001
   properties: []
