@@ -170,7 +170,6 @@ public class NPC : Entity
         
         // 未满足对话条件
         Debug.Log("对话条件不满足");
-        
     }
     
     #region Follow Player
