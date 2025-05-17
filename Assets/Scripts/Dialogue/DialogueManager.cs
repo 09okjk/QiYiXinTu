@@ -5,6 +5,7 @@ using Core;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -41,9 +42,11 @@ public class DialogueManager : MonoBehaviour
     // 打字协程
     private Coroutine typingCoroutine;
     // 存储对话完成后的回调
-    private Action onDialogueCompleteCallback;
+    private Action<bool> onDialogueCompleteCallback;
     // 当前对话文本
     private TextMeshProUGUI currentDialogueText;
+    // Npc对象
+    private NPC currentNpc;
     
     private void Awake()
     {
@@ -59,7 +62,7 @@ public class DialogueManager : MonoBehaviour
     }
     
     // 开始对话，可选择性地添加完成回调
-    public void StartDialogue(DialogueData dialogue, Action onComplete = null)
+    public void StartDialogue(DialogueData dialogue, Action<bool> onComplete = null)
     {
         if (dialogue == null || dialogue.nodes == null || dialogue.nodes.Count == 0)
         {
@@ -83,6 +86,7 @@ public class DialogueManager : MonoBehaviour
         {
             currentNodeID = currentDialogue.currentNodeID;
         }
+        
         dialoguePanel.SetActive(true);
         DisplayCurrentNode();
         onDialogueCompleteCallback = onComplete;
@@ -94,6 +98,7 @@ public class DialogueManager : MonoBehaviour
         // 检查节点索引是否有效
         if (string.IsNullOrEmpty(currentNodeID) )
         {
+            currentDialogue.state = DialogueState.Finished;
             EndDialogue();
             return;
         }
@@ -102,6 +107,9 @@ public class DialogueManager : MonoBehaviour
         currentDialogueNode = currentDialogue.nodes.Find(n => n.nodeID == currentNodeID);
         // 记录当前节点ID，保存到对话数据中
         currentDialogue.currentNodeID = currentNodeID;
+        
+        // 检查对话条件
+        if (!CheckCondition()) return;
         
         // 获取说话者类型
         SpeakerType speakerType = currentDialogueNode.speaker.speakerType;
@@ -125,7 +133,9 @@ public class DialogueManager : MonoBehaviour
                 playerImage.sprite = Resources.Load<Sprite>($"Art/Player/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
                 playerDialoguePanel.SetActive(true);
                 break;
+            case SpeakerType.NpcNotice:
             case SpeakerType.Npc:
+                currentNpc = NPCManager.Instance.GetNpc(currentDialogueNode.speaker.speakerID);
                 nPCNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
                 currentDialogueText = nPCDialogueText;
                 nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
@@ -137,8 +147,7 @@ public class DialogueManager : MonoBehaviour
                 break;
         }
         
-        
-        if (speakerType == SpeakerType.PlayerChoice)
+        if (speakerType == SpeakerType.PlayerChoice || speakerType == SpeakerType.NpcNotice)
             return;
         
         // 清除任何现有的选择按钮
@@ -155,7 +164,7 @@ public class DialogueManager : MonoBehaviour
         typingCoroutine = StartCoroutine(TypeText(currentDialogueText,currentDialogueNode.text, () => {
             // 文本打字完成后，等待玩家点击继续
             
-            //TODO: 提供奖励
+            //提供奖励
             if (currentDialogueNode.rewardIDs.Count > 0)
             {
                 foreach (string rewardID in currentDialogueNode.rewardIDs)
@@ -172,8 +181,11 @@ public class DialogueManager : MonoBehaviour
                 }
             }
             //TODO: 提供任务
-            
-            
+            //TODO: 提供跟随
+            if (currentNpc && currentDialogueNode.isFollow)
+            {
+                currentNpc.FollowPlayer();
+            }
             
             continueButton.onClick.AddListener(OnDialoguePanelClicked);
         }));
@@ -274,8 +286,63 @@ public class DialogueManager : MonoBehaviour
             DisplayChoices();
             return;
         }
+        
         currentNodeID = currentDialogueNode.nextNodeID;
         DisplayCurrentNode();
+    }
+    
+    // 检查对话条件
+    private bool CheckCondition()
+    {
+        switch (currentDialogueNode.conditionType)
+        {
+            case DialogueConditionType.None:
+                break;
+            case DialogueConditionType.QuestCompleted:
+                //TODO: 调用任务管理器检查任务是否完成
+                break;
+            case DialogueConditionType.ItemAcquired:
+                //TODO: 调用物品管理器检查物品是否获得
+                if (!string.IsNullOrEmpty(currentDialogueNode.conditionValue))
+                {
+                    // 拆分条件值
+                    string[] conditionValues = currentDialogueNode.conditionValue.Split(';');
+
+                    // 所有缺失物品的名称
+                    string missingItemNames = "";
+                    foreach (var value in conditionValues)
+                    {
+                        ItemData itemData = ItemManager.Instance.GetItem(currentDialogueNode.conditionValue);
+                        if (!itemData) continue;
+                        missingItemNames += itemData.itemName;
+                    }
+
+                    if (missingItemNames != "")
+                    {
+                        Debug.LogWarning($"缺少物品: {missingItemNames}");
+                        ChangeSpeaker(SpeakerType.NpcNotice);
+                        typingCoroutine = StartCoroutine(TypeText(currentDialogueText, $"缺少物品: {missingItemNames}", EndDialogue));
+                        return false;
+                    }
+                }
+                break;
+            case DialogueConditionType.SceneName:
+                //调用场景管理器检查场景名称
+                if (!string.IsNullOrEmpty(currentDialogueNode.conditionValue))
+                {
+                    if (currentDialogueNode.conditionValue != SceneManager.GetActiveScene().name)
+                    {
+                        Debug.LogWarning($"当前场景名称不匹配: {currentDialogueNode.conditionValue}");
+                        EndDialogue();
+                        return false;
+                    }
+                }
+                break;
+            case DialogueConditionType.NpcCheck:
+                // TODO: 调用NPC管理器检查条件Npc是否存在
+                break;
+        }
+        return true;
     }
     
     // 结束对话
@@ -288,9 +355,9 @@ public class DialogueManager : MonoBehaviour
         // 执行对话完成后的回调 一次性回调，只针对特定对话，在对话结束后自动清除
         if (onDialogueCompleteCallback != null)
         {
-            Action tempCallback = onDialogueCompleteCallback;
+            Action<bool> tempCallback = onDialogueCompleteCallback;
             onDialogueCompleteCallback = null; // 清空回调防止多次触发
-            tempCallback();
+            tempCallback(currentDialogue.state == DialogueState.Finished);
         }
     }
     
@@ -302,8 +369,6 @@ public class DialogueManager : MonoBehaviour
     
     // 对话结束事件
     public event Action OnDialogueEnd;
-    
-    
     
     // 获取对话数据
     public DialogueData GetDialogueData(string dialogueID)

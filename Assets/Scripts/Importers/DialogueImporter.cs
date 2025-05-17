@@ -57,6 +57,7 @@ public class DialogueImporter : EditorWindow
                                 "列8: nextNodeID (下一节点ID，空表示结束)\n" +
                                 "列9: questID (任务ID，可空)\n" +
                                 "列10: rewardIDs (奖励ID列表，用分号分隔)\n" +
+                                "列11: isFollow (是否跟随，true/false)\n" +
                                 "其后的列: 每两列为一组，分别是选项文本和目标节点ID", MessageType.Info);
     }
 
@@ -75,9 +76,9 @@ public class DialogueImporter : EditorWindow
             string[] headers = lines[0].Split(',');
             
             // 检查标题行是否符合预期格式
-            if (headers.Length < 10) // 至少需要 10 个基本列
+            if (headers.Length < 11) // 至少需要 11 个基本列（增加了 isFollow）
             {
-                EditorUtility.DisplayDialog("错误", "CSV格式不正确。至少需要包含：dialogueID, nodeID, speakerID, speakerName, speakerType, emotion, text, nextNodeID, questID, rewardIDs", "确定");
+                EditorUtility.DisplayDialog("错误", "CSV格式不正确。至少需要包含：dialogueID, nodeID, speakerID, speakerName, speakerType, emotion, text, nextNodeID, questID, rewardIDs, isFollow", "确定");
                 return;
             }
             
@@ -94,9 +95,9 @@ public class DialogueImporter : EditorWindow
 
                 string[] values = ParseCSVLine(lines[i]);
                 
-                if (values.Length < 10)
+                if (values.Length < 11)
                 {
-                    Debug.LogWarning($"第 {i+1} 行: 数据不完整，至少需要10列，已跳过");
+                    Debug.LogWarning($"第 {i+1} 行: 数据不完整，至少需要11列，已跳过");
                     continue;
                 }
 
@@ -159,6 +160,13 @@ public class DialogueImporter : EditorWindow
                         speakerType = ParseSpeakerType(values[4]), // 第五列是speakerType
                         emotion = ParseEmotion(values[5]) // 第六列是emotion
                     };
+                    
+                    // 解析 isFollow 值
+                    bool isFollow = false;
+                    if (values.Length > 10)
+                    {
+                        bool.TryParse(values[10].Trim().ToLower(), out isFollow);
+                    }
 
                     // 创建新节点
                     DialogueNode node = new DialogueNode
@@ -169,11 +177,12 @@ public class DialogueImporter : EditorWindow
                         nextNodeID = values[7].Trim(), // 第八列是nextNodeID
                         questID = values[8].Trim(), // 第九列是questID
                         rewardIDs = ParseRewardIDs(values[9]), // 第十列是rewardIDs
+                        isFollow = isFollow, // 第十一列是isFollow
                         choices = new List<DialogueChoice>()
                     };
                     
                     // 处理选择项
-                    for (int c = 10; c < values.Length; c += 2)
+                    for (int c = 11; c < values.Length; c += 2)
                     {
                         if (c + 1 >= values.Length) break;
 

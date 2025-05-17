@@ -138,7 +138,7 @@ public class NPC : Entity
             if (dialogue)
             {
                 cachedDialogue = dialogue;
-                DialogueManager.Instance.StartDialogue(cachedDialogue);
+                DialogueManager.Instance.StartDialogue(cachedDialogue, OnDialogueEnd);
             }
             else
             {
@@ -147,27 +147,46 @@ public class NPC : Entity
         }
         else
         {
-            // 随机选择一个对话数据
-            int randomIndex = Random.Range(0, dialogueDataList.Count);
-            cachedDialogue = dialogueDataList[randomIndex];
-            DialogueManager.Instance.StartDialogue(cachedDialogue);
+            // 遍历对话数据列表，查找未完成的对话
+            foreach (DialogueData dialogueData in dialogueDataList)
+            {
+                if (dialogueData.state != DialogueState.Finished)
+                {
+                    cachedDialogue = dialogueData;
+                    DialogueManager.Instance.StartDialogue(cachedDialogue, OnDialogueEnd);
+                }
+            }
         }
+    }
+    
+    // 根据对话结束的不同方式，进行不同的处理
+    private void OnDialogueEnd(bool isFinished)
+    {
+        if (isFinished)
+        {
+            cachedDialogue = null;
+            return;
+        }
+        
+        // 未满足对话条件
+        Debug.Log("对话条件不满足");
+        
     }
     
     #region Follow Player
     
-    public void FollowTargetPlayer(GameObject target)
+    public void FollowTargetPlayer()
     {
         // 设置目标玩家
-        player = target;
+        player = GameObject.FindGameObjectWithTag("Player");
         // 使NPC跟随玩家
         isFollowing = true;
         
         // 初始化朝向
         UpdateFacingDirection();
     }
-    
-    private void FollowPlayer()
+
+    public void FollowPlayer()
     {
         followSpeed = defaultSpeed;
         if (player != null)

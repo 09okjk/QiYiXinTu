@@ -32,6 +32,9 @@ public class Player : Entity
     public bool isBusy {get; private set;}
     public SkillManager skillManager { get; private set; }
     
+    private bool _isMenuOpen = false;
+    private bool _isInventoryOpen = false;
+    
     #region States
     
     public PlayerStateMachine stateMachine { get; private set; }
@@ -93,6 +96,8 @@ public class Player : Entity
         inventoryAction.action.Enable();
         menuAction.action.Enable();
         
+        MenuManager.Instance.OnMenuStateChanged += HandleMenuStateChanged;
+        InventoryManager.Instance.OnInventoryStateChanged += HandleInventoryStateChanged;
         inventoryAction.action.performed += OnInventoryToggle;
         menuAction.action.performed += OnMenuToggle;
     }
@@ -102,6 +107,8 @@ public class Player : Entity
         inventoryAction.action.Disable();
         menuAction.action.Disable();
         
+        MenuManager.Instance.OnMenuStateChanged -= HandleMenuStateChanged;
+        InventoryManager.Instance.OnInventoryStateChanged -= HandleInventoryStateChanged;
         inventoryAction.action.performed -= OnInventoryToggle;
         menuAction.action.performed -= OnMenuToggle;
     }
@@ -110,14 +117,34 @@ public class Player : Entity
     {
         base.Update();
         
+        // 如果正在与UI交互，不响应输入
+        if (GameUIManager.Instance && GameUIManager.Instance.IsInteractingWithUI)
+            return;
+        
+        // 如果正在对话中，不响应输入
         if (DialogueManager.Instance.IsDialogueActive())
             return;
+        
+        // 如果菜单或背包打开，不响应输入
+        if (_isMenuOpen || _isInventoryOpen)
+            return;
+        
+        // if (MenuManager.Instance.IsAnyPanelOpen())
+        //     return;
         
         stateMachine.CurrentState.Update();
         
         CheckForDashInput();
         StartCoroutine(nameof(BusyFor), 0.1f);
-        
+    }
+    
+    private void HandleMenuStateChanged(bool isOpen)
+    {
+        _isMenuOpen = isOpen;
+    }  
+    private void HandleInventoryStateChanged(bool isOpen)
+    {
+        _isInventoryOpen = isOpen;
     }
 
     /// <summary>
@@ -222,6 +249,10 @@ public class Player : Entity
     
     private void OnMenuToggle(InputAction.CallbackContext context)
     {
+        if (DialogueManager.Instance.IsDialogueActive())
+            return;
+        if (_isInventoryOpen)
+            return;
         MenuManager.Instance.ToggleMenu();
     }
 }

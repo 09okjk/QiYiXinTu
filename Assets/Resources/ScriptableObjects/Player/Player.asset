@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   MaxHealth: 5
-  CurrentHealth: 0
+  CurrentHealth: 5
   MaxMana: 5
   CurrentMana: 5
   InvincibleTime: 1
   knockbackDirection: {x: 2, y: 1}
   KnockbackDuration: 0.5
-  items: []
+  itemIDs: []
   playerID: player
   playerName: "\u73A9\u5BB6001"
   moveSpeed: 8
   jumpForce: 12
   wallJumpForce: 5
   idleToMoveTransitionTime: 0.0001
-  comboTimeWindow: 0.5
+  comboTimeWindow: 1.5
   counterAttackDuration: 2
   attackDamage: 1

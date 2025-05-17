@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,8 +19,9 @@ public class InventoryManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private GameObject inventoryPanel;
     [SerializeField] private GameObject itemSlotPrefab;
-    [SerializeField] private Transform questItemContainer;
-    [SerializeField] private Transform puzzleItemContainer;
+    [SerializeField] private Transform itemContainer;
+    [SerializeField] private TextMeshProUGUI itemTypeText;
+    [SerializeField] private GameObject itemMessageContainer;
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemDescriptionText;
     [SerializeField] private Image itemImage;
@@ -30,6 +32,8 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private List<ItemData> puzzleItems = new List<ItemData>();
     [SerializeField] private ItemType currentTab = ItemType.QuestItem;
 
+    public event Action<bool> OnInventoryStateChanged;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -50,7 +54,15 @@ public class InventoryManager : MonoBehaviour
     private void Start()
     {
         inventoryPanel.SetActive(false);
-        ClearItemDetails();
+        ItemDetailsTrigger(false);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            CloseInventory();
+        }
     }
 
     public void ToggleInventory()
@@ -69,12 +81,14 @@ public class InventoryManager : MonoBehaviour
     {
         inventoryPanel.SetActive(true);
         RefreshInventoryUI();
+        OnInventoryStateChanged?.Invoke(true);
         Time.timeScale = 0; // 当背包打开时暂停游戏
     }
 
     public void CloseInventory()
     {
         inventoryPanel.SetActive(false);
+        OnInventoryStateChanged?.Invoke(false);
         Time.timeScale = 1; // 当背包关闭时继续游戏
     }
 
@@ -152,37 +166,36 @@ public class InventoryManager : MonoBehaviour
     {
         currentTab = tabType;
         RefreshInventoryUI();
-
-        // 更新选项卡按钮的可交互状态
-        questTabButton.interactable = tabType != ItemType.QuestItem;
-        puzzleTabButton.interactable = tabType != ItemType.PuzzleItem;
     }
 
     // 刷新背包UI
     private void RefreshInventoryUI()
     {
+        // 更新选项卡按钮的可交互状态
+        questTabButton.interactable = currentTab != ItemType.QuestItem;
+        puzzleTabButton.interactable = currentTab != ItemType.PuzzleItem;
+     
         // 清除现有物品槽
-        foreach (Transform child in questItemContainer)
+        foreach (Transform child in itemContainer)
         {
             Destroy(child.gameObject);
         }
-        foreach (Transform child in puzzleItemContainer)
-        {
-            Destroy(child.gameObject);
-        }
-
+        
+        Debug.Log("currentTab: " + currentTab);
         // 根据当前选项卡显示/隐藏容器
-        questItemContainer.gameObject.SetActive(currentTab == ItemType.QuestItem);
-        puzzleItemContainer.gameObject.SetActive(currentTab == ItemType.PuzzleItem);
-
-        // 填充当前选项卡
+        // questItemContainer.gameObject.SetActive(currentTab == ItemType.QuestItem);
+        // puzzleItemContainer.gameObject.SetActive(currentTab == ItemType.PuzzleItem);
+        
+        itemTypeText.text = currentTab.ToString();
+        
+        // 填充物品槽
         if (currentTab == ItemType.QuestItem)
         {
-            PopulateItemContainer(questItems, questItemContainer);
+            PopulateItemContainer(questItems, itemContainer);
         }
         else
         {
-            PopulateItemContainer(puzzleItems, puzzleItemContainer);
+            PopulateItemContainer(puzzleItems, itemContainer);
         }
     }
 
@@ -198,27 +211,22 @@ public class InventoryManager : MonoBehaviour
             GameObject slotGO = Instantiate(itemSlotPrefab, container);
             ItemSlot slot = slotGO.GetComponent<ItemSlot>();
             slot.SetItem(item);
-
-            // 添加点击监听器
-            Button button = slotGO.GetComponent<Button>();
-            button.onClick.AddListener(() => ShowItemDetails(item));
         }
     }
 
-    // 显示物品详情
-    private void ShowItemDetails(ItemData item)
+    // 控制物品详情显示
+    public void ItemDetailsTrigger(bool isSelected, ItemData item = null)
     {
+        if (!item)
+        {
+            itemNameText.text = "";
+            itemDescriptionText.text = "";
+            itemMessageContainer.SetActive(false);
+            return;
+        }
         itemNameText.text = item.itemName;
         itemDescriptionText.text = item.description;
         itemImage.sprite = item.icon;
-        itemImage.gameObject.SetActive(true);
-    }
-
-    // 清除物品详情
-    private void ClearItemDetails()
-    {
-        itemNameText.text = "";
-        itemDescriptionText.text = "";
-        itemImage.gameObject.SetActive(false);
+        itemMessageContainer.SetActive(isSelected);
     }
 }

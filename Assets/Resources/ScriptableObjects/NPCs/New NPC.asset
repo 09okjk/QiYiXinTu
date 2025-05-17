@@ -26,4 +26,5 @@ MonoBehaviour:
   spriteID: npc_001
   dialogueIDs:
   - dialogue001
+  - dialogue002
   properties: []

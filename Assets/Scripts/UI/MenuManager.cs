@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private int maxSaveSlots = 6;
     
     private bool isMenuActive = false;
+    
+    public event Action<bool> OnMenuStateChanged; // 事件，用于通知其他脚本菜单状态的变化
     
     private void Awake()
     {
@@ -84,6 +87,7 @@ public class MenuManager : MonoBehaviour
     {
         isMenuActive = true;
         mainMenuPanel.SetActive(true);
+        OnMenuStateChanged?.Invoke(true);
         Time.timeScale = 0; // Pause game
     }
     
@@ -91,12 +95,14 @@ public class MenuManager : MonoBehaviour
     {
         isMenuActive = false;
         CloseAllPanels();
+        OnMenuStateChanged?.Invoke(false);
         Time.timeScale = 1; // Resume game
     }
     
     public void OpenSettings()
     {
         CloseAllPanels();
+        OnMenuStateChanged?.Invoke(true);
         settingsPanel.SetActive(true);
     }
     
@@ -117,6 +123,7 @@ public class MenuManager : MonoBehaviour
     public void OpenControls()
     {
         CloseAllPanels();
+        OnMenuStateChanged?.Invoke(true);
         controlsPanel.SetActive(true);
     }
     
@@ -138,6 +145,7 @@ public class MenuManager : MonoBehaviour
     {
         CloseAllPanels();
         savePanel.SetActive(true);
+        OnMenuStateChanged?.Invoke(true);
         PopulateSaveSlots();
     }
     
@@ -275,5 +283,11 @@ public class MenuManager : MonoBehaviour
         // 重置游戏数据
         GameManager.Instance.OnGameEvent("GameStarted");
         SceneManager.LoadScene("Room1");
+    }
+    
+    // 检测是否有UI面板打开
+    public bool IsAnyPanelOpen()
+    {
+        return mainMenuPanel.activeSelf || settingsPanel.activeSelf || controlsPanel.activeSelf || savePanel.activeSelf;
     }
 }

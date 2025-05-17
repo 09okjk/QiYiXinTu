@@ -5,21 +5,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UI;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class GameUIManager : MonoBehaviour
 {
     public static GameUIManager Instance { get; private set; }
+    public bool IsInteractingWithUI { get; private set; }
     
     [SerializeField] GameObject gameUIPanel;
 
     [Header("Player Status")]
     [SerializeField] private Image playerPortrait; // 玩家头像
     [SerializeField] private HealthBarManager healthBarManager;
-    // [SerializeField] private Slider healthSlider; // 生命值滑块
-    //[SerializeField] private Slider manaSlider; // 魔法值滑块
-    // [SerializeField] private TextMeshProUGUI healthText; // 生命值文本
-    //[SerializeField] private TextMeshProUGUI manaText; // 魔法值文本
     
     [Header("Skill Bar")]
     [SerializeField] private Transform skillBarContainer;
@@ -29,9 +27,8 @@ public class GameUIManager : MonoBehaviour
     [Header("Scene Info")]
     [SerializeField] private TextMeshProUGUI sceneNameText;
     [SerializeField] private Button menuButton;
+    [SerializeField] private Button inventoryButton;
     
-    // private PlayerHealth playerHealth; 
-    // private PlayerCombat playerCombat;
     private List<SkillSlotUI> skillSlotList = new List<SkillSlotUI>();
 
     private Player player;
@@ -55,8 +52,15 @@ public class GameUIManager : MonoBehaviour
         // 初始化技能栏
         InitializeSkillBar();
         
+        // 添加UI交互事件
+        AddUIPointerHandlers(menuButton.gameObject);
+        AddUIPointerHandlers(inventoryButton.gameObject);
+        
         // 设置菜单按钮监听
         menuButton.onClick.AddListener(OpenMenu);
+        
+        // 设置背包按钮监听
+        inventoryButton.onClick.AddListener(OpenInventory);
         
         // 更新场景名称
         UpdateSceneName();
@@ -80,6 +84,12 @@ public class GameUIManager : MonoBehaviour
         
         player.OnHealthChanged -= UpdateHealth;
         player.OnManaChanged -= UpdateMana;
+    }
+    
+    // 在UI开始交互时调用
+    public void SetInteractingWithUI(bool isInteracting)
+    {
+        IsInteractingWithUI = isInteracting;
     }
     
     private void OnSceneLoaded()
@@ -201,6 +211,32 @@ public class GameUIManager : MonoBehaviour
     private void OpenMenu()
     {
         MenuManager.Instance.ToggleMenu();
+    }
+    
+    private void OpenInventory()
+    {
+        InventoryManager.Instance.ToggleInventory();
+    }
+    
+    private void AddUIPointerHandlers(GameObject uiElement)
+    {
+        // 添加事件触发器组件（如果没有）
+        if (!uiElement.GetComponent<EventTrigger>())
+            uiElement.AddComponent<EventTrigger>();
+            
+        EventTrigger trigger = uiElement.GetComponent<EventTrigger>();
+        
+        // 鼠标进入事件
+        EventTrigger.Entry enterEntry = new EventTrigger.Entry();
+        enterEntry.eventID = EventTriggerType.PointerEnter;
+        enterEntry.callback.AddListener((data) => { SetInteractingWithUI(true); });
+        trigger.triggers.Add(enterEntry);
+        
+        // 鼠标离开事件
+        EventTrigger.Entry exitEntry = new EventTrigger.Entry();
+        exitEntry.eventID = EventTriggerType.PointerExit;
+        exitEntry.callback.AddListener((data) => { SetInteractingWithUI(false); });
+        trigger.triggers.Add(exitEntry);
     }
     
     // 公共方法，允许其他脚本更新技能栏

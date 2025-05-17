@@ -16,7 +16,7 @@ public class PlayerPrimaryAttackState : PlayerState
     {
         base.Enter();
 
-        if (comboCount > 2 || Time.time >= lastTimeAttacked * Player.comboTimeWindow)
+        if (comboCount > 2 || Time.time - lastTimeAttacked > Player.comboTimeWindow)
         {
             comboCount = 0;
         }

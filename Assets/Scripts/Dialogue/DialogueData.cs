@@ -22,6 +22,9 @@ public class DialogueNode
     public List<DialogueChoice> choices = new List<DialogueChoice>();
     public string questID ; // 新增：任务ID
     public List<string> rewardIDs = new List<string>(); // 新增：奖励ID列表
+    public bool isFollow; // 新增：是否跟随
+    public DialogueConditionType conditionType = DialogueConditionType.None; // 新增：对话条件类型
+    public string conditionValue; // 新增：对话条件值
 }
 
 [Serializable]
@@ -54,5 +57,17 @@ public enum SpeakerType
     Player, // 0 玩家
     Npc, // 1 非玩家角色
     System, // 2 系统
-    PlayerChoice // 3 玩家选择
+    PlayerChoice, // 3 玩家选择
+    NpcNotice // 4 NPC通知
+}
+
+// 对话条件类型
+[Serializable]
+public enum DialogueConditionType
+{
+    None, // 0 无条件
+    QuestCompleted, // 1 任务完成
+    ItemAcquired, // 2 获得物品
+    SceneName, // 3 场景名称
+    NpcCheck // 4 NPC检查
 }
