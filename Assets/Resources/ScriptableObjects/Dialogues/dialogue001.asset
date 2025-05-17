@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: dialogue001
   m_EditorClassIdentifier: 
   dialogueID: dialogue001
-  state: 2
-  currentNodeID: 
+  state: 0
+  currentNodeID: node009
   nodes:
   - nodeID: node001
     text: "\u4F60\u597D\uFF0C\u65C5\u884C\u8005\uFF01\u6B22\u8FCE\u6765\u5230\u6211\u4EEC\u7684\u6751\u5E84\u3002"
@@ -30,7 +30,7 @@ MonoBehaviour:
     - ink_bottle
     isFollow: 0
     conditionType: 3
-    conditionValue: Room2
+    conditionValue: Room1
   - nodeID: node002
     text: "\u4F60\u597D\uFF0C\u6751\u957F\u3002\u8FD9\u91CC\u53D1\u751F\u4E86\u4EC0\u4E48\u4E8B\uFF1F"
     speaker:
