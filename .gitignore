@@ -74,3 +74,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 **/WenQuanYi Bitmap Song 13px SDF.asset
+
+# 忽略Assets/Art/Fonts目录下的所有文件
+/[Aa]ssets/[Aa]rt/[Ff]onts/*
