@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: dialogue001
   m_EditorClassIdentifier: 
   dialogueID: dialogue001
-  state: 0
-  currentNodeID: node009
+  state: 2
+  currentNodeID: 
   nodes:
   - nodeID: node001
     text: "\u4F60\u597D\uFF0C\u65C5\u884C\u8005\uFF01\u6B22\u8FCE\u6765\u5230\u6211\u4EEC\u7684\u6751\u5E84\u3002"
@@ -22,15 +22,15 @@ MonoBehaviour:
       speakerID: npc_001
       speakerName: "\u6751\u957F"
       speakerType: 1
-      emotion: 1
+      emotion: 0
     nextNodeID: node002
     choices: []
     questID: 
     rewardIDs:
     - ink_bottle
     isFollow: 0
-    conditionType: 3
-    conditionValue: Room1
+    conditionType: 0
+    conditionValue: 
   - nodeID: node002
     text: "\u4F60\u597D\uFF0C\u6751\u957F\u3002\u8FD9\u91CC\u53D1\u751F\u4E86\u4EC0\u4E48\u4E8B\uFF1F"
     speaker:

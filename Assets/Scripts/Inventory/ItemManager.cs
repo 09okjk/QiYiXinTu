@@ -1,30 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    public static ItemManager Instance;
+    public static ItemManager Instance { get; private set; }
     
     [SerializeField] private List<ItemData> allItems = new List<ItemData>();
-    private Dictionary<string, ItemData> itemLookup = new Dictionary<string, ItemData>();
+    private readonly Dictionary<string, ItemData> itemLookup = new Dictionary<string, ItemData>();
     
     private void Awake()
     {
-        Instance = this;
-        ItemData[] itemDatas = Resources.LoadAll<ItemData>("ScriptableObjects/Items");
-        foreach (var itemData in itemDatas)
+        if (Instance == null)
         {
-            if (itemLookup.TryAdd(itemData.itemID, itemData))
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+
+            allItems.Clear();
+            var itemDatas = Resources.LoadAll<ItemData>("ScriptableObjects/Items");
+            foreach (var itemData in itemDatas)
             {
-                allItems.Add(itemData);
+                if (itemLookup.TryAdd(itemData.itemID, itemData))
+                {
+                    allItems.Add(itemData);
+                }
             }
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
     public ItemData GetItem(string itemID)
     {
-        return itemLookup.GetValueOrDefault(itemID);
+        itemLookup.TryGetValue(itemID, out var item);
+        return item;
     }
 }

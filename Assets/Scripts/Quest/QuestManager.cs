@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,273 +8,168 @@ using TMPro;
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager Instance { get; private set; }
-
-    [SerializeField] private GameObject questLogPanel;
-    [SerializeField] private Transform questLogContainer;
-    [SerializeField] private GameObject questLogEntryPrefab;
-    [SerializeField] private GameObject questNotificationPrefab;
-    [SerializeField] private Transform questNotificationContainer;
-    [SerializeField] private float notificationDuration = 5f;
-
-    // 所有任务数据
-    private List<QuestData> allQuests = new List<QuestData>();
-
-    // 活跃任务
-    private List<QuestData> activeQuests = new List<QuestData>();
-
-    // 完成的任务
-    private List<QuestData> completedQuests = new List<QuestData>();
     
-    // 完成的任务目标
-    private Dictionary<string, List<string>> completedObjectives = new Dictionary<string, List<string>>();
-
+    [SerializeField] private TextMeshProUGUI questText; // 任务文本(指引文本)
+    [SerializeField] private List<QuestData> allQuests = new List<QuestData>();
+    private readonly Dictionary<string, QuestData> questDictionary = new Dictionary<string, QuestData>();
+    
+    // 当前任务
+    public QuestData currentQuest { get; private set; }
+    // 当前任务ID
+    public string currentQuestID { get; private set; }
+    // 任务完成回调
+    private Action<bool> onQuestCompleteCallback;
+    
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            
+            allQuests.Clear();
+            var questArray = Resources.LoadAll<QuestData>("ScriptableObjects/Quests");
+            foreach (var questData in questArray)
+            {
+                if (questDictionary.TryAdd(questData.questID, questData))
+                {
+                    allQuests.Add(questData);
+                }
+            }
         }
         else
         {
             Destroy(gameObject);
         }
     }
-
+    
     private void Start()
     {
-        LoadQuests();
-        UpdateQuestLog();
-    }
-    
-    public void ToggleQuestLog()
-    {
-        questLogPanel.SetActive(!questLogPanel.activeSelf);
+        // 订阅各种可能导致任务完成的事件
+        // 例如：对话完成、物品使用、任务完成等
+        DialogueManager.Instance.OnDialogueComplete += OnDialogueFinished;
+        InventoryManager.Instance.OnAddItem += OnDialogueFinished;
     }
 
-    /// <summary>
-    /// 加载所有任务
-    /// </summary>
-    private void LoadQuests()
+    private void OnDialogueFinished()
     {
-        // 从资源中加载任务
-        QuestData[] questsFromResources = Resources.LoadAll<QuestData>("Quests");
-        allQuests.AddRange(questsFromResources); // 添加到列表中
-    }
-
-    /// <summary>
-    /// 开始任务
-    /// </summary>
-    /// <param name="questID">任务ID</param>
-    public void StartQuest(string questID)
-    {
-        QuestData quest = allQuests.Find(q => q.questID == questID); // 从所有任务中查找任务
-
-        if (quest == null)
+        if(CheckQuestCondition())
         {
-            Debug.LogError($"Quest with ID {questID} not found!");
+            FinishQuest(currentQuestID);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // 取消订阅事件
+        DialogueManager.Instance.OnDialogueComplete -= OnDialogueFinished;
+        InventoryManager.Instance.OnAddItem -= OnDialogueFinished;
+    }
+    // 开始任务
+    public void StartQuest(string questID, Action<bool> onComplete = null)
+    {
+        if (string.IsNullOrEmpty(questID))
+        {
+            Debug.LogError("任务ID为空");
             return;
         }
-
-        if (IsQuestActive(questID) || IsQuestCompleted(questID))
+            
+        if (questDictionary.TryGetValue(questID, out var quest))
         {
-            Debug.Log($"Quest {questID} is already active or completed.");
-            return;
-        }
-
-        // 激活任务
-        quest.isActive = true;
-        activeQuests.Add(quest);
-
-        // 通知玩家
-        ShowQuestNotification($"新任务: {quest.questName}");
-
-        // 更新任务日志的UI
-        UpdateQuestLog();
-    }
-
-    // 任务是否激活
-    public bool IsQuestActive(string questID)
-    {
-        return activeQuests.Exists(q => q.questID == questID);
-    }
-    // 任务是否完成
-    public bool IsQuestCompleted(string questID)
-    {
-        return completedQuests.Exists(q => q.questID == questID);
-    }
-    // 获取激活的任务ID
-    public List<string> GetActiveQuestIDs()
-    {
-        return activeQuests.Select(q => q.questID).ToList(); // 返回列表的副本
-    }
-    // 获取完成的任务ID
-    public List<string> GetCompletedQuestIDs()
-    {
-        return completedQuests.Select(q => q.questID).ToList(); // 返回列表的副本
-    }
-    // 重新设置任务
-    public void ResetQuests()
-    {
-        activeQuests.Clear();
-        completedQuests.Clear();
-        completedObjectives.Clear();
-    }
-    // 获取所有完成的任务目标
-    public Dictionary<string, List<string>> GetAllCompletedObjectives() 
-    {
-        // 创建一个深拷贝
-        Dictionary<string, List<string>> result = new Dictionary<string, List<string>>();
-        foreach (var kvp in completedObjectives) 
-        {
-            result[kvp.Key] = new List<string>(kvp.Value);
-        }
-        return result;
-    }
-
-    // 完成任务
-    public void CompleteQuest(string questID)
-    {
-        QuestData quest = activeQuests.Find(q => q.questID == questID);
-
-        if (quest == null)
-        {
-            Debug.LogError($"Active quest with ID {questID} not found!");
-            return;
-        }
-
-        // 从活跃任务移动到完成任务
-        activeQuests.Remove(quest);
-        quest.isCompleted = true;
-        completedQuests.Add(quest);
-
-        // 通知玩家
-        ShowQuestNotification($"任务完成: {quest.questName}");
-
-        // 授予奖励
-        GiveQuestRewards(quest);
-
-        // 更新任务日志的UI
-        UpdateQuestLog();
-    }
-
-    /// <summary>
-    /// 更新任务目标
-    /// </summary>
-    /// <param name="questID">任务ID</param>
-    /// <param name="objectiveID">目标ID</param>
-    public void UpdateQuestObjective(string questID, string objectiveID)
-    {
-        QuestData quest = activeQuests.Find(q => q.questID == questID);
-
-        if (quest == null)
-        {
-            Debug.LogError($"Active quest with ID {questID} not found!");
-            return;
-        }
-
-        QuestObjective objective = quest.objectives.Find(o => o.objectiveID == objectiveID);
-
-        if (objective == null)
-        {
-            Debug.LogError($"Objective with ID {objectiveID} not found in quest {questID}!");
-            return;
-        }
-
-        // 更新目标进度
-        objective.isCompleted = true;
-
-        // 检查是否所有目标都已完成
-        bool allObjectivesCompleted = true;
-        foreach (QuestObjective obj in quest.objectives)
-        {
-            if (!obj.isCompleted)
-            {
-                allObjectivesCompleted = false;
-                break;
-            }
-        }
-
-        // 如果所有目标都完成了，完成任务
-        if (allObjectivesCompleted)
-        {
-            CompleteQuest(questID);
+            currentQuest = quest;
+            currentQuestID = questID;
+            ToggleQuestText(currentQuest.questText);
+            onQuestCompleteCallback = onComplete;
+            Debug.Log($"任务开始: {quest.questName}");
         }
         else
         {
-            // 通知玩家目标完成
-            ShowQuestNotification($"任务进度: {objective.description}");
-
-            // 更新任务日志UI
-            UpdateQuestLog();
+            Debug.LogError($"任务不存在: {questID}");
         }
     }
-
-    /// <summary>
-    /// 提供任务奖励
-    /// </summary>
-    /// <param name="quest">任务</param>
-    private void GiveQuestRewards(QuestData quest)
+    
+    // 完成任务
+    public void FinishQuest(string questID)
     {
-        // Give XP, items, etc. // 根据奖励类型给予奖励 比如物品、经验、金币等
-        foreach (QuestReward reward in quest.rewards)
+        if (questDictionary.TryGetValue(questID, out var quest))
         {
-            switch (reward.rewardType)
-            {
-                case QuestRewardType.Item:
-                    ItemData item = ItemManager.Instance.GetItem(reward.rewardID);
-                    if (item != null)
+            quest.isCompleted = true;
+            string nextQuestID = quest.nextQuestID;
+            currentQuest = null;
+            currentQuestID = null;
+            onQuestCompleteCallback?.Invoke(true);
+            ToggleQuestText();
+            // 自动接取下一个任务
+            StartQuest(nextQuestID);
+            Debug.Log($"任务完成: {quest.questName}");
+        }
+        else
+        {
+            Debug.LogError($"任务不存在: {questID}");
+        }
+    }
+    
+    // 判断任务完成条件
+    private bool CheckQuestCondition()
+    {
+        if (currentQuest == null)
+        {
+            return false;
+        }
+        string value = currentQuest.conditionValue;
+        switch (currentQuest.questConditionType)
+        {
+            case QuestCondition.None:
+                return true; // 没有条件
+            case QuestCondition.CompleteDialogue:
+                // 检查对话是否完成
+                string[] dialogueIDs = value.Split(';');
+                foreach (var dialogueID in dialogueIDs)
+                {
+                    if (!DialogueManager.Instance.IsDialogueFinished(dialogueID))
                     {
-                        InventoryManager.Instance.AddItem(item);
+                        return false;
                     }
-                    break;
-
-                case QuestRewardType.Experience:
-                    // 如果有经验系统，给玩家经验
-                    int xpAmount = int.Parse(reward.rewardID);
-                    // PlayerExperience.Instance.AddXP(xpAmount);
-                    break;
-
-                case QuestRewardType.Gold:
-                    // 如果有货币系统，给玩家金币
-                    int goldAmount = int.Parse(reward.rewardID);
-                    // PlayerCurrency.Instance.AddGold(goldAmount);
-                    break;
-            }
+                }
+                return true;
+            case QuestCondition.HaveItem:
+                // 检查是否拥有物品
+                string[] itemIDs = value.Split(';');
+                foreach (var item in itemIDs)
+                {
+                    if (!InventoryManager.Instance.HasItem(item))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            case QuestCondition.CompleteQuest:
+                // 检查任务是否完成
+                return IsQuestCompleted(value);
+            default:
+                return false;
         }
     }
-
-    /// <summary>
-    /// 更新任务日志UI
-    /// </summary>
-    private void UpdateQuestLog()
+    
+    // 显示任务文本
+    public void ToggleQuestText(string text = "")
     {
-        // 清除现有条目
-        foreach (Transform child in questLogContainer)
-        {
-            Destroy(child.gameObject);
-        }
-
-        // 添加活跃任务(当前任务)到任务日志
-        foreach (QuestData quest in activeQuests)
-        {
-            GameObject entryGO = Instantiate(questLogEntryPrefab, questLogContainer); // 实例化任务日志条目
-            QuestLogEntry entry = entryGO.GetComponent<QuestLogEntry>(); // 获取任务日志条目组件
-            entry.SetQuest(quest); // 设置任务
-        }
+        questText.gameObject.SetActive(text != "");
+        questText.text = text;
     }
-
-    /// <summary>
-    /// 展示任务通知
-    /// </summary>
-    /// <param name="message">消息内容</param>
-    private void ShowQuestNotification(string message)
+    
+    public QuestData GetQuest(string questID)
     {
-        GameObject notificationGO = Instantiate(questNotificationPrefab, questNotificationContainer);// 实例化任务通知
-        TextMeshProUGUI notificationText = notificationGO.GetComponentInChildren<TextMeshProUGUI>();// 获取任务通知文本
-        notificationText.text = message;
-
-        // 一段时间后销毁
-        Destroy(notificationGO, notificationDuration);
+        questDictionary.TryGetValue(questID, out var quest);
+        return quest;
+    }
+    
+    public bool IsQuestCompleted(string questID)
+    {
+        if (questDictionary.TryGetValue(questID, out var quest))
+        {
+            return quest.isCompleted;
+        }
+        return false;
     }
 }

@@ -26,6 +26,6 @@ MonoBehaviour:
   jumpForce: 12
   wallJumpForce: 5
   idleToMoveTransitionTime: 0.0001
-  comboTimeWindow: 1.5
+  comboTimeWindow: 3
   counterAttackDuration: 2
   attackDamage: 1

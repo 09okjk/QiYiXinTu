@@ -154,6 +154,7 @@ public class NPC : Entity
                 {
                     cachedDialogue = dialogueData;
                     DialogueManager.Instance.StartDialogue(cachedDialogue, OnDialogueEnd);
+                    break;
                 }
             }
         }

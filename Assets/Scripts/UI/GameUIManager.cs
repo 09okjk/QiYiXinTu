@@ -26,8 +26,10 @@ public class GameUIManager : MonoBehaviour
     
     [Header("Scene Info")]
     [SerializeField] private TextMeshProUGUI sceneNameText;
-    [SerializeField] private Button menuButton;
-    [SerializeField] private Button inventoryButton;
+    [SerializeField] private Button menuButton; // 菜单按钮
+    [SerializeField] private Button instructionButton; // 新手引导按钮
+    [SerializeField] private Button inventoryButton; // 背包按钮
+    [SerializeField] private Button cameraButton; // 摄像机按钮
     
     private List<SkillSlotUI> skillSlotList = new List<SkillSlotUI>();
 
@@ -74,8 +76,6 @@ public class GameUIManager : MonoBehaviour
         player = PlayerManager.Instance.player;
 
         OnSceneLoaded();
-        
-        QuestManager.Instance.ToggleQuestLog();
     }
 
     private void OnDestroy()
@@ -129,7 +129,7 @@ public class GameUIManager : MonoBehaviour
 
     private void UpdateSceneName()
     {
-        sceneNameText.text = SceneManager.GetActiveScene().name;
+        sceneNameText.text = $"————{SceneManager.GetActiveScene().name}————";
     }
     
     private void UpdateHealth(int current, bool isHit)

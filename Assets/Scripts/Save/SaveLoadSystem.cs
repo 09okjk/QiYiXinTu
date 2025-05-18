@@ -114,12 +114,12 @@ public class SaveLoadSystem : MonoBehaviour
         }
 
         // Quest data
-        if (QuestManager.Instance != null)
-        {
-            saveData.activeQuestIDs = QuestManager.Instance.GetActiveQuestIDs();
-            saveData.completedQuestIDs = QuestManager.Instance.GetCompletedQuestIDs();
-            saveData.completedObjectives = QuestManager.Instance.GetAllCompletedObjectives();
-        }
+        // if (QuestManager.Instance != null)
+        // {
+        //     saveData.activeQuestIDs = QuestManager.Instance.GetActiveQuestIDs();
+        //     saveData.completedQuestIDs = QuestManager.Instance.GetCompletedQuestIDs();
+        //     saveData.completedObjectives = QuestManager.Instance.GetAllCompletedObjectives();
+        // }
 
         // Game state flags
         if (GameStateManager.Instance != null)
@@ -245,34 +245,34 @@ public class SaveLoadSystem : MonoBehaviour
         }
 
         // Quest data
-        if (QuestManager.Instance != null)
-        {
-            QuestManager.Instance.ResetQuests();
-            
-            // Activate saved quests
-            foreach (string questID in saveData.activeQuestIDs)
-            {
-                QuestManager.Instance.StartQuest(questID);
-            }
-
-            // Mark completed quests
-            foreach (string questID in saveData.completedQuestIDs)
-            {
-                QuestManager.Instance.CompleteQuest(questID);
-            }
-
-            // Set completed objectives
-            foreach (var kvp in saveData.completedObjectives)
-            {
-                string questID = kvp.Key;
-                List<string> objectives = kvp.Value;
-
-                foreach (string objectiveID in objectives)
-                {
-                    QuestManager.Instance.UpdateQuestObjective(questID, objectiveID);
-                }
-            }
-        }
+        // if (QuestManager.Instance != null)
+        // {
+        //     QuestManager.Instance.ResetQuests();
+        //     
+        //     // Activate saved quests
+        //     foreach (string questID in saveData.activeQuestIDs)
+        //     {
+        //         QuestManager.Instance.StartQuest(questID);
+        //     }
+        //
+        //     // Mark completed quests
+        //     foreach (string questID in saveData.completedQuestIDs)
+        //     {
+        //         QuestManager.Instance.CompleteQuest(questID);
+        //     }
+        //
+        //     // Set completed objectives
+        //     foreach (var kvp in saveData.completedObjectives)
+        //     {
+        //         string questID = kvp.Key;
+        //         List<string> objectives = kvp.Value;
+        //
+        //         foreach (string objectiveID in objectives)
+        //         {
+        //             QuestManager.Instance.UpdateQuestObjective(questID, objectiveID);
+        //         }
+        //     }
+        // }
 
         // Game state flags
         if (GameStateManager.Instance != null)

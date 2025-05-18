@@ -1,5 +1,7 @@
-﻿QuestID,QuestName,Description,ObjectiveID,ObjectiveDescription,"rewardType（数字：0=物品, 1=经验, 2=金币）",rewardID,rewardDescription
-quest_001,开发软件,根据公司提供的需求完成工作,objective_001,完成需求文档整理,2,100,100块钱
-quest_001,开发软件,根据公司提供的需求完成工作,objective_002,完成工作,2,200,200块钱
-quest_001,开发软件,根据公司提供的需求完成工作,,,2,500,500块钱
-quest_002,打印文件,根据要求打印对应的文件,,,2,10,10块钱
+﻿questID,questName,questText,questConditionType,conditionValue,nextQuestID
+Q001,初次探险,前往村庄外的森林探索一番。,None,,Q002
+Q002,与村长对话,前往村庄中心与村长交谈了解情况。,CompleteDialogue,DLG_Village_Chief,Q003
+Q003,收集药草,为村医收集5株特殊药草。,HaveItem,herb_special,Q004
+Q004,击败山贼,前往山洞击败盘踞在那里的山贼头目。,CompleteDialogue,DLG_Bandit_Defeat,Q005
+Q005,回报村长,向村长报告你的成就。,CompleteQuest,Q004,Q006
+Q006,秘密任务,找到古老遗迹中的宝藏。,None,,

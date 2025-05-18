@@ -17,6 +17,8 @@ public class ItemSlot : MonoBehaviour
         {
             button.onClick.AddListener(OnItemClicked);
         }
+        if (iconImage.sprite)
+            iconImage.gameObject.SetActive(true);
     }
 
     private void Update()

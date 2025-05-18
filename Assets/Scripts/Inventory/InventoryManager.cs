@@ -33,6 +33,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private ItemType currentTab = ItemType.QuestItem;
 
     public event Action<bool> OnInventoryStateChanged;
+    public event Action OnAddItem;
     
     private void Awake()
     {
@@ -112,6 +113,7 @@ public class InventoryManager : MonoBehaviour
 
         // 通知玩家获得新物品
         UIManager.Instance.ShowNotification($"新物品获得: {item.itemName}");
+        OnAddItem?.Invoke();
     }
 
     // 检查是否拥有某个物品
@@ -206,11 +208,15 @@ public class InventoryManager : MonoBehaviour
     /// <param name="container">容器</param>
     private void PopulateItemContainer(List<ItemData> items, Transform container)
     {
-        foreach (ItemData item in items)
+        int itemCount = items.Count;
+        for (int i = 0; i < 25; i++)
         {
             GameObject slotGO = Instantiate(itemSlotPrefab, container);
             ItemSlot slot = slotGO.GetComponent<ItemSlot>();
-            slot.SetItem(item);
+            if (i < itemCount)
+            {
+                slot.SetItem(items[i]);
+            }
         }
     }
 

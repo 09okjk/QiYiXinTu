@@ -131,7 +131,7 @@ public class GameManager : MonoBehaviour
                 // 初始化游戏状态
                 GameStateManager.Instance.ClearAllFlags();
                 // 开始初始任务
-                QuestManager.Instance.StartQuest("quest_intro");
+                QuestManager.Instance.StartQuest("quest_001");
                 break;
                 
             case "PlayerDied":

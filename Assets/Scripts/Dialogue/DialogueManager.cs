@@ -48,6 +48,9 @@ public class DialogueManager : MonoBehaviour
     // Npc对象
     private NPC currentNpc;
     
+    // Events
+    public event Action OnDialogueComplete; // 对话完成事件
+    
     private void Awake()
     {
         if (Instance == null)
@@ -99,6 +102,7 @@ public class DialogueManager : MonoBehaviour
         if (string.IsNullOrEmpty(currentNodeID) )
         {
             currentDialogue.state = DialogueState.Finished;
+            OnDialogueComplete?.Invoke();
             EndDialogue();
             return;
         }
@@ -180,7 +184,6 @@ public class DialogueManager : MonoBehaviour
                     }
                 }
             }
-            //TODO: 提供任务
             //TODO: 提供跟随
             if (currentNpc && currentDialogueNode.isFollow)
             {
@@ -294,15 +297,19 @@ public class DialogueManager : MonoBehaviour
     // 检查对话条件
     private bool CheckCondition()
     {
+        Debug.Log($"当前对话ID: {currentDialogue.dialogueID}");
+        Debug.Log($"当前对话节点ID: {currentDialogueNode.nodeID}");
         switch (currentDialogueNode.conditionType)
         {
             case DialogueConditionType.None:
                 break;
             case DialogueConditionType.QuestCompleted:
-                //TODO: 调用任务管理器检查任务是否完成
+                //调用任务管理器检查任务是否完成
+                if(!QuestManager.Instance.IsQuestCompleted(currentDialogueNode.conditionValue))
+                    return false;
                 break;
             case DialogueConditionType.ItemAcquired:
-                //TODO: 调用物品管理器检查物品是否获得
+                //调用物品管理器检查物品是否获得
                 if (!string.IsNullOrEmpty(currentDialogueNode.conditionValue))
                 {
                     // 拆分条件值
@@ -340,6 +347,14 @@ public class DialogueManager : MonoBehaviour
                 break;
             case DialogueConditionType.NpcCheck:
                 // TODO: 调用NPC管理器检查条件Npc是否存在
+                break;
+            case DialogueConditionType.DialogueCompleted:
+                if (!IsDialogueFinished(currentDialogueNode.conditionValue))
+                {
+                    Debug.LogWarning($"未完成对话: {currentDialogueNode.conditionValue}");
+                    EndDialogue();
+                    return false;
+                }
                 break;
         }
         return true;
@@ -389,5 +404,10 @@ public class DialogueManager : MonoBehaviour
         }
         
         return dialogue;
+    }
+    
+    public bool IsDialogueFinished(string dialogueID)
+    {
+        return GetDialogueData(dialogueID)?.state == DialogueState.Finished;
     }
 }

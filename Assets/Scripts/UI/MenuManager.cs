@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
@@ -278,11 +279,18 @@ public class MenuManager : MonoBehaviour
     }
     
     // 开始新游戏
-    public void StartNewGame()
+    public async void StartNewGame()
     {
-        // 重置游戏数据
-        GameManager.Instance.OnGameEvent("GameStarted");
-        SceneManager.LoadScene("Room1");
+        try
+        {
+            // 重置游戏数据
+            await SceneManager.LoadSceneAsync("Room1");
+            GameManager.Instance.OnGameEvent("GameStarted");
+        }
+        catch (Exception e)
+        {
+            throw; 
+        }
     }
     
     // 检测是否有UI面板打开

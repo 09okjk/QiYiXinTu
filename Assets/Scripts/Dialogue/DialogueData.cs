@@ -69,5 +69,6 @@ public enum DialogueConditionType
     QuestCompleted, // 1 任务完成
     ItemAcquired, // 2 获得物品
     SceneName, // 3 场景名称
-    NpcCheck // 4 NPC检查
+    NpcCheck, // 4 NPC检查
+    DialogueCompleted, // 5 对话完成
 }
