@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Manager
 {
@@ -6,9 +9,12 @@ namespace Manager
     {
         public static PlayerManager Instance { get; private set; }
         public Player player;
+        
+        [SerializeField]
+        private List<GameObject> createPlayerPoints = new List<GameObject>();
         private void Awake()
         {
-            if (Instance == null)
+            if (!Instance)
             {
                 Instance = this;
             }
@@ -18,7 +24,46 @@ namespace Manager
                 Destroy(gameObject);
             }
         }
-    
-    
+
+        private void Start()
+        {
+            SetPlayer();
+        }
+
+        private void SetPlayer()
+        {
+            createPlayerPoints.Clear();
+            GameObject[] points = GameObject.FindGameObjectsWithTag("PlayerStart");
+            foreach (GameObject point in points)
+            {
+                createPlayerPoints.Add(point);
+            }
+            MoveToPlayerPoint(GameStateManager.Instance.GetPlayerPointType());
+        }
+
+        public void MoveToPlayerPoint(PlayerPointType pointType)
+        {
+            if (createPlayerPoints.Count == 0 || pointType == PlayerPointType.None)
+            {
+                Debug.LogError($"No player points found. Count:{createPlayerPoints.Count}. PointType:{pointType}");
+                return;
+            }
+            
+            GameObject point = createPlayerPoints.Find(p => p.gameObject.name == $"PlayerPoint_{pointType}");
+            player.transform.position = point.transform.position;
+            player.gameObject.SetActive(true);
+
+            GameStateManager.Instance.SetPlayerPointType(PlayerPointType.None);
+        }
+    }
+
+    public enum PlayerPointType
+    {
+        None,
+        Left,
+        Right,
+        Middle1,
+        Middle2,
+        Middle3,
     }
 }

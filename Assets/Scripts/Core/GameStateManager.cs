@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Manager;
 using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
+    
     
     // 用于存储游戏状态标志的字典
     private Dictionary<string, bool> gameFlags = new Dictionary<string, bool>();
@@ -20,6 +22,25 @@ public class GameStateManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void SetPlayerPointType(PlayerPointType pointType)
+    {
+        // 使用Unity内置的PlayerPrefs来存储玩家的出生点类型
+        Debug.Log($"SetPlayerPointType:{pointType}");
+        PlayerPrefs.SetInt("PlayerPointType", (int)pointType);
+        
+    }
+    
+    // 获取当前玩家的出生点类型
+    public PlayerPointType GetPlayerPointType()
+    {
+        // 使用Unity内置的PlayerPrefs来获取玩家的出生点类型
+        if (PlayerPrefs.HasKey("PlayerPointType"))
+        {
+            return (PlayerPointType)PlayerPrefs.GetInt("PlayerPointType");
+        }
+        return PlayerPointType.None;
     }
     
     // 获取标志值，如果标志不存在则返回false
