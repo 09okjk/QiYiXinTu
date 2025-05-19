@@ -26,6 +26,7 @@ namespace UI
             {
                 Debug.Log("OnTriggerEnter2D");
                 hasTriggered = true;
+                boxCollider.enabled = false; // 禁用碰撞体，防止重复触发
                 GameStateManager.Instance.SetPlayerPointType(nextScenePointType);
                 // 触发场景切换逻辑
                 GameManager.Instance.LoadScene(nextSceneName);

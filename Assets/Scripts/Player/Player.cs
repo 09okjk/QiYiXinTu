@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core;
 using Manager;
+using News;
 using Skills;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,12 +29,14 @@ public class Player : Entity
     [Header("Input Actions")]
     [SerializeField] private InputActionReference inventoryAction;
     [SerializeField] private InputActionReference menuAction;
+    [SerializeField] private InputActionReference newsBookAction;
     
     public bool isBusy {get; private set;}
     public SkillManager skillManager { get; private set; }
     
     private bool _isMenuOpen = false;
     private bool _isInventoryOpen = false;
+    private bool _isNewsBookOpen = false;
     
     #region States
     
@@ -100,6 +103,7 @@ public class Player : Entity
         InventoryManager.Instance.OnInventoryStateChanged += HandleInventoryStateChanged;
         inventoryAction.action.performed += OnInventoryToggle;
         menuAction.action.performed += OnMenuToggle;
+        newsBookAction.action.performed += OnNewsBookToggle;
     }
     
     private void OnDisable()
@@ -109,8 +113,10 @@ public class Player : Entity
         
         MenuManager.Instance.OnMenuStateChanged -= HandleMenuStateChanged;
         InventoryManager.Instance.OnInventoryStateChanged -= HandleInventoryStateChanged;
+        NewsManager.Instance.OnNewsBookStateChanged -= HandleNewsBookStateChanged;
         inventoryAction.action.performed -= OnInventoryToggle;
         menuAction.action.performed -= OnMenuToggle;
+        newsBookAction.action.performed -= OnNewsBookToggle;
     }
 
     protected override void Update()
@@ -125,8 +131,8 @@ public class Player : Entity
         if (DialogueManager.Instance.IsDialogueActive())
             return;
         
-        // 如果菜单或背包打开，不响应输入
-        if (_isMenuOpen || _isInventoryOpen)
+        // 如果菜单、背包、新闻库打开，不响应输入
+        if (_isMenuOpen || _isInventoryOpen || _isNewsBookOpen)
             return;
         
         // if (MenuManager.Instance.IsAnyPanelOpen())
@@ -145,6 +151,19 @@ public class Player : Entity
     private void HandleInventoryStateChanged(bool isOpen)
     {
         _isInventoryOpen = isOpen;
+    }
+    
+    public void RegisterNewsBookEvent()
+    {
+        if (NewsManager.Instance != null)
+        {
+            NewsManager.Instance.OnNewsBookStateChanged += HandleNewsBookStateChanged;
+        }
+    }
+    
+    private void HandleNewsBookStateChanged(bool isOpen)
+    {
+        _isNewsBookOpen = isOpen;
     }
 
     /// <summary>
@@ -242,17 +261,31 @@ public class Player : Entity
         
     }
 
+    #region Input Actions
+
+    private bool CanToggleUI()
+    {
+        // 只要对话激活或有其他UI打开，就不允许切换
+        return !DialogueManager.Instance.IsDialogueActive() && !_isMenuOpen && !_isInventoryOpen && !_isNewsBookOpen;
+    }
+
     private void OnInventoryToggle(InputAction.CallbackContext context)
     {
+        if (!CanToggleUI() || _isNewsBookOpen) return;
         InventoryManager.Instance.ToggleInventory();
+    }
+
+    private void OnNewsBookToggle(InputAction.CallbackContext context)
+    {
+        if (!CanToggleUI() || _isInventoryOpen) return;
+        NewsManager.Instance.ToggleNewsInfoBook();
     }
     
     private void OnMenuToggle(InputAction.CallbackContext context)
     {
-        if (DialogueManager.Instance.IsDialogueActive())
-            return;
-        if (_isInventoryOpen)
-            return;
+        if (!CanToggleUI() || _isInventoryOpen || _isNewsBookOpen) return;
         MenuManager.Instance.ToggleMenu();
     }
+
+    #endregion
 }
