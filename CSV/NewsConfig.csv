@@ -1,0 +1,3 @@
+﻿newsID,newsTitle,newsContent,newsImageFileName,isRead
+news001,开学典礼,欢迎新同学加入我们的大家庭！,Triangle,FALSE
+news002,期中考试,期中考试将于下周举行，请大家做好准备。,exam,FALSE
