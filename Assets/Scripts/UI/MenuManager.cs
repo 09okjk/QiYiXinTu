@@ -42,6 +42,7 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
+            Debug.Log($"发现重复的 MenuManager 实例：{gameObject.name}，当前实例：{Instance.gameObject.name}");
             Destroy(gameObject);
         }
     }
@@ -71,6 +72,22 @@ public class MenuManager : MonoBehaviour
         }
     }
     
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log($"场景加载：{scene.name}，当前 MenuManager 是否为实例：{this == Instance}");
+        Debug.Log($"当前 TimeScale: {Time.timeScale}");
+    }
+    
     // 切换菜单的显示状态
     public void ToggleMenu()
     {
@@ -89,7 +106,11 @@ public class MenuManager : MonoBehaviour
         isMenuActive = true;
         mainMenuPanel.SetActive(true);
         OnMenuStateChanged?.Invoke(true);
-        Time.timeScale = 0; // Pause game
+        Time.timeScale = 0; // 直接设置时间缩放为0
+
+        //GameStateManager.Instance.PauseGame();
+        Debug.Log("Menu Opened, TimeScale: " + Time.timeScale);
+        
     }
     
     public void CloseMenu()
@@ -97,7 +118,10 @@ public class MenuManager : MonoBehaviour
         isMenuActive = false;
         CloseAllPanels();
         OnMenuStateChanged?.Invoke(false);
-        Time.timeScale = 1; // Resume game
+        Time.timeScale = 1; // 直接设置时间缩放为0
+
+        //GameStateManager.Instance.ResumeGame();
+        Debug.Log("Menu Closed, TimeScale: " + Time.timeScale);    
     }
     
     public void OpenSettings()

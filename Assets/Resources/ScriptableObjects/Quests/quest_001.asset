@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa9729b0c5174d399b8cd7f64f8da848, type: 3}
+  m_Name: quest_001
+  m_EditorClassIdentifier: 
+  questID: quest_001
+  questName: "\u521D\u6B21\u63A2\u9669"
+  questConditionType: 1
+  conditionValue: dialogue001
+  questText: "\u524D\u5F80\u6751\u5E84\u5916\u7684\u68EE\u6797\u63A2\u7D22\u4E00\u756A\u3002"
+  nextQuestID: Q002
+  isCompleted: 0

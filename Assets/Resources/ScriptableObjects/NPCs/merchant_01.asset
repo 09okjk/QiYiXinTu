@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f741c0af46ec4c83a7046555c9eef973, type: 3}
+  m_Name: merchant_01
+  m_EditorClassIdentifier: 
+  MaxHealth: 100
+  CurrentHealth: 100
+  MaxMana: 0
+  CurrentMana: 0
+  InvincibleTime: 0.5
+  knockbackDirection: {x: 1, y: 1}
+  KnockbackDuration: 0.3
+  itemIDs:
+  - potion_01
+  - sword_01
+  - shield_01
+  npcID: merchant_01
+  npcName: "\u5F20\u8001\u677F"
+  spriteID: merchant_sprite
+  dialogueIDs:
+  - greeting_dialogue
+  - shop_dialogue
+  properties:
+  - key: isFriendly
+    value: TRUE
+  - key: shopLevel
+    value: 3

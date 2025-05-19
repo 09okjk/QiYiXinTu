@@ -123,16 +123,16 @@ public class Player : Entity
     {
         base.Update();
         
+        // 如果菜单、背包、新闻库打开，不响应输入
+        if (_isMenuOpen || _isInventoryOpen || _isNewsBookOpen)
+            return;
+        
         // 如果正在与UI交互，不响应输入
         if (GameUIManager.Instance && GameUIManager.Instance.IsInteractingWithUI)
             return;
         
         // 如果正在对话中，不响应输入
         if (DialogueManager.Instance.IsDialogueActive())
-            return;
-        
-        // 如果菜单、背包、新闻库打开，不响应输入
-        if (_isMenuOpen || _isInventoryOpen || _isNewsBookOpen)
             return;
         
         // if (MenuManager.Instance.IsAnyPanelOpen())

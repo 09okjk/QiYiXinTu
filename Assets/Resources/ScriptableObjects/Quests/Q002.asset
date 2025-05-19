@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa9729b0c5174d399b8cd7f64f8da848, type: 3}
+  m_Name: Q002
+  m_EditorClassIdentifier: 
+  questID: Q002
+  questName: "\u4E0E\u6751\u957F\u5BF9\u8BDD"
+  questConditionType: 1
+  conditionValue: DLG_Village_Chief
+  questText: "\u524D\u5F80\u6751\u5E84\u4E2D\u5FC3\u4E0E\u6751\u957F\u4EA4\u8C08\u4E86\u89E3\u60C5\u51B5\u3002"
+  nextQuestID: Q003
+  isCompleted: 0

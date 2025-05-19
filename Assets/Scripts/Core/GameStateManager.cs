@@ -43,6 +43,20 @@ public class GameStateManager : MonoBehaviour
         return PlayerPointType.None;
     }
     
+    // 暂停游戏
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+        // 其他暂停逻辑
+    }
+    
+    // 恢复游戏
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        // 其他恢复逻辑
+    }
+    
     // 获取标志值，如果标志不存在则返回false
     public bool GetFlag(string flagName)
     {
