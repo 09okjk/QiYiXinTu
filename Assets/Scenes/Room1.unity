@@ -6036,7 +6036,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &803361044
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7254,7 +7254,7 @@ GameObject:
   - component: {fileID: 1014804366}
   - component: {fileID: 1014804365}
   m_Layer: 5
-  m_Name: CameraButton
+  m_Name: NewsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13045,7 +13045,7 @@ MonoBehaviour:
   menuButton: {fileID: 1053863077}
   instructionButton: {fileID: 375066227}
   inventoryButton: {fileID: 1056010186}
-  cameraButton: {fileID: 1014804365}
+  newsButton: {fileID: 0}
 --- !u!1 &2144881886
 GameObject:
   m_ObjectHideFlags: 0

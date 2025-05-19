@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Manager;
+using News;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -29,7 +30,7 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Button menuButton; // 菜单按钮
     [SerializeField] private Button instructionButton; // 新手引导按钮
     [SerializeField] private Button inventoryButton; // 背包按钮
-    [SerializeField] private Button cameraButton; // 摄像机按钮
+    [SerializeField] private Button newsButton; // 新闻按钮
     
     private List<SkillSlotUI> skillSlotList = new List<SkillSlotUI>();
 
@@ -58,12 +59,16 @@ public class GameUIManager : MonoBehaviour
         // 添加UI交互事件
         AddUIPointerHandlers(menuButton.gameObject);
         AddUIPointerHandlers(inventoryButton.gameObject);
+        AddUIPointerHandlers(newsButton.gameObject);
         
         // 设置菜单按钮监听
         menuButton.onClick.AddListener(OpenMenu);
         
         // 设置背包按钮监听
         inventoryButton.onClick.AddListener(OpenInventory);
+        
+        // 设置新闻按钮监听
+        newsButton.onClick.AddListener(OpenNews);
         
         // 更新场景名称
         UpdateSceneName();
@@ -217,6 +222,11 @@ public class GameUIManager : MonoBehaviour
     private void OpenInventory()
     {
         InventoryManager.Instance.ToggleInventory();
+    }
+
+    private void OpenNews()
+    {
+        NewsManager.Instance.ToggleNewsInfoBook();
     }
     
     private void AddUIPointerHandlers(GameObject uiElement)
