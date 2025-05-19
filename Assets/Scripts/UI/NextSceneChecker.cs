@@ -10,8 +10,8 @@ namespace UI
         private BoxCollider2D boxCollider;
         private bool hasTriggered = false;
 
-        
-        private void Awake()
+         
+        private void Awake()    
         {
             boxCollider = GetComponent<BoxCollider2D>();
             if (!boxCollider)
