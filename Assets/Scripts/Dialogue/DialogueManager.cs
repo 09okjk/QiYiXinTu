@@ -95,6 +95,19 @@ public class DialogueManager : MonoBehaviour
         onDialogueCompleteCallback = onComplete;
     }
     
+    public void StartDialogueByID(string dialogueID, Action<bool> onComplete = null)
+    {
+        DialogueData dialogue = GetDialogueData(dialogueID);
+        if (dialogue != null)
+        {
+            StartDialogue(dialogue, onComplete);
+        }
+        else
+        {
+            Debug.LogError($"无法找到对话数据: {dialogueID}");
+        }
+    }
+    
     // 显示当前对话节点
     private void DisplayCurrentNode()
     {

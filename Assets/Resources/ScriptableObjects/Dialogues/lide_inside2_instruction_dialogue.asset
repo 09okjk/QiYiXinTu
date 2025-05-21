@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: lide_inside2_instruction_dialogue
+  m_EditorClassIdentifier: 
+  dialogueID: lide_inside2_instruction_dialogue
+  state: 2
+  currentNodeID: node002
+  nodes:
+  - nodeID: node002
+    text: "\u8BF4\u8D77\u8FD9\u4E2A\uFF01\u57282022\u5E74\u4E94\u56DB\u9752\u5E74\u8282\u524D\u7684\u65F6\u5019\uFF0C\u7ACB\u5FB7\u697C\u6709\u4E00\u4E2A\u8D85\u7EA7\u91CD\u8981\u7684\u65B0\u95FB\u54E6~\uFF01\u5982\u679C\u611F\u5174\u8DA3\u7684\u8BDD\u53EF\u4EE5\u53BB\u6211\u4EEC\u5B66\u6821\u7F51\u7AD9\u91CC\u770B\u4E00\u770B\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node003
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 

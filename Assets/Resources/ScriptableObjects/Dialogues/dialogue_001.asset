@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: dialogue_001
+  m_EditorClassIdentifier: 
+  dialogueID: dialogue_001
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u4F60\u53EF\u4EE5\u53EB\u6211\uFF08\u73A9\u5BB6id\uFF09"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node002
+    text: "\u8C22\u8C22\u4F60{playerName}\uFF0C\u6211\u53EB\u8DEF\u85AA\u58F0\uFF01\u4F60\u53EF\u4EE5\u53EB\u6211\u5C0F\u8DEF~"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 10
+    nextNodeID: node003
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node003
+    text: "\u55EF\u2026{playerName}\uFF0C\u53EF\u2026\u53EF\u4EE5\u518D\u9EBB\u70E6\u4F60\u4E00\u4E2A\u4E8B\u60C5\u5417\uFF01\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 15
+    nextNodeID: node004
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node004
+    text: "\u4F5C\u4E3A\u4EA4\u6362\uFF01\u6211\u4F1A\u5E2E\u52A9\u4F60\u627E\u5230\u56DE\u53BB\u7684\u8DEF\u7684\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node005
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node005
+    text: "\u8BF7\u8BB2\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node006
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node006
+    text: "\u2026\u2026\u53EF\u4EE5\u9EBB\u70E6\u4F60\u5728\u4ECA\u5929\u966A\u6211\u5B8C\u6210\u201C\u65B0\u95FB\u91C7\u5199\u5B9E\u8DF5\u201D\u7684\u4F5C\u4E1A\u561B~\u62DC\u6258\u62DC\u6258\u4E86\uFF01\u6709\u4F60\u5728\u4E00\u5B9A\u4F1A\u5982\u6709\u795E\u52A9\u7684\uFF0C\u563F\u563F~"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 2
+    nextNodeID: 
+    choices:
+    - text: "\u540C\u610F(\u83B7\u5F97\u9053\u5177\u3010\u82F1\u96C4\u724C\u58A8\u6C34\u74F6\u3011)"
+      nextNodeID: node007
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node007
+    text: "\u6CA1\u95EE\u9898\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node008
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node008
+    text: "\u8036yeeeee~\u592A\u597D\u5566\uFF01\uFF01\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 2
+    nextNodeID: node009
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node009
+    text: "\u563B\u563B\u5BF9\u4E86{playerName}\uFF0C\u9001\u4F60\u4E00\u4E2A\u89C1\u9762\u793C\u2026\u2026\u6211\u521A\u624D\u770B\u5230\u4F60\u628A\u624B\u91CC\u7684\u94A2\u7B14\u53D8\u6210\u6B66\u5668\u6218\u6597\u4E86\uFF0C\u6211\u60F3\u4F60\u5E94\u8BE5\u4F1A\u9700\u8981\u8FD9\u4E2A\u5427\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 2
+    nextNodeID: node010
+    choices: []
+    questID: 
+    rewardIDs:
+    - ink_bottle
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node010
+    text: "\u53EA\u8981\u6211\u4EEC\u5728\u4E00\u5929\u5185\u5B8C\u6210\u4E00\u4EFD\u771F\u5B9E\u7684\u6821\u56ED\u65B0\u95FB\u62A5\u9053\u5C31\u7B97\u5B8C\u6210\u4EFB\u52A1\u4E86\uFF01\u563F\u563F\uFF0C\u62FF\u4E0A\u6211\u7684\u76F8\u673Agogogo\u51FA\u53D1\u54AF\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 2
+    nextNodeID: 
+    choices: []
+    questID: open_bag
+    rewardIDs: []
+    isFollow: 1
+    conditionType: 0
+    conditionValue: 
