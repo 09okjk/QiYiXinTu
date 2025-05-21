@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [Header("Confirm Dialog")]
     [SerializeField] private GameObject confirmDialogPanel;
     [SerializeField] private TextMeshProUGUI confirmTitleText;
+    [SerializeField] private Image confirmImage;
     [SerializeField] private TextMeshProUGUI confirmMessageText;
     [SerializeField] private Button confirmYesButton;
     [SerializeField] private Button confirmNoButton;
@@ -37,7 +38,7 @@ public class UIManager : MonoBehaviour
     
     private void Start()
     {
-        if (confirmDialogPanel != null)
+        if (confirmDialogPanel)
         {
             confirmDialogPanel.SetActive(false);
         }
@@ -83,20 +84,28 @@ public class UIManager : MonoBehaviour
         // 完成后销毁
         Destroy(notification);
     }
+
     /// <summary>
     /// 显示确认对话框
     /// </summary>
     /// <param name="title">对话框标题</param>
     /// <param name="message">对话框消息</param>
+    /// <param name="sprite">图片</param>
     /// <param name="onYes">点击确认时执行的操作</param>
     /// <param name="onNo">点击取消时执行的操作</param>
-    public void ShowConfirmDialog(string title, string message, Action onYes, Action onNo)
+    /// <param name="confirmType"></param>
+    public void ShowConfirmDialog(string title, string message,Sprite sprite = null, Action onYes = null, Action onNo = null)
     {
-        if (confirmDialogPanel == null)
+        if (!confirmDialogPanel)
         {
             Debug.LogError("Confirm dialog panel not assigned!");
             return;
         }
+        
+        // 隐藏按钮
+        confirmYesButton.gameObject.SetActive(false);
+        confirmNoButton.gameObject.SetActive(false);
+        confirmImage.gameObject.SetActive(false);
         
         confirmTitleText.text = title;
         confirmMessageText.text = message;
@@ -104,6 +113,23 @@ public class UIManager : MonoBehaviour
         // 清除之前的监听器 防止重复调用
         confirmYesButton.onClick.RemoveAllListeners();
         confirmNoButton.onClick.RemoveAllListeners();
+
+        // 设置图片
+        if (sprite)
+        {
+            confirmImage.gameObject.SetActive(true);
+            confirmImage.sprite = sprite;
+        }
+
+        if (onYes != null)
+        {
+            confirmYesButton.gameObject.SetActive(true);
+        }
+        
+        if (onNo != null)
+        {
+            confirmNoButton.gameObject.SetActive(true);
+        }
         
         // 添加新的监听器
         confirmYesButton.onClick.AddListener(() => 

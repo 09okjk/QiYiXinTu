@@ -12,7 +12,6 @@ public class NPCManager:MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -29,10 +28,11 @@ public class NPCManager:MonoBehaviour
     private void InitializeNPCManager()
     {
         // 加载场景中所有的NPC
-        NPC[] npcs = FindObjectsOfType<NPC>();
+        NPC[] npcs = GetComponentsInChildren<NPC>();
         foreach (NPC npc in npcs)
         {
             npcList.Add(npc);
+            npc.DeactivateNpc();
         }
     }
 

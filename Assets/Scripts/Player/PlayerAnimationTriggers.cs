@@ -28,4 +28,14 @@ public class PlayerAnimationTriggers : MonoBehaviour
     {
         
     }
+
+    private void ActivateNpc(string npcID)
+    {
+        NPCManager.Instance.GetNpc(npcID).ActivateNpc();
+    }
+    
+    private void StartQuest(string questID)
+    {
+        QuestManager.Instance.StartQuest(questID);
+    }
 }

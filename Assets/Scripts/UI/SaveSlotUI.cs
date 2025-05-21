@@ -66,9 +66,7 @@ public class SaveSlotUI : MonoBehaviour
             UIManager.Instance.ShowConfirmDialog(
                 "Overwrite Save?",
                 "Are you sure you want to overwrite this save?",
-                () => SaveLoadSystem.SaveGame(slotIndex),
-                null
-            );
+                null, () => SaveLoadSystem.SaveGame(slotIndex));
         }
         else
         {

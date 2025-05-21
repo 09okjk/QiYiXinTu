@@ -234,7 +234,17 @@ public class NPC : Entity
     }
 
     #endregion
+
+
+    public void ActivateNpc()
+    {
+        gameObject.SetActive(true);
+    }
     
+    public void DeactivateNpc()
+    {
+        gameObject.SetActive(false);
+    }
     
     private void OnDrawGizmosSelected()
     {

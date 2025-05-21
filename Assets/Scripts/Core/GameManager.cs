@@ -139,9 +139,8 @@ public class GameManager : MonoBehaviour
                 UIManager.Instance.ShowConfirmDialog(
                     "你死了",
                     "是否重新加载最近的保存点？",
-                    () => LoadLastSave(),
-                    () => LoadScene("MainMenu")
-                );
+                    null,
+                    () => LoadScene("MainMenu"), () => LoadLastSave());
                 break;
                 
             // 根据需要添加更多事件

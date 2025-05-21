@@ -113,6 +113,12 @@ public class InventoryManager : MonoBehaviour
 
         // 通知玩家获得新物品
         UIManager.Instance.ShowNotification($"新物品获得: {item.itemName}");
+        UIManager.Instance.ShowConfirmDialog(
+            "获得新物品",
+            $"你获得了新物品: {item.itemName}",
+            item.icon,
+            () => { Debug.Log("确认按钮被点击"); }
+        );
         OnAddItem?.Invoke();
     }
 
