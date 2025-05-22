@@ -9,10 +9,13 @@ public class GameManager : MonoBehaviour
     
     [Header("References")]
     [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private GameObject pressAnyKeyPrompt;
     [SerializeField] private UnityEngine.UI.Slider loadingBar;
     
     [Header("Settings")]
     [SerializeField] private float minimumLoadingTime = 0.5f;
+    
+    private bool gameStarted = false;
     
     private void Awake()
     {
@@ -29,17 +32,32 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
-        if (loadingScreen != null)
+        /*if (loadingScreen)
         {
             loadingScreen.SetActive(false);
-        }
+        }*/
         // 添加订阅场景加载事件
         SceneManager.sceneLoaded += OnSceneLoaded;
         
-        // 自动加载主菜单场景
-        LoadScene("MainMenu");
+        // 显示"按任意键开始"提示
+        pressAnyKeyPrompt.SetActive(true);
+        loadingBar.gameObject.SetActive(false);
+        gameStarted = false;
     }
     
+    private void Update()
+    {
+        // 如果游戏尚未开始且检测到任意按键或点击
+        if (!gameStarted && (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)))
+        {
+            // 隐藏提示并开始加载场景
+            gameStarted = true;
+            pressAnyKeyPrompt.SetActive(false);
+            loadingBar.gameObject.SetActive(true);
+            LoadScene("MainMenu");
+        }
+    }
+
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
