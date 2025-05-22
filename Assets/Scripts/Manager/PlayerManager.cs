@@ -55,6 +55,18 @@ namespace Manager
 
             GameStateManager.Instance.SetPlayerPointType(PlayerPointType.None);
         }
+
+        public void ChangePlayerName(string newName)
+        {
+            if (string.IsNullOrEmpty(newName))
+            {
+                Debug.LogError("New name is null or empty.");
+                return;
+            }
+            
+            player.playerData.playerName = newName;
+            Debug.Log($"Player name changed to: {newName}");
+        }
     }
 
     public enum PlayerPointType

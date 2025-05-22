@@ -23,6 +23,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button confirmYesButton;
     [SerializeField] private Button confirmNoButton;
     
+    [Header("InputField Window")]
+    [SerializeField] private GameObject inputFieldWindow;
+    [SerializeField] private TextMeshProUGUI inputFieldTitleText;
+    [SerializeField] private TextMeshProUGUI inputFieldMessageText;
+    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private Button inputFieldConfirmButton;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -145,5 +152,10 @@ public class UIManager : MonoBehaviour
         });
         
         confirmDialogPanel.SetActive(true);
+    }
+
+    public void InputFieldWindow(string title, string message, Action<string> onConfirm)
+    {
+        
     }
 }
