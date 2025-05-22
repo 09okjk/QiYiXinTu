@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
@@ -15,7 +16,7 @@ namespace UI
     
     public class InteractiveUI:MonoBehaviour
     {
-        public Image interactImage; // 交互按钮
+        public SpriteRenderer interactImage; // 交互按钮
         public InteractionType interactionType = InteractionType.None; // 交互类型
         public string interactionValue; // 交互值
         
@@ -23,7 +24,16 @@ namespace UI
         {
             interactImage.gameObject.SetActive(false); // 初始隐藏交互按钮
         }
-        
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.E) && interactImage.gameObject.activeSelf)
+            {
+                // 处理交互逻辑
+                OnInteractButtonClicked();
+            }
+        }
+
         void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Player"))

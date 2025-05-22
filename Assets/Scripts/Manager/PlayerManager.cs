@@ -30,6 +30,21 @@ namespace Manager
             player.gameObject.SetActive(false);
         }
 
+        private void OnEnable()
+        {
+            DialogueManager.Instance.OnDialogueEnd += CheckDialogueID;
+        }
+
+        private void OnDisable()
+        {
+            DialogueManager.Instance.OnDialogueEnd -= CheckDialogueID;
+        }
+
+        private void CheckDialogueID(string dialogueID)
+        {
+            
+        }
+
         public void SetPlayer()
         {
             createPlayerPoints.Clear();

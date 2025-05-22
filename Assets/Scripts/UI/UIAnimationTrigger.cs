@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Manager;
+using UnityEngine;
 
 namespace UI
 {
@@ -24,6 +25,11 @@ namespace UI
         {
             Debug.Log($"TriggerDialogue: {dialogueID}");
             DialogueManager.Instance.StartDialogueByID(dialogueID);
+        }
+
+        public void ActivatePlayer()
+        {
+            PlayerManager.Instance.SetPlayer();
         }
     }
 }
