@@ -29,6 +29,7 @@ namespace UI
 
         public void ActivatePlayer()
         {
+            GameStateManager.Instance.SetPlayerPointType(PlayerPointType.Right);
             PlayerManager.Instance.SetPlayer();
         }
     }

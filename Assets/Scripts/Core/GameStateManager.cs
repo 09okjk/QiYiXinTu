@@ -40,7 +40,7 @@ public class GameStateManager : MonoBehaviour
         {
             return (PlayerPointType)PlayerPrefs.GetInt("PlayerPointType");
         }
-        return PlayerPointType.None;
+        return PlayerPointType.Right;
     }
     
     // 暂停游戏

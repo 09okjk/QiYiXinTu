@@ -50,8 +50,8 @@ namespace UI
         
         private void OnStartButtonClicked()
         {
-            // titleImage.gameObject.GetComponent<Animator>().enabled = true;
-            EnterGame();
+            titleImage.gameObject.GetComponent<Animator>().enabled = true;
+            // EnterGame();
         }
 
         private void OnLoadButtonClicked()
