@@ -27,10 +27,10 @@ namespace Manager
 
         private void Start()
         {
-            SetPlayer();
+            player.gameObject.SetActive(false);
         }
 
-        private void SetPlayer()
+        public void SetPlayer()
         {
             createPlayerPoints.Clear();
             GameObject[] points = GameObject.FindGameObjectsWithTag("PlayerStart");

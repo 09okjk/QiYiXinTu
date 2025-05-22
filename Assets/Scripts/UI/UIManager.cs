@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Manager;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -50,6 +52,40 @@ public class UIManager : MonoBehaviour
             confirmDialogPanel.SetActive(false);
         }
     }
+
+    private void OnEnable()
+    {
+        DialogueManager.Instance.OnDialogueEnd += CheckDialogueID;
+    }
+
+    private void OnDisable()
+    {
+        DialogueManager.Instance.OnDialogueEnd -= CheckDialogueID;
+    }
+
+    private async void CheckDialogueID(string dialogueID)
+    {
+        try
+        {
+            // 检查对话ID并显示相应的输入框
+            if (dialogueID == "fight_over_dialogue")
+            {
+                await InputFieldWindow(
+                    "Enter Player Name", 
+                    "Please enter your name:", 
+                    PlayerManager.Instance.ChangePlayerName
+                );
+                DialogueManager.Instance.StartDialogueByID("dialogue_001");
+            
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error in CheckDialogueID: {e.Message}");
+            throw; // TODO 处理异常
+        }
+    }
+
     /// <summary>
     /// 显示通知
     /// </summary>
@@ -154,8 +190,29 @@ public class UIManager : MonoBehaviour
         confirmDialogPanel.SetActive(true);
     }
 
-    public void InputFieldWindow(string title, string message, Action<string> onConfirm)
+    public async Task InputFieldWindow(string title, string message, Action<string> onConfirm)
     {
+        if (!inputFieldWindow)
+        {
+            Debug.LogError("Input field window not assigned!");
+            return;
+        }
+        
+        inputFieldTitleText.text = title;
+        inputFieldMessageText.text = message;
+        
+        inputFieldWindow.SetActive(true);
+        
+        // 清除之前的监听器 防止重复调用
+        inputFieldConfirmButton.onClick.RemoveAllListeners();
+        
+        // 添加新的监听器
+        inputFieldConfirmButton.onClick.AddListener(() => 
+        {
+            string inputText = inputField.text;
+            onConfirm?.Invoke(inputText);
+            inputFieldWindow.SetActive(false);
+        });
         
     }
 }

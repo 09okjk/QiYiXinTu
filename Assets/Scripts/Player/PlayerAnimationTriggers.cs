@@ -31,7 +31,7 @@ public class PlayerAnimationTriggers : MonoBehaviour
 
     private void ActivateNpc(string npcID)
     {
-        NPCManager.Instance.GetNpc(npcID).ActivateNpc();
+        NPCManager.Instance.ShowNpc(npcID);
     }
     
     private void StartQuest(string questID)

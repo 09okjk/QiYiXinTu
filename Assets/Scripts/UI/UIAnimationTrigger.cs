@@ -13,5 +13,17 @@ namespace UI
         {
             MainMenuManager.Instance.EnterGame();
         }
+        
+        public void OnSceneAnimationFinished(int animationIndex)
+        {
+            Debug.Log($"OnSceneAnimationFinished: {animationIndex}");
+            GameUIManager.Instance.PlaySceneAnimation(animationIndex);
+        }
+        
+        public void TriggerDialogue(string dialogueID)
+        {
+            Debug.Log($"TriggerDialogue: {dialogueID}");
+            DialogueManager.Instance.StartDialogueByID(dialogueID);
+        }
     }
 }

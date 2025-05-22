@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core;
+using Manager;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -65,7 +67,7 @@ public class DialogueManager : MonoBehaviour
     }
     
     // 开始对话，可选择性地添加完成回调
-    public void StartDialogue(DialogueData dialogue, Action<bool> onComplete = null)
+    public async Task StartDialogue(DialogueData dialogue, Action<bool> onComplete = null)
     {
         if (dialogue == null || dialogue.nodes == null || dialogue.nodes.Count == 0)
         {
@@ -91,16 +93,17 @@ public class DialogueManager : MonoBehaviour
         }
         
         dialoguePanel.SetActive(true);
-        DisplayCurrentNode();
+        await DisplayCurrentNode();
         onDialogueCompleteCallback = onComplete;
     }
     
+    // 一些动画触发的对话和特定场景触发的对话，需要通过ID来开始
     public void StartDialogueByID(string dialogueID, Action<bool> onComplete = null)
     {
         DialogueData dialogue = GetDialogueData(dialogueID);
-        if (dialogue != null)
+        if (dialogue)
         {
-            StartDialogue(dialogue, onComplete);
+            _ = StartDialogue(dialogue, onComplete);
         }
         else
         {
@@ -109,7 +112,7 @@ public class DialogueManager : MonoBehaviour
     }
     
     // 显示当前对话节点
-    private void DisplayCurrentNode()
+    private async Task DisplayCurrentNode()
     {
         // 检查节点索引是否有效
         if (string.IsNullOrEmpty(currentNodeID) )
@@ -137,6 +140,7 @@ public class DialogueManager : MonoBehaviour
 
     private void ChangeSpeaker(SpeakerType speakerType)
     {
+        Debug.Log($"show speaker: {speakerType}");
         playerDialoguePanel.SetActive(false);
         nPCDialoguePanel.SetActive(false);
         systemDialoguePanel.SetActive(false);
@@ -145,21 +149,33 @@ public class DialogueManager : MonoBehaviour
         {
             case SpeakerType.PlayerChoice:
             case SpeakerType.Player:
-                playerNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
-                currentDialogueText = playerDialogueText;
-                playerImage.sprite = Resources.Load<Sprite>($"Art/Player/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
-                playerDialoguePanel.SetActive(true);
+                try
+                {
+                    playerNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName)
+                        ? currentDialogueNode.speaker.speakerID
+                        : currentDialogueNode.speaker.speakerName;
+                    CurrentDialogueTextCheck(playerDialogueText);
+                    playerImage.sprite =
+                        Resources.Load<Sprite>(
+                            $"Art/Player/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
+                    playerDialoguePanel.SetActive(true);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"设置玩家对话面板时出错: {e.Message}");
+                    throw;
+                }
                 break;
             case SpeakerType.NpcNotice:
             case SpeakerType.Npc:
                 currentNpc = NPCManager.Instance.GetNpc(currentDialogueNode.speaker.speakerID);
                 nPCNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
-                currentDialogueText = nPCDialogueText;
+                CurrentDialogueTextCheck(nPCDialogueText);
                 nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
                 nPCDialoguePanel.SetActive(true);
                 break;
             case SpeakerType.System:
-                currentDialogueText = systemDialogueText;
+                CurrentDialogueTextCheck(systemDialogueText);
                 systemDialoguePanel.SetActive(true);
                 break;
         }
@@ -181,6 +197,12 @@ public class DialogueManager : MonoBehaviour
         typingCoroutine = StartCoroutine(TypeText(currentDialogueText,currentDialogueNode.text, () => {
             // 文本打字完成后，等待玩家点击继续
             
+            // 发布任务
+            if (!string.IsNullOrEmpty(currentDialogueNode.questID))
+            {
+                Debug.Log($"发布任务: {currentDialogueNode.questID}");
+                QuestManager.Instance.StartQuest(currentDialogueNode.questID);
+            }
             //提供奖励
             if (currentDialogueNode.rewardIDs.Count > 0)
             {
@@ -269,12 +291,12 @@ public class DialogueManager : MonoBehaviour
             return;
         }
         
-        // 获取按钮文本，并显示打字效果在对话框上
-        DialogueChoice selectedChoice = currentDialogueNode.choices[choiceIndex];
-        ChangeSpeaker(SpeakerType.PlayerChoice);
-        typingCoroutine = StartCoroutine(TypeText(currentDialogueText,selectedChoice.text, () =>
-        {
-        }));
+        // // 获取按钮文本，并显示打字效果在对话框上
+        // DialogueChoice selectedChoice = currentDialogueNode.choices[choiceIndex];
+        // ChangeSpeaker(SpeakerType.PlayerChoice);
+        // typingCoroutine = StartCoroutine(TypeText(currentDialogueText,selectedChoice.text, () =>
+        // {
+        // }));
         string nextNodeID = currentDialogueNode.choices[choiceIndex].nextNodeID;
     
         // 清除选择
@@ -286,7 +308,7 @@ public class DialogueManager : MonoBehaviour
         // 移动到下一个对话节点
         currentNodeID = nextNodeID;
         // 显示下一个节点
-        DisplayCurrentNode();
+        _ = DisplayCurrentNode();
     }
     
     // 点击对话面板事件
@@ -312,6 +334,7 @@ public class DialogueManager : MonoBehaviour
     {
         Debug.Log($"当前对话ID: {currentDialogue.dialogueID}");
         Debug.Log($"当前对话节点ID: {currentDialogueNode.nodeID}");
+        Debug.Log($"当前对话条件类型: {currentDialogueNode.conditionType}");
         switch (currentDialogueNode.conditionType)
         {
             case DialogueConditionType.None:
@@ -378,7 +401,7 @@ public class DialogueManager : MonoBehaviour
     {
         dialoguePanel.SetActive(false);
         // 对话结束时的回调或事件
-        OnDialogueEnd?.Invoke();// 全局事件
+        OnDialogueEnd?.Invoke(currentDialogue.dialogueID);// 全局事件
         
         // 执行对话完成后的回调 一次性回调，只针对特定对话，在对话结束后自动清除
         if (onDialogueCompleteCallback != null)
@@ -396,7 +419,22 @@ public class DialogueManager : MonoBehaviour
     }
     
     // 对话结束事件
-    public event Action OnDialogueEnd;
+    public event Action<string> OnDialogueEnd;
+
+    private void CurrentDialogueTextCheck(TextMeshProUGUI dialogueText)
+    {
+        try
+        {
+            currentDialogueText = dialogueText;
+            string playerName = PlayerManager.Instance.player.playerData.playerName;
+            currentDialogueText.text = currentDialogueText.text.Replace("{playerName}", playerName);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"设置对话文本时出错: {e.Message}");
+            throw;
+        }
+    }
     
     // 获取对话数据
     public DialogueData GetDialogueData(string dialogueID)

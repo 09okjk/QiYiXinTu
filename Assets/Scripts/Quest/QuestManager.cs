@@ -68,6 +68,11 @@ public class QuestManager : MonoBehaviour
     // 开始任务
     public void StartQuest(string questID, Action<bool> onComplete = null)
     {
+        if (currentQuest)
+        {
+            currentQuest = null;
+        }
+        
         if (string.IsNullOrEmpty(questID))
         {
             Debug.LogError("任务ID为空");
@@ -100,7 +105,14 @@ public class QuestManager : MonoBehaviour
             onQuestCompleteCallback?.Invoke(true);
             ToggleQuestText();
             // 自动接取下一个任务
-            StartQuest(nextQuestID);
+            if (!string.IsNullOrEmpty(nextQuestID))
+            {
+                StartQuest(nextQuestID);
+            }
+            else
+            {
+                Debug.Log("没有下一个任务");
+            }
             Debug.Log($"任务完成: {quest.questName}");
         }
         else

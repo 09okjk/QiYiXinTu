@@ -21,7 +21,7 @@ MonoBehaviour:
   KnockbackDuration: 0.5
   itemIDs: []
   playerID: player
-  playerName: "\u73A9\u5BB6001"
+  playerName: ???
   moveSpeed: 8
   jumpForce: 12
   wallJumpForce: 5

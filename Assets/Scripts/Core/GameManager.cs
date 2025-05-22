@@ -121,8 +121,10 @@ public class GameManager : MonoBehaviour
             case "MainMenu":
                 Time.timeScale = 1f; // 确保游戏没有暂停
                 break;
-                
-            case "Scene 1":
+            case "Room1":
+                // 播放开场动画
+                GameUIManager.Instance.PlaySceneAnimation(0);
+                break;
             case "Scene 2":
             case "Scene 3":
             case "Scene 4":
@@ -149,7 +151,7 @@ public class GameManager : MonoBehaviour
                 // 初始化游戏状态
                 GameStateManager.Instance.ClearAllFlags();
                 // 开始初始任务
-                QuestManager.Instance.StartQuest("quest_001");
+                // QuestManager.Instance.StartQuest("quest_001");
                 break;
                 
             case "PlayerDied":

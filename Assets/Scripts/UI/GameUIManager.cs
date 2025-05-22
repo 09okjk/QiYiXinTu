@@ -31,6 +31,7 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Button instructionButton; // 新手引导按钮
     [SerializeField] private Button inventoryButton; // 背包按钮
     [SerializeField] private Button newsButton; // 新闻按钮
+    [SerializeField] private Animator sceneAnimator; // 场景动画
     
     private List<SkillSlotUI> skillSlotList = new List<SkillSlotUI>();
 
@@ -50,8 +51,8 @@ public class GameUIManager : MonoBehaviour
 
     private void Start()
     {
-        // 显示游戏UI
-        gameUIPanel.SetActive(true);
+        // 不显示游戏UI
+        gameUIPanel.SetActive(false);
         
         // 初始化技能栏
         InitializeSkillBar();
@@ -90,6 +91,37 @@ public class GameUIManager : MonoBehaviour
         
         player.OnHealthChanged -= UpdateHealth;
         player.OnManaChanged -= UpdateMana;
+    }
+    
+    public void PlaySceneAnimation(int animationIndex)
+    {
+        if (animationIndex < 0)
+        {
+            StopSceneAnimation();
+            return;
+        }
+        if (sceneAnimator != null)
+        {
+            sceneAnimator.gameObject.SetActive(true);
+            sceneAnimator.SetInteger("AnimationIndex", animationIndex);
+        }
+        else
+        {
+            Debug.LogWarning("Scene Animator is not assigned.");
+        }
+    }
+    
+    public void StopSceneAnimation()
+    {
+        if (sceneAnimator != null)
+        {
+            sceneAnimator.StopPlayback();
+            sceneAnimator.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning("Scene Animator is not assigned.");
+        }
     }
     
     // 在UI开始交互时调用

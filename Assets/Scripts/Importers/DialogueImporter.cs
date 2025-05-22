@@ -58,6 +58,8 @@ public class DialogueImporter : EditorWindow
                                 "列9: questID (任务ID，可空)\n" +
                                 "列10: rewardIDs (奖励ID列表，用分号分隔)\n" +
                                 "列11: isFollow (是否跟随，true/false)\n" +
+                                "列12：conditionType (对话条件类型，如：None/QuestCompleted/ItemAcquired等)\n" +
+                                "列13：conditionValue (对话条件值)\n" +
                                 "其后的列: 每两列为一组，分别是选项文本和目标节点ID", MessageType.Info);
     }
 
@@ -76,7 +78,7 @@ public class DialogueImporter : EditorWindow
             string[] headers = lines[0].Split(',');
             
             // 检查标题行是否符合预期格式
-            if (headers.Length < 11) // 至少需要 11 个基本列（增加了 isFollow）
+            if (headers.Length < 13) // 至少需要 13 个基本列（增加了 isFollow）
             {
                 EditorUtility.DisplayDialog("错误", "CSV格式不正确。至少需要包含：dialogueID, nodeID, speakerID, speakerName, speakerType, emotion, text, nextNodeID, questID, rewardIDs, isFollow", "确定");
                 return;
@@ -95,9 +97,9 @@ public class DialogueImporter : EditorWindow
 
                 string[] values = ParseCSVLine(lines[i]);
                 
-                if (values.Length < 11)
+                if (values.Length < 13)
                 {
-                    Debug.LogWarning($"第 {i+1} 行: 数据不完整，至少需要11列，已跳过");
+                    Debug.LogWarning($"第 {i+1} 行: 数据不完整，至少需要13列，已跳过");
                     continue;
                 }
 
@@ -178,11 +180,13 @@ public class DialogueImporter : EditorWindow
                         questID = values[8].Trim(), // 第九列是questID
                         rewardIDs = ParseRewardIDs(values[9]), // 第十列是rewardIDs
                         isFollow = isFollow, // 第十一列是isFollow
-                        choices = new List<DialogueChoice>()
+                        choices = new List<DialogueChoice>(),
+                        conditionType = ParseConditionType(values[11]), // 第十二列是conditionType
+                        conditionValue = values.Length > 12 ? values[12].Trim() : "" // 第十三列是conditionValue
                     };
                     
                     // 处理选择项
-                    for (int c = 11; c < values.Length; c += 2)
+                    for (int c = 13; c < values.Length; c += 2)
                     {
                         if (c + 1 >= values.Length) break;
 
@@ -260,6 +264,20 @@ public class DialogueImporter : EditorWindow
         
         Debug.LogWarning($"无法解析情绪类型: {emotionString}，使用默认值Neutral");
         return Emotion.Neutral;
+    }
+    
+    // 解析条件类型
+    private DialogueConditionType ParseConditionType(string conditionTypeString)
+    {
+        conditionTypeString = conditionTypeString.Trim();
+        
+        if (Enum.TryParse(conditionTypeString, true, out DialogueConditionType conditionType))
+        {
+            return conditionType;
+        }
+        
+        Debug.LogWarning($"无法解析条件类型: {conditionTypeString}，使用默认值None");
+        return DialogueConditionType.None;
     }
 
     // 解析奖励ID列表

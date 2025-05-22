@@ -40,4 +40,17 @@ public class NPCManager:MonoBehaviour
     {
         return npcList.Find(n => n.npcData.npcID == npcID);
     }
+    
+    public void ShowNpc(string npcID)
+    {
+        NPC npc = GetNpc(npcID);
+        if (npc != null)
+        {
+            npc.ActivateNpc();
+        }
+        else
+        {
+            Debug.LogWarning($"NPC with ID {npcID} not found.");
+        }
+    }
 }

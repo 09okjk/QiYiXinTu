@@ -1,5 +1,5 @@
-﻿npcID,npcName,description,spriteID,MaxHealth,CurrentHealth,MaxMana,CurrentMana,InvincibleTime,knockbackDirectionX,knockbackDirectionY,KnockbackDuration,itemIDs,dialogueIDs,customKey1,customValue1,customKey2,customValue2,,
-merchant_01,张老板,城镇里经营杂货铺的商人,merchant_sprite,100,100,0,0,0.5,1,1,0.3,potion_01;sword_01;shield_01,greeting_dialogue;shop_dialogue,isFriendly,TRUE,shopLevel,3,,
-guard_01,王卫兵,城镇守卫,guard_sprite,150,150,50,50,1,0.8,0.8,0.2,health_potion;guard_sword,patrol_dialogue;alert_dialogue,isHostile,FALSE,patrolArea,town_center,,
-village_elder,李长老,村庄的智者,elder_sprite,80,80,100,100,0.8,0.5,0.5,0.1,wisdom_scroll;healing_herbs,wisdom_dialogue;quest_dialogue;history_dialogue,questGiver,TRUE,specialAbility,healing,,
-blacksmith,赵铁匠,锻造大师,blacksmith_sprite,120,120,0,0,0.7,1.2,1.2,0.4,iron_ingot;steel_sword;hammer,forge_dialogue;upgrade_dialogue,canUpgradeWeapons,TRUE,forgeLevel,5,specialCrafting,weapons
+﻿npcID,npcName,description,spriteID,MaxHealth,CurrentHealth,MaxMana,CurrentMana,InvincibleTime,knockbackDirectionX,knockbackDirectionY,KnockbackDuration,itemIDs,dialogueIDs,customKey1,customValue1,customKey2,customValue2
+LuXinsheng,路薪声,1,路薪声,100,100,100,100,0.5,1,1,0.3,ink_bottle,lu_first_dialogue;fight_over_dialogue;,,,,
+guard_01,王卫兵,城镇守卫,guard_sprite,150,150,50,50,1,0.8,0.8,0.2,health_potion;guard_sword,patrol_dialogue;alert_dialogue,,,,
+village_elder,李长老,村庄的智者,elder_sprite,80,80,100,100,0.8,0.5,0.5,0.1,wisdom_scroll;healing_herbs,wisdom_dialogue;quest_dialogue;history_dialogue,,,,
+blacksmith,赵铁匠,锻造大师,blacksmith_sprite,120,120,0,0,0.7,1.2,1.2,0.4,iron_ingot;steel_sword;hammer,forge_dialogue;upgrade_dialogue,,,,
