@@ -25,6 +25,5 @@ MonoBehaviour:
   npcName: "\u8DEF\u85AA\u58F0"
   spriteID: "\u8DEF\u85AA\u58F0"
   dialogueIDs:
-  - dialogue001
-  - dialogue002
+  - fight_over_dialogue
   properties: []

@@ -20,8 +20,12 @@ namespace UI
         public SpriteRenderer interactImage; // 交互按钮
         public InteractionType interactionType = InteractionType.None; // 交互类型
         public string interactionValue; // 交互值
-        
-        
+
+        protected virtual void Awake()
+        {
+            
+        }
+
         protected virtual void Start()
         {
             interactImage.gameObject.SetActive(false); // 初始隐藏交互按钮
@@ -80,6 +84,7 @@ namespace UI
                     Debug.Log("No valid interaction type selected.");
                     break;
             }
+            gameObject.SetActive(false); // 隐藏交互按钮
         }
     }
 }

@@ -44,7 +44,7 @@ public class NPCManager:MonoBehaviour
     public void ShowNpc(string npcID)
     {
         NPC npc = GetNpc(npcID);
-        if (npc != null)
+        if (npc)
         {
             npc.ActivateNpc();
         }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: homework
   state: 2
-  currentNodeID: node001
+  currentNodeID: 
   nodes:
   - nodeID: node001
     text: "\u662F\u71AC\u591C\u809D\u5B8C\u7684\u201C\u65B0\u95FB\u91C7\u5199\u5B9E\u8DF5\u4F5C\u4E1A\u201D\uFF0C\u5C4F\u5E55\u505C\u7559\u5728\u6587\u6863\u7ED3\u5C3E\u7684\u754C\u9762"

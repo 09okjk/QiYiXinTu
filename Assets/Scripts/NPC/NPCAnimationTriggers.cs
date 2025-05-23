@@ -8,5 +8,11 @@ public class NPCAnimationTriggers:MonoBehaviour
     {
         npc.AnimationTrigger();
     }
+    
+    private void TriggerDialogue(string dialogueID)
+    {
+        Debug.Log($"TriggerDialogue: {dialogueID}");
+        DialogueManager.Instance.StartDialogueByID(dialogueID);
+    }
         
 }

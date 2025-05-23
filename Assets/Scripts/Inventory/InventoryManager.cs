@@ -33,7 +33,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private ItemType currentTab = ItemType.QuestItem;
 
     public event Action<bool> OnInventoryStateChanged;
-    public event Action OnAddItem;
+    public event Action<string> OnAddItem;
     
     private void Awake()
     {
@@ -119,7 +119,7 @@ public class InventoryManager : MonoBehaviour
             item.icon,
             () => { Debug.Log("确认按钮被点击"); }
         );
-        OnAddItem?.Invoke();
+        OnAddItem?.Invoke(item.itemID);
     }
 
     // 检查是否拥有某个物品

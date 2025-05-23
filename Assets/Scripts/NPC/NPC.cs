@@ -31,6 +31,8 @@ public class NPC : Entity
     {
         base.Awake();
         
+        stateMachine = new NPCStateMachine();
+        
         if (npcData == null)
             npcData = baseData as NPCData;
     }
@@ -252,12 +254,12 @@ public class NPC : Entity
     #endregion
 
 
-    public void ActivateNpc()
+    public virtual void ActivateNpc()
     {
         gameObject.SetActive(true);
     }
     
-    public void DeactivateNpc()
+    public virtual void DeactivateNpc()
     {
         gameObject.SetActive(false);
     }

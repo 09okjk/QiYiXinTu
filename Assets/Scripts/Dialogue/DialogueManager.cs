@@ -50,8 +50,8 @@ public class DialogueManager : MonoBehaviour
     // Npc对象
     private NPC currentNpc;
     
-    // Events
-    public event Action OnDialogueComplete; // 对话完成事件
+    // 对话结束事件
+    public event Action<string> OnDialogueEnd;
     
     private void Awake()
     {
@@ -118,7 +118,6 @@ public class DialogueManager : MonoBehaviour
         if (string.IsNullOrEmpty(currentNodeID) )
         {
             currentDialogue.state = DialogueState.Finished;
-            OnDialogueComplete?.Invoke();
             EndDialogue();
             return;
         }
@@ -410,6 +409,7 @@ public class DialogueManager : MonoBehaviour
             onDialogueCompleteCallback = null; // 清空回调防止多次触发
             tempCallback(currentDialogue.state == DialogueState.Finished);
         }
+        Debug.Log($"对话结束: {currentDialogue.dialogueID}");
     }
     
     // 检查对话是否正在进行
@@ -418,8 +418,6 @@ public class DialogueManager : MonoBehaviour
         return dialoguePanel.activeSelf;
     }
     
-    // 对话结束事件
-    public event Action<string> OnDialogueEnd;
 
     private void CurrentDialogueTextCheck(TextMeshProUGUI dialogueText)
     {

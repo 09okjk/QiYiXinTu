@@ -11540,7 +11540,7 @@ Transform:
   m_GameObject: {fileID: 1551647985}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3.09, y: 1.67, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11873,6 +11873,7 @@ GameObject:
   - component: {fileID: 1647690982}
   - component: {fileID: 1647690984}
   - component: {fileID: 1647690983}
+  - component: {fileID: 1647690985}
   m_Layer: 0
   m_Name: NPCAnimator
   m_TagString: Untagged
@@ -11972,6 +11973,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1647690985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647690981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b033d23d1a8477b821c6f034e219326, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1655722369
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,5 +32,10 @@ namespace UI
             GameStateManager.Instance.SetPlayerPointType(PlayerPointType.Right);
             PlayerManager.Instance.SetPlayer();
         }
+
+        public void ShowNpc(string npcID)
+        {
+            NPCManager.Instance.ShowNpc(npcID);
+        }
     }
 }

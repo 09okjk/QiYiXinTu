@@ -27,15 +27,6 @@ public class LuXinsheng:NPC
     protected override void Start()
     {
         base.Start();
-        // 如果当前场景是Room1，则初始化SleepState
-        if (SceneManager.GetActiveScene().name == "Room1")
-        {
-            stateMachine.Initialize(SleepState);
-        }
-        else
-        {
-            stateMachine.Initialize(IdleState);
-        }
     }
     
     protected override void FixedUpdate()
@@ -54,6 +45,21 @@ public class LuXinsheng:NPC
         if (dialogueID == "homework_over")
         {
             WeekUp();
+        }
+    }
+
+    public override void ActivateNpc()
+    {
+        base.ActivateNpc();
+        
+        // 如果当前场景是Room1，则初始化SleepState
+        if (SceneManager.GetActiveScene().name == "Room1")
+        {
+            stateMachine.Initialize(SleepState);
+        }
+        else
+        {
+            stateMachine.Initialize(IdleState);
         }
     }
 

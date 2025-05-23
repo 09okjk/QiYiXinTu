@@ -42,29 +42,30 @@ public class QuestManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
     private void Start()
     {
         // 订阅各种可能导致任务完成的事件
         // 例如：对话完成、物品使用、任务完成等
-        DialogueManager.Instance.OnDialogueComplete += OnDialogueFinished;
-        InventoryManager.Instance.OnAddItem += OnDialogueFinished;
-    }
-
-    private void OnDialogueFinished()
-    {
-        if(CheckQuestCondition())
-        {
-            FinishQuest(currentQuestID);
-        }
+        DialogueManager.Instance.OnDialogueEnd += OnConditionFinished;
+        InventoryManager.Instance.OnAddItem += OnConditionFinished;
     }
 
     private void OnDestroy()
     {
         // 取消订阅事件
-        DialogueManager.Instance.OnDialogueComplete -= OnDialogueFinished;
-        InventoryManager.Instance.OnAddItem -= OnDialogueFinished;
+        DialogueManager.Instance.OnDialogueEnd -= OnConditionFinished;
+        InventoryManager.Instance.OnAddItem -= OnConditionFinished;
     }
+    
+    private void OnConditionFinished(string dialogueID)
+    {
+        if(CheckQuestCondition(dialogueID))
+        {
+            FinishQuest(currentQuestID);
+        }
+    }
+    
     // 开始任务
     public void StartQuest(string questID, Action<bool> onComplete = null)
     {
@@ -122,7 +123,7 @@ public class QuestManager : MonoBehaviour
     }
     
     // 判断任务完成条件
-    private bool CheckQuestCondition()
+    private bool CheckQuestCondition(string completedValue)
     {
         if (currentQuest == null)
         {
@@ -136,25 +137,13 @@ public class QuestManager : MonoBehaviour
             case QuestCondition.CompleteDialogue:
                 // 检查对话是否完成
                 string[] dialogueIDs = value.Split(';');
-                foreach (var dialogueID in dialogueIDs)
-                {
-                    if (!DialogueManager.Instance.IsDialogueFinished(dialogueID))
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                value = dialogueIDs.Where(dialogueID => dialogueID == completedValue).Aggregate(value, (current, dialogueID) => current.Replace(dialogueID, ""));
+                return string.IsNullOrEmpty(value);
             case QuestCondition.HaveItem:
                 // 检查是否拥有物品
                 string[] itemIDs = value.Split(';');
-                foreach (var item in itemIDs)
-                {
-                    if (!InventoryManager.Instance.HasItem(item))
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                value = itemIDs.Where(item => item == completedValue).Aggregate(value, (current, item) => current.Replace(item, ""));
+                return string.IsNullOrEmpty(value);
             case QuestCondition.CompleteQuest:
                 // 检查任务是否完成
                 return IsQuestCompleted(value);
