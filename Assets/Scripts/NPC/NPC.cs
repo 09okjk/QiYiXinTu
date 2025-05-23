@@ -4,8 +4,8 @@ using System.Collections.Generic;
 public class NPC : Entity
 {
     [Header("NPC Data")] internal NPCData npcData;
-    [SerializeField] private float followDistance = 1.5f; // 跟随距离
-    [SerializeField] private float followSpeed = 2f; // 跟随速度
+    [SerializeField] protected float followDistance = 1.5f; // 跟随距离
+    [SerializeField] protected internal float followSpeed = 2f; // 跟随速度
     public SpriteRenderer spriteRenderer;
     
     [Header("交互设置")]
@@ -17,12 +17,12 @@ public class NPC : Entity
     
     private bool canInteract = false; // 是否可以交互
     private DialogueData cachedDialogue; // 缓存对话数据
-    private bool isFollowing = false; // 是否跟随玩家
+    protected bool isFollowing = false; // 是否跟随玩家
     private GameObject player; // 玩家引用
     private float defaultSpeed; // 当前速度
     #region State
 
-    NPCStateMachine stateMachine { get; set; }
+    protected NPCStateMachine stateMachine { get; set; }
 
     #endregion
 
@@ -73,7 +73,7 @@ public class NPC : Entity
         }
     }
     
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         // 如果NPC处于跟随状态，则更新位置
         if (isFollowing)
