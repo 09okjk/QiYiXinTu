@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -47,7 +48,18 @@ public class NPC : Entity
         
         defaultSpeed = followSpeed;
     }
-    
+
+    protected void OnEnable()
+    {
+        DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+    }
+
+
+    protected void OnDisable()
+    {
+        DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -110,6 +122,10 @@ public class NPC : Entity
             }
         }
     }
+    protected virtual void OnDialogueEnd(string obj)
+    {
+        
+    }
     
     // 交互方法
     private void Interact()
@@ -138,7 +154,7 @@ public class NPC : Entity
             if (dialogue)
             {
                 cachedDialogue = dialogue;
-                DialogueManager.Instance.StartDialogue(cachedDialogue, OnDialogueEnd);
+                DialogueManager.Instance.StartDialogue(cachedDialogue, OnCurrentDialogueEnd);
             }
             else
             {
@@ -153,7 +169,7 @@ public class NPC : Entity
                 if (dialogueData.state != DialogueState.Finished)
                 {
                     cachedDialogue = dialogueData;
-                    DialogueManager.Instance.StartDialogue(cachedDialogue, OnDialogueEnd);
+                    DialogueManager.Instance.StartDialogue(cachedDialogue, OnCurrentDialogueEnd);
                     break;
                 }
             }
@@ -161,7 +177,7 @@ public class NPC : Entity
     }
     
     // 根据对话结束的不同方式，进行不同的处理
-    private void OnDialogueEnd(bool isFinished)
+    private void OnCurrentDialogueEnd(bool isFinished)
     {
         if (isFinished)
         {

@@ -10,9 +10,17 @@ namespace UI
         {
             base.Start();
             
-            DialogueManager.Instance.OnDialogueEnd += ActivateInteractImage;
             animator = GetComponentInChildren<Animator>();
             animator.enabled = false; // 禁用动画器
+        }
+
+        private void OnEnable()
+        {
+            DialogueManager.Instance.OnDialogueEnd += ActivateInteractImage;
+        }
+        private void OnDisable()
+        {
+            DialogueManager.Instance.OnDialogueEnd -= ActivateInteractImage;
         }
 
         protected override void Update()
@@ -22,16 +30,10 @@ namespace UI
             // 检测按键输入
             if (Input.GetKeyDown(KeyCode.S) && (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl)) && interactImage.gameObject.activeSelf )
             {
-                // 处理交互逻辑
-                OnInteractButtonClicked();
+                animator.enabled = true; // 启用动画器
             }
         }
-
-        private void OnDisable()
-        {
-            DialogueManager.Instance.OnDialogueEnd -= ActivateInteractImage;
-        }
-
+        
         private void ActivateInteractImage(string dialogueID)
         {
             if (dialogueID == "homework")

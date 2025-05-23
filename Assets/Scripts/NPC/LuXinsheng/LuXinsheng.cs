@@ -1,4 +1,6 @@
-﻿public class LuXinsheng:NPC
+﻿using UnityEngine.SceneManagement;
+
+public class LuXinsheng:NPC
 {
     # region States
     internal LuXinshengIdleState IdleState { get; set; }
@@ -25,7 +27,15 @@
     protected override void Start()
     {
         base.Start();
-        stateMachine.Initialize(IdleState);
+        // 如果当前场景是Room1，则初始化SleepState
+        if (SceneManager.GetActiveScene().name == "Room1")
+        {
+            stateMachine.Initialize(SleepState);
+        }
+        else
+        {
+            stateMachine.Initialize(IdleState);
+        }
     }
     
     protected override void FixedUpdate()
@@ -35,7 +45,18 @@
         if (isFollowing)
           stateMachine.ChangeState(MoveState);
     }
-    
+
+    protected override void OnDialogueEnd(string dialogueID)
+    {
+        base.OnDialogueEnd(dialogueID);
+        
+        // 处理对话结束后的逻辑
+        if (dialogueID == "homework_over")
+        {
+            WeekUp();
+        }
+    }
+
     public void Homework()
     {
         stateMachine.ChangeState(HomeworkState);
