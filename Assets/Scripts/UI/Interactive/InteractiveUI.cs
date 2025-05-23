@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,7 @@ namespace UI
         PickUp, // 拾取物品
         Use, // 使用物品
         Open, // 打开
-        Close // 关闭
+        Close, // 关闭
     }
     
     public class InteractiveUI:MonoBehaviour
@@ -20,21 +21,17 @@ namespace UI
         public InteractionType interactionType = InteractionType.None; // 交互类型
         public string interactionValue; // 交互值
         
-        private void Start()
+        
+        protected virtual void Start()
         {
             interactImage.gameObject.SetActive(false); // 初始隐藏交互按钮
         }
 
-        private void Update()
+        protected virtual void Update()
         {
-            if (Input.GetKeyDown(KeyCode.E) && interactImage.gameObject.activeSelf)
-            {
-                // 处理交互逻辑
-                OnInteractButtonClicked();
-            }
         }
 
-        void OnTriggerEnter2D(Collider2D other)
+        protected virtual void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Player"))
             {
@@ -43,7 +40,7 @@ namespace UI
             }
         }
         
-        void OnTriggerExit2D(Collider2D other)
+        protected virtual void OnTriggerExit2D(Collider2D other)
         {
             if (other.CompareTag("Player"))
             {
@@ -52,8 +49,9 @@ namespace UI
             }
         }
 
-        private void OnInteractButtonClicked()
+        protected void OnInteractButtonClicked()
         {
+            interactImage.gameObject.SetActive(false); // 隐藏交互按钮
             switch (interactionType)
             {
                 case InteractionType.Talk:
