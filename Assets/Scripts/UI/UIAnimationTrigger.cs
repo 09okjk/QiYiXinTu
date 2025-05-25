@@ -15,22 +15,18 @@ namespace UI
             MainMenuManager.Instance.EnterGame();
         }
         
-        public void OnSceneAnimationFinished(int animationIndex)
-        {
-            Debug.Log($"OnSceneAnimationFinished: {animationIndex}");
-            GameUIManager.Instance.PlaySceneAnimation(animationIndex);
-        }
-        
         public void TriggerDialogue(string dialogueID)
         {
             Debug.Log($"TriggerDialogue: {dialogueID}");
             DialogueManager.Instance.StartDialogueByID(dialogueID);
+            GameUIManager.Instance.StopSceneAnimation();
         }
 
-        public void ActivatePlayer()
+        public void ActivatePlayerAndNpc(string npcID)
         {
             GameStateManager.Instance.SetPlayerPointType(PlayerPointType.Right);
             PlayerManager.Instance.SetPlayer();
+            ShowNpc(npcID);
         }
 
         public void ShowNpc(string npcID)

@@ -32,7 +32,7 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Button inventoryButton; // 背包按钮
     [SerializeField] private Button newsButton; // 新闻按钮
     [SerializeField] private Animator sceneAnimator; // 场景动画
-    
+    [SerializeField] private GameObject frontScene; // 前景场景
     private List<SkillSlotUI> skillSlotList = new List<SkillSlotUI>();
 
     private Player player;
@@ -93,17 +93,15 @@ public class GameUIManager : MonoBehaviour
         player.OnManaChanged -= UpdateMana;
     }
     
-    public void PlaySceneAnimation(int animationIndex)
+    public void PlaySceneAnimation()
     {
-        if (animationIndex < 0)
-        {
-            StopSceneAnimation();
-            return;
-        }
         if (sceneAnimator != null)
         {
             sceneAnimator.gameObject.SetActive(true);
-            sceneAnimator.SetInteger("AnimationIndex", animationIndex);
+            if (frontScene)
+            {
+                frontScene.SetActive(true);
+            }
         }
         else
         {

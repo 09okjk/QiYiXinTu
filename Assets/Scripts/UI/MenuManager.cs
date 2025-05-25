@@ -84,8 +84,8 @@ public class MenuManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"场景加载：{scene.name}，当前 MenuManager 是否为实例：{this == Instance}");
-        Debug.Log($"当前 TimeScale: {Time.timeScale}");
+        // Debug.Log($"场景加载：{scene.name}，当前 MenuManager 是否为实例：{this == Instance}");
+        // Debug.Log($"当前 TimeScale: {Time.timeScale}");
     }
     
     // 切换菜单的显示状态

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -123,7 +124,7 @@ public class GameManager : MonoBehaviour
                 break;
             case "Room1":
                 // 播放开场动画
-                GameUIManager.Instance.PlaySceneAnimation(0);
+                StartAnimationCotroller.Instance.PlayVideo(0);
                 break;
             case "Scene 2":
             case "Scene 3":
