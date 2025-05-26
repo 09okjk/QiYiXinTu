@@ -1,4 +1,5 @@
-﻿using UnityEngine.SceneManagement;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LuXinsheng:NPC
 {
@@ -27,6 +28,18 @@ public class LuXinsheng:NPC
     protected override void Start()
     {
         base.Start();
+    }
+    
+    
+    protected void OnEnable()
+    {
+        DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+    }
+
+
+    protected void OnDisable()
+    {
+        DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
     }
     
     protected override void FixedUpdate()
@@ -76,6 +89,7 @@ public class LuXinsheng:NPC
     public void WeekUp()
     {
         stateMachine.ChangeState(WeekUpState);
+        Debug.Log("LuXinsheng is waking up!");
     }
     
     public void Shocked()

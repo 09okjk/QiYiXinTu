@@ -75,7 +75,6 @@ public class UIManager : MonoBehaviour
                     "Please enter your name:", 
                     PlayerManager.Instance.ChangePlayerName
                 );
-                DialogueManager.Instance.StartDialogueByID("dialogue_001");
             
             }
         }

@@ -150,9 +150,7 @@ public class DialogueManager : MonoBehaviour
             case SpeakerType.Player:
                 try
                 {
-                    playerNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName)
-                        ? currentDialogueNode.speaker.speakerID
-                        : currentDialogueNode.speaker.speakerName;
+                    playerNameText.text = currentDialogueNode.speaker.speakerName != "???" ? PlayerManager.Instance.player.playerData.playerName : currentDialogueNode.speaker.speakerName;
                     CurrentDialogueTextCheck(playerDialogueText);
                     playerImage.sprite =
                         Resources.Load<Sprite>(

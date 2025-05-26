@@ -23,7 +23,7 @@ public class NPC : Entity
     private float defaultSpeed; // 当前速度
     #region State
 
-    protected NPCStateMachine stateMachine { get; set; }
+    public NPCStateMachine stateMachine { get; set; }
 
     #endregion
 
@@ -49,17 +49,6 @@ public class NPC : Entity
         SetupNpc();
         
         defaultSpeed = followSpeed;
-    }
-
-    protected void OnEnable()
-    {
-        DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
-    }
-
-
-    protected void OnDisable()
-    {
-        DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
     }
 
     protected override void Update()

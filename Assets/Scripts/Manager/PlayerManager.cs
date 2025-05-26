@@ -81,6 +81,8 @@ namespace Manager
             
             player.playerData.playerName = newName;
             Debug.Log($"Player name changed to: {newName}");
+            
+            DialogueManager.Instance.StartDialogueByID("dialogue_001");
         }
     }
 
