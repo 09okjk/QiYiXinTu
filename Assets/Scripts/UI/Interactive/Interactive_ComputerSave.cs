@@ -1,16 +1,26 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
     public class Interactive_ComputerSave:MonoBehaviour
     {
-        public SpriteRenderer interactImage; // 交互按钮
-        private Animator animator;
+        public static Interactive_ComputerSave Instance { get; private set; } // 单例实例
+        public Image interactImage; // 交互按钮
+        public Animator animator;
         
         protected void Awake()
         {
-            animator = GetComponentInChildren<Animator>();
+            if (Instance == null)
+            {
+                Instance = this; // 设置单例实例
+            }
+            else
+            {
+                Destroy(gameObject); // 如果实例已存在，则销毁当前对象
+                return;
+            }
             animator.enabled = false; // 禁用动画器
         }
         protected void Start()
