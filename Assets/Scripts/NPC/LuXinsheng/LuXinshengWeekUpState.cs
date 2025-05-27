@@ -16,17 +16,16 @@ public class LuXinshengWeekUpState: LuXinshengGroundState
     public override void Update()
     {
         base.Update();
-        
-        // 检测是否完成了起床的动画
-        Debug.Log("LuXinshengWeekUpState Update");
-        Debug.Log("TriggerCalled: " + TriggerCalled);
-        if (TriggerCalled)
-        {
-            // 触发对话
-            DialogueManager.Instance.StartDialogueByID("lu_first_dialogue");
-            // 切换到Idle状态
-            LuXinsheng.stateMachine.ChangeState(LuXinsheng.IdleState);
-        }
+        //
+        // Debug.Log("LuXinshengWeekUpState Update");
+        // Debug.Log("TriggerCalled: " + TriggerCalled);
+        // if (TriggerCalled)
+        // {
+        //     // 触发对话
+        //     DialogueManager.Instance.StartDialogueByID("lu_first_dialogue");
+        //     // 切换到Idle状态
+        //     LuXinsheng.stateMachine.ChangeState(LuXinsheng.IdleState);
+        // }
     }
     
     public override void Exit()

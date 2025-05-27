@@ -32,6 +32,7 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Button inventoryButton; // 背包按钮
     [SerializeField] private Button newsButton; // 新闻按钮
     [SerializeField] private Animator sceneAnimator; // 场景动画
+    [SerializeField] private Animator luSleepAnimator; // 路睡觉动画
     [SerializeField] private GameObject frontScene; // 前景场景
     private List<SkillSlotUI> skillSlotList = new List<SkillSlotUI>();
 
@@ -53,6 +54,7 @@ public class GameUIManager : MonoBehaviour
     {
         // 不显示游戏UI
         gameUIPanel.SetActive(false);
+        luSleepAnimator.gameObject.SetActive(false);
         
         // 初始化技能栏
         InitializeSkillBar();
@@ -93,6 +95,36 @@ public class GameUIManager : MonoBehaviour
         player.OnManaChanged -= UpdateMana;
     }
     
+    protected void OnEnable()
+    {
+        DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+    }
+
+
+    protected void OnDisable()
+    {
+        DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
+    }
+
+    private void OnDialogueEnd(string dialogueID)
+    {
+        // 处理对话结束后的逻辑
+        if (dialogueID == "homework_over")
+        {
+            LuXinsheng luXinsheng = NPCManager.Instance.GetNpc("LuXinsheng") as LuXinsheng;
+            if (luXinsheng != null)
+            {
+                luSleepAnimator.gameObject.SetActive(false);
+                luXinsheng.ActivateNpc();
+                luXinsheng.WeekUp();
+            }
+            else
+            {
+                Debug.LogWarning("LuXinsheng NPC not found.");
+            }
+        }
+    }
+
     public void PlaySceneAnimation()
     {
         if (sceneAnimator != null)
@@ -119,6 +151,31 @@ public class GameUIManager : MonoBehaviour
         else
         {
             Debug.LogWarning("Scene Animator is not assigned.");
+        }
+    }
+    
+    public void PlayLuSleepAnimation()
+    {
+        if (luSleepAnimator != null)
+        {
+            luSleepAnimator.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("Lu Sleep Animator is not assigned.");
+        }
+    }
+    
+    public void StopLuSleepAnimation()
+    {
+        if (luSleepAnimator != null)
+        {
+            luSleepAnimator.StopPlayback();
+            luSleepAnimator.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning("Lu Sleep Animator is not assigned.");
         }
     }
     

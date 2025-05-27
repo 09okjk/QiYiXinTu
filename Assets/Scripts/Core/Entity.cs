@@ -82,7 +82,7 @@ public class Entity:MonoBehaviour
     {
         //EntityFX.StartCoroutine("DieFX");
         Debug.Log(gameObject.name + " was die");
-        Destroy(gameObject);
+        Destroy(gameObject); 
     }
 
     protected virtual IEnumerator HitKnockback()

@@ -35,8 +35,8 @@ public class LuXinsheng:NPC
     {
         DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
     }
-
-
+    
+    
     protected void OnDisable()
     {
         DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
@@ -55,9 +55,9 @@ public class LuXinsheng:NPC
         base.OnDialogueEnd(dialogueID);
         
         // 处理对话结束后的逻辑
-        if (dialogueID == "homework_over")
+        if (dialogueID == "lu_first_dialogue")
         {
-            WeekUp();
+            Shocked();
         }
     }
 

@@ -8,5 +8,16 @@ public class NPCAnimationTriggers:MonoBehaviour
     {
         npc.AnimationTrigger();
     }
+    
+    private void WeekUpTrigger()
+    {
+        LuXinsheng luXinsheng = npc as LuXinsheng;
+        if (luXinsheng)
+        {
+            luXinsheng.stateMachine.ChangeState(luXinsheng.IdleState);
+            DialogueManager.Instance.StartDialogueByID("lu_first_dialogue");
+        }
+        
+    }
         
 }

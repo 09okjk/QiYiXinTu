@@ -47,7 +47,9 @@ namespace UI
             // }  
             if (Input.GetKeyDown(KeyCode.W))
             {
+                animator.gameObject.SetActive(true); // 禁用动画器
                 animator.enabled = true; // 启用动画器
+                interactImage.gameObject.SetActive(false); // 隐藏交互按钮
             }
         }
         

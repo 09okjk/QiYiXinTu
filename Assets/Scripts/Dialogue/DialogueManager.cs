@@ -151,7 +151,7 @@ public class DialogueManager : MonoBehaviour
                 try
                 {
                     playerNameText.text = currentDialogueNode.speaker.speakerName != "???" ? PlayerManager.Instance.player.playerData.playerName : currentDialogueNode.speaker.speakerName;
-                    CurrentDialogueTextCheck(playerDialogueText);
+                    currentDialogueText = playerDialogueText;
                     playerImage.sprite =
                         Resources.Load<Sprite>(
                             $"Art/Player/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
@@ -167,15 +167,17 @@ public class DialogueManager : MonoBehaviour
             case SpeakerType.Npc:
                 currentNpc = NPCManager.Instance.GetNpc(currentDialogueNode.speaker.speakerID);
                 nPCNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
-                CurrentDialogueTextCheck(nPCDialogueText);
+                currentDialogueText = nPCDialogueText;
                 nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
                 nPCDialoguePanel.SetActive(true);
                 break;
             case SpeakerType.System:
-                CurrentDialogueTextCheck(systemDialogueText);
+                currentDialogueText = systemDialogueText;
                 systemDialoguePanel.SetActive(true);
                 break;
         }
+        
+        CurrentDialogueTextCheck();
         
         if (speakerType == SpeakerType.PlayerChoice || speakerType == SpeakerType.NpcNotice)
             return;
@@ -219,10 +221,11 @@ public class DialogueManager : MonoBehaviour
             //TODO: 提供跟随
             if (currentNpc && currentDialogueNode.isFollow)
             {
-                currentNpc.FollowPlayer();
+                currentNpc.FollowTargetPlayer();
             }
-            
-            continueButton.onClick.AddListener(OnDialoguePanelClicked);
+            // 在添加监听前先移除
+            continueButton.onClick.RemoveAllListeners();
+            continueButton.onClick.AddListener(OnDialoguePanelClicked); ;
         }));
     }
     
@@ -417,13 +420,13 @@ public class DialogueManager : MonoBehaviour
     }
     
 
-    private void CurrentDialogueTextCheck(TextMeshProUGUI dialogueText)
+    private void CurrentDialogueTextCheck()
     {
         try
         {
-            currentDialogueText = dialogueText;
             string playerName = PlayerManager.Instance.player.playerData.playerName;
-            currentDialogueText.text = currentDialogueText.text.Replace("{playerName}", playerName);
+            currentDialogueNode.text = currentDialogueNode.text.Replace("{playerName}", playerName);
+            Debug.Log($"对话文本已设置: {currentDialogueText.text}");
         }
         catch (Exception e)
         {

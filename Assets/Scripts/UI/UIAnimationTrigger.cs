@@ -26,7 +26,7 @@ namespace UI
         {
             GameStateManager.Instance.SetPlayerPointType(PlayerPointType.Right);
             PlayerManager.Instance.SetPlayer();
-            ShowNpc(npcID);
+            GameUIManager.Instance.PlayLuSleepAnimation();
         }
 
         public void ShowNpc(string npcID)

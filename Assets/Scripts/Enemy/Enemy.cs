@@ -205,6 +205,7 @@ public class Enemy : Entity
                 }
             }
         }
+        
         Die();
     }
 
@@ -222,6 +223,17 @@ public class Enemy : Entity
             Instantiate(itemPrefab, dropPosition, Quaternion.identity);
             itemPrefab.GetComponent<Item>().SetItemData(itemData);
         }
+    }
+    
+    public virtual void ActivateEnemy()
+    {
+        gameObject.SetActive(true);
+    }
+    
+    public virtual void DeactivateEnemy()
+    {
+        gameObject.SetActive(false);
+        hasExecuted = false; // 重置执行状态
     }
     
     protected override void OnDrawGizmos()
