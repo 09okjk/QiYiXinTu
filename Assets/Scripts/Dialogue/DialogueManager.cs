@@ -392,6 +392,14 @@ public class DialogueManager : MonoBehaviour
                     return false;
                 }
                 break;
+            case DialogueConditionType.EnemyCleared:
+                if (Enum.TryParse(currentDialogueNode.conditionValue, out EnemyType enemyType) && EnemyManager.Instance.CheckActiveEnemyType(enemyType))
+                {
+                    Debug.LogWarning($"未清除敌人: {currentDialogueNode.conditionValue}");
+                    EndDialogue();
+                    return false;
+                }
+                break;
         }
         return true;
     }

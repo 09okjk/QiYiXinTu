@@ -1,12 +1,13 @@
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 public enum EnemyType
 {
     Skeleton,
     Ranged,
     Magic,
-    Boss
+    Boss,
+    Enemy1,
 }
 
 public class Enemy : Entity
@@ -33,7 +34,6 @@ public class Enemy : Entity
     public EnemyStateMachine stateMachine { get; private set; }
     
     private bool hasExecuted;
-
 
     protected override void Awake()
     {
@@ -120,15 +120,23 @@ public class Enemy : Entity
         return false;
     }
     
+    public override async Task Die()
+    {
+        await base.Die();
+        await DropItem();
+        // 发布游戏事件
+        EnemyManager.Instance.EnemyDied(this);
+        Destroy(gameObject); 
+    }
     
-    public void DropItem()
+    public Task DropItem()
     {
         if (hasExecuted)
-            return;
+            return Task.CompletedTask;
         hasExecuted = true;
         // 检查是否有可掉落物品
         if (items == null || items.Count == 0)
-            return;
+            return Task.CompletedTask;
             
         // 分类物品
         List<ItemData> questItems = new List<ItemData>();
@@ -205,8 +213,10 @@ public class Enemy : Entity
                 }
             }
         }
-        
-        Die();
+
+        return Task.CompletedTask;
+
+        // Die();
     }
 
     // 生成物品实例的辅助方法

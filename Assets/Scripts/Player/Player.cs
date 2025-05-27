@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core;
 using Manager;
 using News;
@@ -253,12 +254,13 @@ public class Player : Entity
         OnManaChanged?.Invoke(playerData.CurrentMana, playerData.MaxMana);
     }
 
-    public override void Die()
+    public override Task Die()
     {
-        base.Die();
+        _ = base.Die();
         // 触发游戏事件
         GameManager.Instance.OnGameEvent("PlayerDied");
-        
+        Destroy(gameObject);
+        return Task.CompletedTask;
     }
 
     #region Input Actions

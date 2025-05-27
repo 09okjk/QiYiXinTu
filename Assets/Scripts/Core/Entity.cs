@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Threading.Tasks;
 using Core;
 using UnityEngine;
 
@@ -78,11 +79,11 @@ public class Entity:MonoBehaviour
         return baseData.CurrentMana / baseData.MaxMana;
     }
     
-    public virtual void Die()
+    public virtual Task Die()
     {
         //EntityFX.StartCoroutine("DieFX");
         Debug.Log(gameObject.name + " was die");
-        Destroy(gameObject); 
+        return Task.CompletedTask;
     }
 
     protected virtual IEnumerator HitKnockback()

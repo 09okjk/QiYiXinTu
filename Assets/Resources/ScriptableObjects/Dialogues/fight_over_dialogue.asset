@@ -28,8 +28,8 @@ MonoBehaviour:
     questID: 
     rewardIDs: []
     isFollow: 0
-    conditionType: 0
-    conditionValue: 
+    conditionType: 6
+    conditionValue: Enemy1
   - nodeID: node002
     text: "\u4E0D\u8FC7\u521A\u521A\u4F60\u5F88\u5FEB\u5C31\u51FB\u8D25\u5B83\u4E86\uFF0C\u771F\u7684\u597D\u5389\u5BB3\uFF01\uFF01\u4F60\u679C\u7136\u662F\u5929\u964D\u6551\u661F\u5427\u3002"
     speaker:

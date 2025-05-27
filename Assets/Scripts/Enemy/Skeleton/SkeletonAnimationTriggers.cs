@@ -23,7 +23,7 @@ public class SkeletonAnimationTriggers:MonoBehaviour
 
     private void DeathTrigger()
     {
-        skeleton.DropItem();
+        skeleton.Die();
     }
     
     private void OpenCounterWindow() => skeleton.OpenCounterAttackWindow();

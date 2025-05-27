@@ -27,7 +27,6 @@ public class NPCManager:MonoBehaviour
 
     private void InitializeNPCManager()
     {
-        // 加载场景中所有的NPC
         NPC[] npcs = GetComponentsInChildren<NPC>();
         foreach (NPC npc in npcs)
         {

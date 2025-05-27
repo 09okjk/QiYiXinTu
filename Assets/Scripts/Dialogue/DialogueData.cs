@@ -71,4 +71,5 @@ public enum DialogueConditionType
     SceneName, // 3 场景名称
     NpcCheck, // 4 NPC检查
     DialogueCompleted, // 5 对话完成
+    EnemyCleared, // 6 敌人清除
 }
