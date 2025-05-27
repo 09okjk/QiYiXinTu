@@ -18,7 +18,7 @@ public class NPC : Entity
     
     private bool canInteract = false; // 是否可以交互
     private DialogueData cachedDialogue; // 缓存对话数据
-    protected bool isFollowing = false; // 是否跟随玩家
+    // protected bool isFollowing = false; // 是否跟随玩家
     private GameObject player; // 玩家引用
     private float defaultSpeed; // 当前速度
     #region State
@@ -79,7 +79,7 @@ public class NPC : Entity
     protected virtual void FixedUpdate()
     {
         // 如果NPC处于跟随状态，则更新位置
-        if (isFollowing)
+        if (PlayerPrefs.GetString("FollowingNpcID") == npcData.npcID)
         {
             FollowPlayer();
         }
@@ -187,7 +187,11 @@ public class NPC : Entity
         // 设置目标玩家
         player = GameObject.FindGameObjectWithTag("Player");
         // 使NPC跟随玩家
-        isFollowing = true;
+        // isFollowing = true;
+        
+        // 使用PlayerPrefs记录跟随的NPCID
+        PlayerPrefs.SetString("FollowingNpcID", npcData.npcID);
+        PlayerPrefs.Save();        
         
         // 初始化朝向
         UpdateFacingDirection();
@@ -232,7 +236,10 @@ public class NPC : Entity
     public void StopFollowing()
     {
         // 停止跟随玩家
-        isFollowing = false;
+        // isFollowing = false;
+        // 清空PlayerPrefs记录跟随的NPCID
+        PlayerPrefs.SetString("FollowingNpcID", string.Empty);
+        PlayerPrefs.Save();
         followSpeed = 0;
         
         // 重置朝向
