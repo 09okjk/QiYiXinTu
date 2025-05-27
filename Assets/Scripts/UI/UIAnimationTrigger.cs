@@ -20,6 +20,10 @@ namespace UI
             Debug.Log($"TriggerDialogue: {dialogueID}");
             DialogueManager.Instance.StartDialogueByID(dialogueID);
             GameUIManager.Instance.StopSceneAnimation();
+            if (dialogueID == "lu_first_dialogue")
+            {
+                GameUIManager.Instance.StopLuWeekUpAnimation();
+            }
         }
 
         public void ActivatePlayerAndNpc(string npcID)

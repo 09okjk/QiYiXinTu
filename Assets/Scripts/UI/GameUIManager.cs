@@ -33,6 +33,7 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Button newsButton; // 新闻按钮
     [SerializeField] private Animator sceneAnimator; // 场景动画
     [SerializeField] private Animator luSleepAnimator; // 路睡觉动画
+    [SerializeField] private Animator luWeekUpAnimator; // 路睡醒动画
     [SerializeField] private GameObject frontScene; // 前景场景
     private List<SkillSlotUI> skillSlotList = new List<SkillSlotUI>();
 
@@ -55,6 +56,7 @@ public class GameUIManager : MonoBehaviour
         // 不显示游戏UI
         gameUIPanel.SetActive(false);
         luSleepAnimator.gameObject.SetActive(false);
+        luWeekUpAnimator.gameObject.SetActive(false);
         
         // 初始化技能栏
         InitializeSkillBar();
@@ -115,8 +117,9 @@ public class GameUIManager : MonoBehaviour
             if (luXinsheng != null)
             {
                 luSleepAnimator.gameObject.SetActive(false);
-                luXinsheng.ActivateNpc();
-                luXinsheng.WeekUp();
+                luWeekUpAnimator.gameObject.SetActive(true);
+                // luXinsheng.ActivateNpc();
+                // luXinsheng.WeekUp();
             }
             else
             {
@@ -166,12 +169,13 @@ public class GameUIManager : MonoBehaviour
         }
     }
     
-    public void StopLuSleepAnimation()
+    public void StopLuWeekUpAnimation()
     {
-        if (luSleepAnimator != null)
+        if (luWeekUpAnimator != null)
         {
-            luSleepAnimator.StopPlayback();
-            luSleepAnimator.gameObject.SetActive(false);
+            luWeekUpAnimator.StopPlayback();
+            luWeekUpAnimator.gameObject.SetActive(false);
+            NPCManager.Instance.ShowNpc("LuXinsheng");
         }
         else
         {
