@@ -129,6 +129,6 @@ MonoBehaviour:
     choices: []
     questID: 
     rewardIDs: []
-    isFollow: 1
+    isFollow: 0
     conditionType: 0
     conditionValue: 

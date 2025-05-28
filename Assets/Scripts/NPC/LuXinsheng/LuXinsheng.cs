@@ -6,10 +6,7 @@ public class LuXinsheng:NPC
     # region States
     internal LuXinshengIdleState IdleState { get; set; }
     internal LuXinshengMoveState MoveState { get; set; }
-    internal LuXinshengHomeworkState HomeworkState { get; set; }
-    internal LuXinshengSleepState SleepState { get; set; }
-    internal LuXinshengWeekUpState WeekUpState { get; set; }
-    internal LuXinshengShockedState ShockedState { get; set; }
+    internal LuXinshengAnxiousState AnxiousState { get; set; }
     
     # endregion
     
@@ -19,10 +16,7 @@ public class LuXinsheng:NPC
 
         IdleState = new LuXinshengIdleState(this, stateMachine, "Idle", this);
         MoveState = new LuXinshengMoveState(this, stateMachine, "Move", this);
-        HomeworkState = new LuXinshengHomeworkState(this, stateMachine, "Homework", this);
-        SleepState = new LuXinshengSleepState(this, stateMachine, "Sleep", this);
-        WeekUpState = new LuXinshengWeekUpState(this, stateMachine, "WeekUp", this);
-        ShockedState = new LuXinshengShockedState(this, stateMachine, "Shocked", this);
+        AnxiousState = new LuXinshengAnxiousState(this, stateMachine, "Anxious", this);
     }
 
     protected override void Start()
@@ -57,7 +51,7 @@ public class LuXinsheng:NPC
         // 处理对话结束后的逻辑
         if (dialogueID == "lu_first_dialogue")
         {
-            Shocked();
+            Anxious();
         }
     }
 
@@ -68,24 +62,9 @@ public class LuXinsheng:NPC
         stateMachine.Initialize(IdleState);
     }
 
-    public void Homework()
+	// 焦虑 Anxious
+	public void Anxious()
     {
-        stateMachine.ChangeState(HomeworkState);
-    }
-    
-    public void Sleep()
-    {
-        stateMachine.ChangeState(SleepState);
-    }
-    
-    public void WeekUp()
-    {
-        stateMachine.ChangeState(WeekUpState);
-        Debug.Log("LuXinsheng is waking up!");
-    }
-    
-    public void Shocked()
-    {
-        stateMachine.ChangeState(ShockedState);
-    }
+        stateMachine.ChangeState(AnxiousState);
+	}
 }

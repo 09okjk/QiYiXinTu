@@ -129,7 +129,7 @@ public class NPC : Entity
     {
         if (cachedDialogue)
         {
-            DialogueManager.Instance.StartDialogue(cachedDialogue);
+            _ = DialogueManager.Instance.StartDialogue(cachedDialogue);
             return;
         }
         
@@ -160,7 +160,7 @@ public class NPC : Entity
                 if (dialogueData.state != DialogueState.Finished)
                 {
                     cachedDialogue = dialogueData;
-                    DialogueManager.Instance.StartDialogue(cachedDialogue, OnCurrentDialogueEnd);
+                    _ = DialogueManager.Instance.StartDialogue(cachedDialogue, OnCurrentDialogueEnd);
                     break;
                 }
             }
