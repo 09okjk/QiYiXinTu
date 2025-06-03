@@ -65,7 +65,18 @@ public class DialogueManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
+    private void Start()
+    {
+    }
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
     // 开始对话，可选择性地添加完成回调
     public async Task StartDialogue(DialogueData dialogue, Action<bool> onComplete = null)
     {
@@ -168,7 +179,7 @@ public class DialogueManager : MonoBehaviour
                 currentNpc = NPCManager.Instance.GetNpc(currentDialogueNode.speaker.speakerID);
                 nPCNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
                 currentDialogueText = nPCDialogueText;
-                nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
+                nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerName}_{currentDialogueNode.speaker.emotion.ToString()}");
                 nPCDialoguePanel.SetActive(true);
                 break;
             case SpeakerType.System:

@@ -111,6 +111,7 @@ public class NPC : Entity
                     Debug.LogWarning($"无法找到对话数据: {dialogueID}");
                 }
             }
+            StopFollowing();
         }
     }
     protected virtual void OnDialogueEnd(string obj)
@@ -233,14 +234,14 @@ public class NPC : Entity
         }
     }
     
-    public void StopFollowing()
+    public virtual void StopFollowing()
     {
         // 停止跟随玩家
         isFollowing = false;
         // 清空PlayerPrefs记录跟随的NPCID
         PlayerPrefs.SetString("FollowingNpcID", string.Empty);
         PlayerPrefs.Save();
-        followSpeed = 0;
+        // followSpeed = 0;
         
         // 重置朝向
         if (spriteRenderer != null)

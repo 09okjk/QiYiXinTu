@@ -15,7 +15,7 @@ MonoBehaviour:
   itemID: ink_bottle
   itemName: "\u58A8\u6C34\u74F6"
   description: "\u6062\u590D\u5C11\u91CF\u9B54\u529B"
-  icon: {fileID: 2415917035509507012, guid: 464059aa64914654f8a9798a46743405, type: 3}
+  icon: {fileID: 556637506744012104, guid: 8285524c06138724f8b65a630372870f, type: 3}
   itemType: 2
   properties:
   - key: manaRestore

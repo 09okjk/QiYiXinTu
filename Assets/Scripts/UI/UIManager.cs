@@ -71,8 +71,8 @@ public class UIManager : MonoBehaviour
             if (dialogueID == "fight_over_dialogue")
             {
                 await InputFieldWindow(
-                    "Enter Player Name", 
-                    "Please enter your name:", 
+                    "你的名字是？", 
+                    "请输入你的名字：", 
                     PlayerManager.Instance.ChangePlayerName
                 );
             

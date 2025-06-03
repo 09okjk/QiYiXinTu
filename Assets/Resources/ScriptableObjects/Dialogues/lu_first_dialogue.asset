@@ -105,11 +105,11 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node007
-    text: "\u55F7\uFF01\uFF01\uFF01\u4E0D\uFF01\uFF01\uFF01\uFF01\u4ECA\u5929\u665A\u4E0A\u5C31\u8981\u4E0A\u4EA4\u4E86\u554A\u554A\uFF01"
+    text: "\u8DEF\u85AA\u58F0\u8F6C\u8FC7\u8EAB\u67E5\u770B\u7535\u8111\uFF0C\u53D1\u73B0\u6CA1\u6709\u4FDD\u5B58\u4F5C\u4E1A\u540E\u518D\u6B21\u53D7\u5230\u60CA\u5413\u3002"
     speaker:
-      speakerID: LuXinsheng
-      speakerName: "\u8DEF\u85AA\u58F0"
-      speakerType: 1
+      speakerID: system
+      speakerName: "\u7CFB\u7EDF"
+      speakerType: 2
       emotion: 0
     nextNodeID: node008
     choices: []
@@ -119,12 +119,12 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node008
-    text: "\u6211\u7684\u4F5C\u4E1A\u6CA1\u4E86\uFF08\u54ED\u8138\uFF09"
+    text: "\u55F7\uFF01\uFF01\uFF01\u4E0D\uFF01\uFF01\uFF01\uFF01\u4ECA\u5929\u665A\u4E0A\u5C31\u8981\u4E0A\u4EA4\u4E86\u554A\u554A\uFF01"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
       speakerType: 1
-      emotion: 4
+      emotion: 8
     nextNodeID: 
     choices: []
     questID: 

@@ -8,16 +8,15 @@ public class NPCAnimationTriggers:MonoBehaviour
     {
         npc.AnimationTrigger();
     }
-    
-    private void WeekUpTrigger()
+
+    private void AnxiousOver()
     {
         LuXinsheng luXinsheng = npc as LuXinsheng;
         if (luXinsheng)
         {
             luXinsheng.stateMachine.ChangeState(luXinsheng.IdleState);
-            DialogueManager.Instance.StartDialogueByID("lu_first_dialogue");
+            EnemyManager.Instance.ActivateEnemy(EnemyType.Enemy1);
         }
-        
     }
         
 }

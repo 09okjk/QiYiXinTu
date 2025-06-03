@@ -8,6 +8,7 @@ public class EnemyManager:MonoBehaviour
 
     
     public event Action<string> OnEnemyDeath; // 敌人死亡事件
+    public event Action<EnemyType> OnEnemyActivatedByType; // 敌人激活事件
     
     private void Awake()
     {
@@ -43,6 +44,30 @@ public class EnemyManager:MonoBehaviour
         foreach (Enemy enemy in enemies)
         {
             enemy.DeactivateEnemy(); // 禁用所有
+        }
+    }
+    
+    // 激活所有指定指定类型的敌人
+    public void ActivateEnemy(EnemyType type)
+    {
+        foreach (Enemy enemy in enemies)
+        {
+            if (enemy.enemyData.enemyType == type && !enemy.isActiveAndEnabled) // 检查敌人类型和是否未激活
+            {
+                enemy.ActivateEnemy(); // 激活敌人
+                OnEnemyActivatedByType?.Invoke(type); // 触发敌人激活事件
+                Debug.Log($"Activated enemy of type: {type} with ID: {enemy.enemyData.enemyID}");
+            }
+        }
+
+        if(HasActiveEnemies())
+        {
+            OnEnemyActivatedByType?.Invoke(type);
+            Debug.Log("There are active enemies in the scene.");
+        }
+        else
+        {
+            Debug.Log("No active enemies in the scene.");
         }
     }
     

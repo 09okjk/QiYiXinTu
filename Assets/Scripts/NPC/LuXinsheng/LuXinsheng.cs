@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LuXinsheng:NPC
@@ -22,9 +23,14 @@ public class LuXinsheng:NPC
     protected override void Start()
     {
         base.Start();
+        EnemyManager.Instance.OnEnemyActivatedByType += OnEnemyActivatedByType;
     }
-    
-    
+
+    private void OnDestroy()
+    {
+        EnemyManager.Instance.OnEnemyActivatedByType -= OnEnemyActivatedByType;
+    }
+
     protected void OnEnable()
     {
         DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
@@ -35,13 +41,39 @@ public class LuXinsheng:NPC
     {
         DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
     }
-    
+
+    private void OnEnemyActivatedByType(EnemyType obj)
+    {
+        Debug.Log("Enemy activated: " + obj);
+        // 检查是否是 Enemy1 类型的敌人被激活
+        if (obj == EnemyType.Enemy1)
+        {
+            // 如果是 Enemy1，则切换到 MoveState
+            stateMachine.ChangeState(MoveState);
+            FollowTargetPlayer();
+            DialogueManager.Instance.StartDialogueByID("fight_dialogue");
+        }
+    }
+
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        
+
         if (isFollowing)
-          stateMachine.ChangeState(MoveState);
+        {
+            if (followSpeed == 0)
+            {
+                // 如果跟随速度为0，切换到 IdleState
+                stateMachine.ChangeState(IdleState);
+            }
+            else
+            {
+                // 如果跟随速度不为0，切换到 MoveState
+                stateMachine.ChangeState(MoveState);
+            }
+        }
+        
+        
     }
 
     protected override void OnDialogueEnd(string dialogueID)
