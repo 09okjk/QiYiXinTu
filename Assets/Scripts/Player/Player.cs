@@ -287,19 +287,19 @@ public class Player : Entity
 
     private void OnInventoryToggle(InputAction.CallbackContext context)
     {
-        if (!CanToggleUI() || _isNewsBookOpen) return;
+        if (!CanToggleUI() || _isNewsBookOpen || _isPopWindowOpen) return;
         InventoryManager.Instance.ToggleInventory();
     }
 
     private void OnNewsBookToggle(InputAction.CallbackContext context)
     {
-        if (!CanToggleUI() || _isInventoryOpen) return;
+        if (!CanToggleUI() || _isInventoryOpen || _isPopWindowOpen) return;
         NewsManager.Instance.ToggleNewsInfoBook();
     }
     
     private void OnMenuToggle(InputAction.CallbackContext context)
     {
-        if (!CanToggleUI() || _isInventoryOpen || _isNewsBookOpen) return;
+        if (!CanToggleUI() || _isInventoryOpen || _isNewsBookOpen || _isPopWindowOpen) return;
         MenuManager.Instance.ToggleMenu();
     }
 

@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Choice1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: cf1cc93ea6400714f8d0869d6d3040a0, type: 2}
-  m_sharedMaterial: {fileID: 3254295013296376894, guid: cf1cc93ea6400714f8d0869d6d3040a0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 37e4b8523b2a2c844905e38b6c372af8, type: 2}
+  m_sharedMaterial: {fileID: 6079054293803428108, guid: 37e4b8523b2a2c844905e38b6c372af8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6641843056130978658}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

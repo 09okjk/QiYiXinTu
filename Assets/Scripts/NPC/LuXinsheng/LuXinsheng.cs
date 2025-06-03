@@ -76,6 +76,15 @@ public class LuXinsheng:NPC
         
     }
 
+    public override void DeactivateNpc()
+    {
+        base.DeactivateNpc();
+        if (SceneManager.GetActiveScene().name == "女生宿舍楼下——立德楼")
+        {
+            ActivateNpc();
+        }
+    }
+
     protected override void OnDialogueEnd(string dialogueID)
     {
         base.OnDialogueEnd(dialogueID);
@@ -91,12 +100,18 @@ public class LuXinsheng:NPC
     {
         base.ActivateNpc();
         
+        // 测试用-------
+        if (SceneManager.GetActiveScene().name == "女生宿舍楼下——立德楼")
+            DialogueManager.Instance.StartDialogueByID("lide_dialogue");
+        // 测试用-------
+        
         stateMachine.Initialize(IdleState);
     }
 
 	// 焦虑 Anxious
 	public void Anxious()
     {
+        Debug.Log("LuXinsheng is anxious.");
         stateMachine.ChangeState(AnxiousState);
 	}
 }

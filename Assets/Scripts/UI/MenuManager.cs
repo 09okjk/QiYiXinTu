@@ -308,7 +308,7 @@ public class MenuManager : MonoBehaviour
         try
         {
             // 重置游戏数据
-            await SceneManager.LoadSceneAsync("Room1");
+            await SceneManager.LoadSceneAsync("女生宿舍");
             GameManager.Instance.OnGameEvent("GameStarted");
         }
         catch (Exception e)
