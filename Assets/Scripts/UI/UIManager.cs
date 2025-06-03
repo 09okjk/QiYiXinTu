@@ -32,6 +32,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Button inputFieldConfirmButton;
     
+    public event Action<bool> OnPopWindowEvent;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -81,7 +83,7 @@ public class UIManager : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogError($"Error in CheckDialogueID: {e.Message}");
-            throw; // TODO 处理异常
+            throw; 
         }
     }
 
@@ -135,7 +137,6 @@ public class UIManager : MonoBehaviour
     /// <param name="sprite">图片</param>
     /// <param name="onYes">点击确认时执行的操作</param>
     /// <param name="onNo">点击取消时执行的操作</param>
-    /// <param name="confirmType"></param>
     public void ShowConfirmDialog(string title, string message,Sprite sprite = null, Action onYes = null, Action onNo = null)
     {
         if (!confirmDialogPanel)
@@ -143,6 +144,8 @@ public class UIManager : MonoBehaviour
             Debug.LogError("Confirm dialog panel not assigned!");
             return;
         }
+        
+        PlayerManager.Instance.player.RegisterPopWindowEvent();
         
         // 隐藏按钮
         confirmYesButton.gameObject.SetActive(false);
@@ -178,24 +181,35 @@ public class UIManager : MonoBehaviour
         {
             onYes?.Invoke();
             confirmDialogPanel.SetActive(false);
+            OnPopWindowEvent?.Invoke(confirmDialogPanel.activeSelf);
         });
         
         confirmNoButton.onClick.AddListener(() => 
         {
             onNo?.Invoke();
             confirmDialogPanel.SetActive(false);
+            OnPopWindowEvent?.Invoke(confirmDialogPanel.activeSelf);
         });
         
         confirmDialogPanel.SetActive(true);
+        OnPopWindowEvent?.Invoke(confirmDialogPanel.activeSelf);
     }
 
-    public async Task InputFieldWindow(string title, string message, Action<string> onConfirm)
+    /// <summary>
+    /// 显示输入框窗口
+    /// </summary>
+    /// <param name="title">弹窗标题</param>
+    /// <param name="message">输入提示</param>
+    /// <param name="onConfirm">确认按钮</param>
+    /// <returns></returns>
+    public Task InputFieldWindow(string title, string message, Action<string> onConfirm)
     {
         if (!inputFieldWindow)
         {
             Debug.LogError("Input field window not assigned!");
-            return;
+            return Task.CompletedTask;
         }
+        PlayerManager.Instance.player.RegisterPopWindowEvent();
         
         inputFieldTitleText.text = title;
         inputFieldMessageText.text = message;
@@ -211,7 +225,10 @@ public class UIManager : MonoBehaviour
             string inputText = inputField.text;
             onConfirm?.Invoke(inputText);
             inputFieldWindow.SetActive(false);
+            OnPopWindowEvent?.Invoke(inputFieldWindow.activeSelf);
         });
         
+        OnPopWindowEvent?.Invoke(inputFieldWindow.activeSelf);
+        return Task.CompletedTask;
     }
 }

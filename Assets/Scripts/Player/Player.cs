@@ -38,6 +38,7 @@ public class Player : Entity
     private bool _isMenuOpen = false;
     private bool _isInventoryOpen = false;
     private bool _isNewsBookOpen = false;
+    private bool _isPopWindowOpen = false;
     
     #region States
     
@@ -125,7 +126,7 @@ public class Player : Entity
         base.Update();
         
         // 如果菜单、背包、新闻库打开，不响应输入
-        if (_isMenuOpen || _isInventoryOpen || _isNewsBookOpen)
+        if (_isMenuOpen || _isInventoryOpen || _isNewsBookOpen || _isPopWindowOpen)
             return;
         
         // 如果正在与UI交互，不响应输入
@@ -162,6 +163,19 @@ public class Player : Entity
         }
     }
     
+    public void RegisterPopWindowEvent()
+    {
+        if (UIManager.Instance)
+        {
+            UIManager.Instance.OnPopWindowEvent += HandlePopWindowEvent;
+        }
+    }
+
+    private void HandlePopWindowEvent(bool isOpen)
+    {
+        _isPopWindowOpen = isOpen;
+    }
+
     private void HandleNewsBookStateChanged(bool isOpen)
     {
         _isNewsBookOpen = isOpen;

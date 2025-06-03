@@ -17,7 +17,7 @@ MonoBehaviour:
   currentNodeID: 
   nodes:
   - nodeID: node001
-    text: "\u4F60\u53EF\u4EE5\u53EB\u6211{playerName}"
+    text: "\u4F60\u53EF\u4EE5\u53EB\u6211123"
     speaker:
       speakerID: player
       speakerName: playerName
@@ -31,7 +31,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node002
-    text: "\u8C22\u8C22\u4F60{playerName}\uFF0C\u6211\u53EB\u8DEF\u85AA\u58F0\uFF01\u4F60\u53EF\u4EE5\u53EB\u6211\u5C0F\u8DEF~"
+    text: "\u8C22\u8C22\u4F60123\uFF0C\u6211\u53EB\u8DEF\u85AA\u58F0\uFF01\u4F60\u53EF\u4EE5\u53EB\u6211\u5C0F\u8DEF~"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
@@ -45,7 +45,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node003
-    text: "\u55EF\u2026{playerName}\uFF0C\u53EF\u2026\u53EF\u4EE5\u518D\u9EBB\u70E6\u4F60\u4E00\u4E2A\u4E8B\u60C5\u5417\uFF01\uFF01"
+    text: "\u55EF\u2026123\uFF0C\u53EF\u2026\u53EF\u4EE5\u518D\u9EBB\u70E6\u4F60\u4E00\u4E2A\u4E8B\u60C5\u5417\uFF01\uFF01"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
@@ -131,7 +131,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node009
-    text: "\u563B\u563B\u5BF9\u4E86{playerName}\uFF0C\u9001\u4F60\u4E00\u4E2A\u89C1\u9762\u793C\u2026\u2026\u6211\u521A\u624D\u770B\u5230\u4F60\u628A\u624B\u91CC\u7684\u94A2\u7B14\u53D8\u6210\u6B66\u5668\u6218\u6597\u4E86\uFF0C\u6211\u60F3\u4F60\u5E94\u8BE5\u4F1A\u9700\u8981\u8FD9\u4E2A\u5427\uFF01"
+    text: "\u563B\u563B\u5BF9\u4E86123\uFF0C\u9001\u4F60\u4E00\u4E2A\u89C1\u9762\u793C\u2026\u2026\u6211\u521A\u624D\u770B\u5230\u4F60\u628A\u624B\u91CC\u7684\u94A2\u7B14\u53D8\u6210\u6B66\u5668\u6218\u6597\u4E86\uFF0C\u6211\u60F3\u4F60\u5E94\u8BE5\u4F1A\u9700\u8981\u8FD9\u4E2A\u5427\uFF01"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
