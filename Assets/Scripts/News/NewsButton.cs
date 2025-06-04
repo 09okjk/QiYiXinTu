@@ -6,8 +6,8 @@ namespace News
     public class NewsButton : MonoBehaviour
     {
         public string newsID;
-        private Button newsButton;
-        private Animator animator;
+        public Button newsButton;
+        public Image shadowImage; // 用于显示按钮的阴影效果
         
         private void Awake()
         {
@@ -16,8 +16,6 @@ namespace News
             {
                 Debug.LogError("Button组件缺失: " + gameObject.name);
             }
-            
-            animator = GetComponentInChildren<Animator>();
         }
         
         private void Start()
@@ -44,6 +42,7 @@ namespace News
             if (NewsManager.Instance != null)
             {
                 NewsManager.Instance.OpenNewsInfo(newsID);
+                shadowImage.gameObject.SetActive(false);
                 gameObject.SetActive(false); // 隐藏按钮
             }
             else

@@ -64,11 +64,13 @@ namespace UI
                     Debug.Log("Talk interaction triggered.");
                     // 这里可以添加对话框的显示逻辑
                     DialogueManager.Instance.StartDialogueByID(interactionValue);
+                    gameObject.SetActive(false); // 隐藏交互按钮
                     break;
                 case InteractionType.GetItem:
                     // 处理获得物品逻辑
                     Debug.Log("Pick up interaction triggered.");
                     InventoryManager.Instance.AddItemById(interactionValue);
+                    gameObject.SetActive(false); // 隐藏交互按钮
                     break;
                 case InteractionType.Use:
                     // 处理使用物品逻辑
@@ -101,7 +103,6 @@ namespace UI
                     Debug.Log("No valid interaction type selected.");
                     break;
             }
-            gameObject.SetActive(false); // 隐藏交互按钮
         }
     }
 }

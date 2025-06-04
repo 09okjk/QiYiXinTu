@@ -26,7 +26,7 @@ namespace UI
             {
                 Instance = this;
                 // 确保此对象跨场景不销毁
-                DontDestroyOnLoad(gameObject);
+                // DontDestroyOnLoad(gameObject);
             }
             else
             {
