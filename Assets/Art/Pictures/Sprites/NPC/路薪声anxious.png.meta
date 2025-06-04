@@ -1,0 +1,1432 @@
+fileFormatVersion: 2
+guid: d89dfd957a7bdf5439157e2b06736878
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5711803803490659371
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_0"
+  - first:
+      213: -5716131315080180940
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_1"
+  - first:
+      213: 7344936599161492271
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_2"
+  - first:
+      213: -161475785592265371
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_3"
+  - first:
+      213: -7166218534925623994
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_4"
+  - first:
+      213: -4866617814767093240
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_5"
+  - first:
+      213: 7523884073908024693
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_6"
+  - first:
+      213: 6116213678097551254
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_7"
+  - first:
+      213: -8735884128935495117
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_8"
+  - first:
+      213: 6598555773503830629
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_9"
+  - first:
+      213: -2594109391257922093
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_10"
+  - first:
+      213: 4466085702074297270
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_11"
+  - first:
+      213: 2061388848048721717
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_12"
+  - first:
+      213: 6488232430022385523
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_13"
+  - first:
+      213: 3848403312716286233
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_14"
+  - first:
+      213: -5830566332044940505
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_15"
+  - first:
+      213: -6055843039171458104
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_16"
+  - first:
+      213: 1069752439760082690
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_17"
+  - first:
+      213: -6707197589549461641
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_18"
+  - first:
+      213: 5574691805058907486
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_19"
+  - first:
+      213: -6158030457889980738
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_20"
+  - first:
+      213: -8233591657289932176
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_21"
+  - first:
+      213: 4979479409178038623
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_22"
+  - first:
+      213: -8956773898040480005
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_23"
+  - first:
+      213: 5029564805402061959
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_24"
+  - first:
+      213: 2451175575124518083
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_25"
+  - first:
+      213: 2752516271639109693
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_26"
+  - first:
+      213: 3585266717810870896
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_27"
+  - first:
+      213: -8141468524929657784
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_28"
+  - first:
+      213: 1975693793211657213
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_29"
+  - first:
+      213: 7375610277516934097
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_30"
+  - first:
+      213: 980153505872794373
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_31"
+  - first:
+      213: 5281415991159420955
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_32"
+  - first:
+      213: -3019667186119171425
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_33"
+  - first:
+      213: 4874248532509091419
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_34"
+  - first:
+      213: -671042226228397400
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_35"
+  - first:
+      213: 5821105219718090913
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_36"
+  - first:
+      213: 2574465458065825947
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_37"
+  - first:
+      213: 4330257579957635294
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_38"
+  - first:
+      213: -661174450627894192
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_39"
+  - first:
+      213: 1148003319205477100
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_40"
+  - first:
+      213: -4946406266407616389
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_41"
+  - first:
+      213: 2190432620950862310
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_42"
+  - first:
+      213: 6921012113606009504
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_43"
+  - first:
+      213: 6968769903136559071
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_44"
+  - first:
+      213: 3906781920228432337
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_45"
+  - first:
+      213: -1907768509309938592
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_46"
+  - first:
+      213: -1763689462131404452
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_47"
+  - first:
+      213: 7998193403127187907
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_48"
+  - first:
+      213: -2495002059756724948
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_49"
+  - first:
+      213: -2170655088990854226
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_50"
+  - first:
+      213: -1606499802761343676
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_51"
+  - first:
+      213: 2521859771042801234
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_52"
+  - first:
+      213: 2146305960888932192
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_53"
+  - first:
+      213: -6336638808744416382
+    second: "\u7B2C\u4E00\u4E2A\u573A\u666F\u52A8\u753B502 Copy-Recovered Copy11(2)_54"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6ef1de6da01d7747a4191ecd3789b9a
+      internalID: 1100816996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_1"
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e467a32f1e16fd948bbf38dd06db363c
+      internalID: -1209011433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_2"
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa0da7061090e004ca44c7acb47433bf
+      internalID: -1072597852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_3"
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97f3c759d4298314fae5cb8a12868bc5
+      internalID: 96714906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_4"
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dce9a0d731fea0a4b88817ab71e63a52
+      internalID: -72069774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_5"
+      rect:
+        serializedVersion: 2
+        x: 2500
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7180251e802137b47852014c8e34d44d
+      internalID: -1841089368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_6"
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d59a4815d56826243aeeb1fc53484966
+      internalID: 1825584126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_7"
+      rect:
+        serializedVersion: 2
+        x: 3500
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b940c77cd0ea1224e8cc9e25a8e68f1f
+      internalID: -1269495330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_8"
+      rect:
+        serializedVersion: 2
+        x: 4000
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e858404d69fb1dd4a8908c55896e6af3
+      internalID: 1213489210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_9"
+      rect:
+        serializedVersion: 2
+        x: 4500
+        y: 2680
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fef94bd9485af64295a070d7f0b91d2
+      internalID: 1201362408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_10"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 747d1e5961db0c546bca7f8b48ea0f95
+      internalID: -19987433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_11"
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 386fa2536f48e4e4f9cbaa07b89e78be
+      internalID: -1596764399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_12"
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1c9eac4ddc9a7d42a50eff7643f5048
+      internalID: 1668588843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_13"
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ae68ba598178fa47aab448ecb332515
+      internalID: 1373892533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_14"
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 365270668d5e95c4fb8f0437cc13a0c2
+      internalID: -1676541392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_15"
+      rect:
+        serializedVersion: 2
+        x: 2500
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6beb92a16c022a242b1dc611705196f6
+      internalID: -571790555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_16"
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df64dd07f18b4cc4d98e6a1c2b23d326
+      internalID: 832802245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_17"
+      rect:
+        serializedVersion: 2
+        x: 3500
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79dfeabe4fdb3764eaa70e6c3f50a4c1
+      internalID: -944978134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_18"
+      rect:
+        serializedVersion: 2
+        x: 4000
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec244d8ae6f02c64988168521b2a0ee6
+      internalID: 2108888012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_19"
+      rect:
+        serializedVersion: 2
+        x: 4500
+        y: 2010
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4250a792e0f3ee34fbb28f70d901bb95
+      internalID: 471272148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_20"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6b27586c5f0aa2479b4bb848d9f65eb
+      internalID: 381618904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_21"
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d63b47ceb66285f4d9422880ab100334
+      internalID: -102789887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_22"
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74e667b666f61f448beaf80a8a408bfc
+      internalID: 1739856069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_23"
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a0d7ce8e396bd5459289eec50ec2e5e
+      internalID: -119179762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_24"
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 387a3fe22a651f34ba04c64fd922a019
+      internalID: 512758399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_25"
+      rect:
+        serializedVersion: 2
+        x: 2500
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4eada342dcfcfd0459e2cd8644d1f1dc
+      internalID: -1100568044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_26"
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4d245378ce2161449d3f9c24de4d4b1
+      internalID: -1791768700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_27"
+      rect:
+        serializedVersion: 2
+        x: 3500
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa329a9dc71a9384e89cf27e2e671012
+      internalID: -870533430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_28"
+      rect:
+        serializedVersion: 2
+        x: 4000
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 680709e55ef1e6b4d9c4178ce0fcf1b9
+      internalID: -466539388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_29"
+      rect:
+        serializedVersion: 2
+        x: 4500
+        y: 1340
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74ba9aa30631b4b4daf29ed9b12a8ba7
+      internalID: -1686169359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_30"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6cbd3396a34662b4c929554be5f9f0c5
+      internalID: -502899322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_31"
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1e9affdd64a2fb43a588f690af8d4aa
+      internalID: 946339318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_32"
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62f161ca85f05a4419de9f6e738a55a0
+      internalID: 1267006548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_33"
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05c80fa5b26a84c4cb13f885ed7e4453
+      internalID: -855049799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_34"
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13bcdc5d4520443418215d30c6bc9121
+      internalID: 1483074280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_35"
+      rect:
+        serializedVersion: 2
+        x: 2500
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2c16ce5660ef49428f3f35516e6f988
+      internalID: 978533772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_36"
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 695d39cbb1042094cb36ca6568b3f9a1
+      internalID: -1615502369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_37"
+      rect:
+        serializedVersion: 2
+        x: 3500
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d9a490d0cec89f48a8ec74e5db5813a
+      internalID: 1280287383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_38"
+      rect:
+        serializedVersion: 2
+        x: 4000
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d64a54e9c3e13c7449523e7d0e0b65b8
+      internalID: 651361025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_39"
+      rect:
+        serializedVersion: 2
+        x: 4500
+        y: 670
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 674329501383b6145a171f7195fcfce5
+      internalID: -1348203465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_40"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 889c484720a25974bafafdebf2291ed7
+      internalID: 550850330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_41"
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10c8a09a516e25344b0b3e06e3fb7ce9
+      internalID: -1151247454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_42"
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e792cde86a7c334f9379c6fdbe0ce17
+      internalID: 1555163891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_43"
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c86d0c29d976814ca05e6a129e5a793
+      internalID: -780064240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_44"
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec4e718270c4eeb4c8e17c86d6401875
+      internalID: 1366669840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_45"
+      rect:
+        serializedVersion: 2
+        x: 2500
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d110c5c799090814a87f93f33f4bfa83
+      internalID: 627531409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_46"
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 380b763bbbb58cd41b30cc0d0197d547
+      internalID: -1871264983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_47"
+      rect:
+        serializedVersion: 2
+        x: 3500
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0b102a62a4435f41933e98d75f38874
+      internalID: 1566689967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_48"
+      rect:
+        serializedVersion: 2
+        x: 4000
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3465796e4dff87a48ada32081764c8db
+      internalID: 1720738370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u8DEF\u85AA\u58F0anxious_49"
+      rect:
+        serializedVersion: 2
+        x: 4500
+        y: 0
+        width: 500
+        height: 670
+      alignment: 9
+      pivot: {x: 0.342, y: 0.316}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd3ac274883e21a4eb454223a30dae0f
+      internalID: 587843991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 6a962c07118a0e7498e9b6e669d9eabb
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "\u8DEF\u85AA\u58F0anxious_0": 1100816996
+      "\u8DEF\u85AA\u58F0anxious_1": -1209011433
+      "\u8DEF\u85AA\u58F0anxious_10": -19987433
+      "\u8DEF\u85AA\u58F0anxious_11": -1596764399
+      "\u8DEF\u85AA\u58F0anxious_12": 1668588843
+      "\u8DEF\u85AA\u58F0anxious_13": 1373892533
+      "\u8DEF\u85AA\u58F0anxious_14": -1676541392
+      "\u8DEF\u85AA\u58F0anxious_15": -571790555
+      "\u8DEF\u85AA\u58F0anxious_16": 832802245
+      "\u8DEF\u85AA\u58F0anxious_17": -944978134
+      "\u8DEF\u85AA\u58F0anxious_18": 2108888012
+      "\u8DEF\u85AA\u58F0anxious_19": 471272148
+      "\u8DEF\u85AA\u58F0anxious_2": -1072597852
+      "\u8DEF\u85AA\u58F0anxious_20": 381618904
+      "\u8DEF\u85AA\u58F0anxious_21": -102789887
+      "\u8DEF\u85AA\u58F0anxious_22": 1739856069
+      "\u8DEF\u85AA\u58F0anxious_23": -119179762
+      "\u8DEF\u85AA\u58F0anxious_24": 512758399
+      "\u8DEF\u85AA\u58F0anxious_25": -1100568044
+      "\u8DEF\u85AA\u58F0anxious_26": -1791768700
+      "\u8DEF\u85AA\u58F0anxious_27": -870533430
+      "\u8DEF\u85AA\u58F0anxious_28": -466539388
+      "\u8DEF\u85AA\u58F0anxious_29": -1686169359
+      "\u8DEF\u85AA\u58F0anxious_3": 96714906
+      "\u8DEF\u85AA\u58F0anxious_30": -502899322
+      "\u8DEF\u85AA\u58F0anxious_31": 946339318
+      "\u8DEF\u85AA\u58F0anxious_32": 1267006548
+      "\u8DEF\u85AA\u58F0anxious_33": -855049799
+      "\u8DEF\u85AA\u58F0anxious_34": 1483074280
+      "\u8DEF\u85AA\u58F0anxious_35": 978533772
+      "\u8DEF\u85AA\u58F0anxious_36": -1615502369
+      "\u8DEF\u85AA\u58F0anxious_37": 1280287383
+      "\u8DEF\u85AA\u58F0anxious_38": 651361025
+      "\u8DEF\u85AA\u58F0anxious_39": -1348203465
+      "\u8DEF\u85AA\u58F0anxious_4": -72069774
+      "\u8DEF\u85AA\u58F0anxious_40": 550850330
+      "\u8DEF\u85AA\u58F0anxious_41": -1151247454
+      "\u8DEF\u85AA\u58F0anxious_42": 1555163891
+      "\u8DEF\u85AA\u58F0anxious_43": -780064240
+      "\u8DEF\u85AA\u58F0anxious_44": 1366669840
+      "\u8DEF\u85AA\u58F0anxious_45": 627531409
+      "\u8DEF\u85AA\u58F0anxious_46": -1871264983
+      "\u8DEF\u85AA\u58F0anxious_47": 1566689967
+      "\u8DEF\u85AA\u58F0anxious_48": 1720738370
+      "\u8DEF\u85AA\u58F0anxious_49": 587843991
+      "\u8DEF\u85AA\u58F0anxious_5": -1841089368
+      "\u8DEF\u85AA\u58F0anxious_6": 1825584126
+      "\u8DEF\u85AA\u58F0anxious_7": -1269495330
+      "\u8DEF\u85AA\u58F0anxious_8": 1213489210
+      "\u8DEF\u85AA\u58F0anxious_9": 1201362408
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
