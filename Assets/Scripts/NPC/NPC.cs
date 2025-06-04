@@ -193,7 +193,9 @@ public class NPC : Entity
         
         // 使用PlayerPrefs记录跟随的NPCID
         PlayerPrefs.SetString("FollowingNpcID", npcData.npcID);
-        PlayerPrefs.Save();        
+        PlayerPrefs.Save();
+
+        GameStateManager.Instance.SetFlag("Following_" + npcData.npcID, isFollowing);
         
         // 初始化朝向
         UpdateFacingDirection();
@@ -247,6 +249,9 @@ public class NPC : Entity
         // 重置朝向
         if (spriteRenderer != null)
             spriteRenderer.flipX = false;
+        
+        // 清除跟随状态标志
+        GameStateManager.Instance.SetFlag("Following_" + npcData.npcID, false);
     }
 
     #endregion

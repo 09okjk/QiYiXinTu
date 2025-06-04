@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Manager;
 using UnityEngine;
 
 public class NPCManager:MonoBehaviour
@@ -43,6 +44,14 @@ public class NPCManager:MonoBehaviour
     public void ShowNpc(string npcID)
     {
         NPC npc = GetNpc(npcID);
+        if (GameStateManager.Instance.GetFlag("Following_" + npcID))
+        {
+            // 在玩家附近生成
+            Vector3 playerPosition = PlayerManager.Instance.player.transform.position;
+            // 在玩家后方生成NPC
+            Vector3 spawnPosition = playerPosition + PlayerManager.Instance.player.transform.forward * -2f;
+            npc.transform.position = spawnPosition;
+        }
         if (npc)
         {
             npc.ActivateNpc();

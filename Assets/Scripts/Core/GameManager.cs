@@ -127,7 +127,8 @@ public class GameManager : MonoBehaviour
                 break;
             case "女生宿舍":
                 // 播放开场动画
-                StartAnimationCotroller.Instance.PlayVideo(0);
+                if(!GameStateManager.Instance.GetFlag("StartAnimationFinished"))
+                    StartAnimationCotroller.Instance.PlayVideo(0);
                 break;
             case "outside1":
                 // 触发开场对话

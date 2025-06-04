@@ -43,6 +43,10 @@ namespace UI
         
         private void Start()
         {
+            if (GameStateManager.Instance.GetFlag("StartAnimationFinished"))
+            {
+                return;
+            }
             // 设置视频播放器的播放速度
             videoPlayer.playbackSpeed = 1.0f;
             
@@ -70,6 +74,7 @@ namespace UI
                 }
                 GameUIManager.Instance.PlaySceneAnimation();
             }
+            videoPlayer.gameObject.SetActive(false); // 确保视频播放器初始状态为不激活
         }
         
         private void OnVideoPrepared(VideoPlayer source)
@@ -212,6 +217,8 @@ namespace UI
             videoPlayer.gameObject.SetActive(false);
             
             Debug.Log("所有视频播放完毕");
+            // 设置游戏状态标志，表示开始动画已完成
+            GameStateManager.Instance.SetFlag("StartAnimationFinished", true);
             GameUIManager.Instance.PlaySceneAnimation();
         }
         

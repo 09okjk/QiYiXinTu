@@ -29,7 +29,7 @@ namespace Manager
         {
             player.gameObject.SetActive(false);
             // 测试用--------
-            if (SceneManager.GetActiveScene().name == "outside1")
+            if (SceneManager.GetActiveScene().name != "女生宿舍")
             {
                 player.gameObject.SetActive(true);
                 NPCManager.Instance.ShowNpc("LuXinsheng");
