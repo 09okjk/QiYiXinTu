@@ -19,6 +19,19 @@ public class NPCState
     
     public virtual void Enter()
     {
+        if (Npc == null)
+        {
+            Debug.LogError("NPC对象为空");
+            return;
+        }
+    
+        if (Npc.Anim == null)
+        {
+            // Debug.LogError("NPC的Anim组件为空");
+            Npc.Anim = Npc.GetComponent<Animator>();
+            // return;
+        }
+    
         Npc.Anim.SetBool(_animBoolName, true);
         Rb = Npc.Rb;
         TriggerCalled = false;

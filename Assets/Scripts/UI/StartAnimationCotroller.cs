@@ -74,7 +74,7 @@ namespace UI
                 }
                 GameUIManager.Instance.PlaySceneAnimation();
             }
-            videoPlayer.gameObject.SetActive(false); // 确保视频播放器初始状态为不激活
+            //videoPlayer.gameObject.SetActive(false); // 确保视频播放器初始状态为不激活
         }
         
         private void OnVideoPrepared(VideoPlayer source)
