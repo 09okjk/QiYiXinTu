@@ -28,6 +28,13 @@ namespace Manager
         private void Start()
         {
             player.gameObject.SetActive(false);
+            // 测试用--------
+            if (SceneManager.GetActiveScene().name == "outside1")
+            {
+                player.gameObject.SetActive(true);
+                NPCManager.Instance.ShowNpc("LuXinsheng");
+            }
+            // 测试用--------
         }
 
         private void OnEnable()

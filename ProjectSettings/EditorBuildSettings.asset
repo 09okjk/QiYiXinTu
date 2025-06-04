@@ -12,10 +12,10 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: ecaaa58dc9089544f95fb9166cc419f2
   - enabled: 1
-    path: Assets/Scenes/Room1.unity
+    path: "Assets/Scenes/\u5973\u751F\u5BBF\u820D.unity"
     guid: 77bd815c2da70bf40ac3d500d9d1c888
   - enabled: 1
-    path: Assets/Scenes/Outside1.unity
+    path: Assets/Scenes/outside1.unity
     guid: baaf13d8df8350643898a2c19e05574d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
