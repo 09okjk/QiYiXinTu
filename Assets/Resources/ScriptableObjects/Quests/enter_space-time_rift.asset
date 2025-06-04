@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa9729b0c5174d399b8cd7f64f8da848, type: 3}
-  m_Name: Q006
+  m_Name: enter_space-time_rift
   m_EditorClassIdentifier: 
-  questID: Q006
-  questName: "\u79D8\u5BC6\u4EFB\u52A1"
+  questID: enter_space-time_rift
+  questName: "\u8FDB\u5165\u88C2\u7F1D"
   questConditionType: 0
   conditionValue: 
-  questText: "\u627E\u5230\u53E4\u8001\u9057\u8FF9\u4E2D\u7684\u5B9D\u85CF\u3002"
+  questText: "\u518D\u6B21\u4E92\u52A8\uFF0C\u590D\u539F\u63A8\u9001\u6392\u7248\uFF0C\u8FDB\u5165\u65F6\u7A7A\u88C2\u7F1D\u518D\u6B21\u4E92\u52A8\uFF0C\u590D\u539F\u63A8\u9001\u6392\u7248\uFF0C\u8FDB\u5165\u65F6\u7A7A\u88C2\u7F1D"
   nextQuestID: 
   isCompleted: 0

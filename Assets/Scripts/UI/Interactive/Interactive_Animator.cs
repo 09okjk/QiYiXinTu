@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class Interactive_ComputerSave:MonoBehaviour
+    public class Interactive_Animator:MonoBehaviour
     {
-        public static Interactive_ComputerSave Instance { get; private set; } // 单例实例
+        public static Interactive_Animator Instance { get; private set; } // 单例实例
         public Image interactImage; // 交互按钮
         public Animator animator;
         

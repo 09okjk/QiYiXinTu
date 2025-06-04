@@ -218,15 +218,7 @@ public class DialogueManager : MonoBehaviour
             {
                 foreach (string rewardID in currentDialogueNode.rewardIDs)
                 {
-                    ItemData itemData = ItemManager.Instance.GetItem(rewardID);
-                    if (itemData != null)
-                    {
-                        InventoryManager.Instance.AddItem(itemData);
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"无法找到奖励物品: {rewardID}");
-                    }
+                    InventoryManager.Instance.AddItemById(rewardID);
                 }
             }
             //TODO: 提供跟随

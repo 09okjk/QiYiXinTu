@@ -133,7 +133,11 @@ public class GameManager : MonoBehaviour
                 // 触发开场对话
                 DialogueManager.Instance.StartDialogueByID("lide_dialogue");
                 break;
-            case "Scene 3":
+            case "outside1_1":
+                break;
+            case "In_LiDe":
+                DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
+                break;
             case "Scene 4":
                 // 找到玩家初始位置并放置玩家
                 GameObject playerStart = GameObject.FindGameObjectWithTag("PlayerStart");

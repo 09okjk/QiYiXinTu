@@ -8,6 +8,9 @@ public enum EnemyType
     Magic,
     Boss,
     Enemy1,
+    Enemy2,
+    Enemy3,
+    Enemy4,
 }
 
 public class Enemy : Entity
@@ -184,6 +187,10 @@ public class Enemy : Entity
             // 根据敌人类型调整掉落数量
             switch (enemyData.enemyType)
             {
+                case EnemyType.Enemy1:
+                case EnemyType.Enemy2:
+                case EnemyType.Enemy3:
+                case EnemyType.Enemy4:
                 case EnemyType.Magic:
                     finalDropCount += UnityEngine.Random.Range(0, 2);
                     break;

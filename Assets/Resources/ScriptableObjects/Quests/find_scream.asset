@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa9729b0c5174d399b8cd7f64f8da848, type: 3}
-  m_Name: Q005
+  m_Name: find_scream
   m_EditorClassIdentifier: 
-  questID: Q005
-  questName: "\u56DE\u62A5\u6751\u957F"
-  questConditionType: 3
-  conditionValue: Q004
-  questText: "\u5411\u6751\u957F\u62A5\u544A\u4F60\u7684\u6210\u5C31\u3002"
-  nextQuestID: Q006
+  questID: find_scream
+  questName: "\u5BFB\u627E\u5C16\u53EB\u58F0"
+  questConditionType: 0
+  conditionValue: 
+  questText: "\u5BFB\u627E\u6709\u4EBA\u5728\u91CC\u9762\u5C16\u53EB\u7684\u9759\u97F3\u4ED3\u3002"
+  nextQuestID: 
   isCompleted: 0

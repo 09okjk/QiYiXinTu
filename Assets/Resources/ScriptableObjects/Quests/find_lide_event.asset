@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa9729b0c5174d399b8cd7f64f8da848, type: 3}
-  m_Name: Q003
+  m_Name: find_lide_event
   m_EditorClassIdentifier: 
-  questID: Q003
-  questName: "\u6536\u96C6\u836F\u8349"
-  questConditionType: 2
-  conditionValue: herb_special
-  questText: "\u4E3A\u6751\u533B\u6536\u96C65\u682A\u7279\u6B8A\u836F\u8349\u3002"
-  nextQuestID: Q004
+  questID: find_lide_event
+  questName: "\u524D\u5F80\u7ACB\u5FB7\u697C"
+  questConditionType: 0
+  conditionValue: 
+  questText: "\u524D\u5F80\u7ACB\u5FB7\u697C\u5BFB\u627E\u5947\u5F02\u73B0\u8C61\u548C\u65F6\u7A7A\u88C2\u7F1D\u3002"
+  nextQuestID: 
   isCompleted: 0
