@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
                 // 播放开场动画
                 StartAnimationCotroller.Instance.PlayVideo(0);
                 break;
-            case "女生宿舍楼下——立德楼":
+            case "outside1":
                 // 触发开场对话
                 DialogueManager.Instance.StartDialogueByID("lide_dialogue");
                 break;

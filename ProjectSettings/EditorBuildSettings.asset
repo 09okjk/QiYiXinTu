@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: "Assets/Scenes/\u5973\u751F\u5BBF\u820D.unity"
     guid: 77bd815c2da70bf40ac3d500d9d1c888
   - enabled: 1
-    path: "Assets/Scenes/\u5973\u751F\u5BBF\u820D\u697C\u4E0B\u2014\u2014\u7ACB\u5FB7\u697C.unity"
+    path: Assets/Scenes/outside1.unity
     guid: baaf13d8df8350643898a2c19e05574d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

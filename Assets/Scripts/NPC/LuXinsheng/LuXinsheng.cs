@@ -79,7 +79,7 @@ public class LuXinsheng:NPC
     public override void DeactivateNpc()
     {
         base.DeactivateNpc();
-        if (SceneManager.GetActiveScene().name == "女生宿舍楼下——立德楼")
+        if (SceneManager.GetActiveScene().name == "outside1")
         {
             ActivateNpc();
         }
@@ -101,7 +101,7 @@ public class LuXinsheng:NPC
         base.ActivateNpc();
         
         // 测试用-------
-        if (SceneManager.GetActiveScene().name == "女生宿舍楼下——立德楼")
+        if (SceneManager.GetActiveScene().name == "outside1")
             DialogueManager.Instance.StartDialogueByID("lide_dialogue");
         // 测试用-------
         
