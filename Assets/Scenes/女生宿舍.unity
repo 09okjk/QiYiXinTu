@@ -11884,6 +11884,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 717ee04c0da0486596d1b8a279a302bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  npcGameObjectList: []
+  npcList: []
 --- !u!4 &1714576947
 Transform:
   m_ObjectHideFlags: 0
@@ -14535,7 +14537,7 @@ GameObject:
   - component: {fileID: 1438051964828773517}
   m_Layer: 6
   m_Name: LuXinsheng
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14679,6 +14681,7 @@ MonoBehaviour:
   followDistance: 1.5
   followSpeed: 2
   spriteRenderer: {fileID: 5773410903994482131}
+  isFollowing: 0
   interactionDistance: 2
   interactionIndicator: {fileID: 8955661504743149877}
   dialogueDataList: []

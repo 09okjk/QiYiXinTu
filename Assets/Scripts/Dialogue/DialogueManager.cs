@@ -221,11 +221,11 @@ public class DialogueManager : MonoBehaviour
                     InventoryManager.Instance.AddItemById(rewardID);
                 }
             }
-            //TODO: 提供跟随
-            if (currentNpc && currentDialogueNode.isFollow)
-            {
-                currentNpc.FollowTargetPlayer();
-            }
+            // 提供跟随
+            // if (currentNpc && currentDialogueNode.isFollow)
+            // {
+            //     currentNpc.FollowTargetPlayer();
+            // }
             // 在添加监听前先移除
             continueButton.onClick.RemoveAllListeners();
             continueButton.onClick.AddListener(OnDialoguePanelClicked); ;

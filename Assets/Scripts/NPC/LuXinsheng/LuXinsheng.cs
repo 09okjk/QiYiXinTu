@@ -94,6 +94,19 @@ public class LuXinsheng:NPC
         {
             Anxious();
         }
+
+        if (dialogueID == "fight_dialogue")
+        {
+            FollowTargetPlayer();
+        }
+        
+        if (dialogueID == "lide_dialogue")
+        {
+            // 处理开场对话结束后的逻辑
+            Debug.Log("开场对话结束，LuXinsheng 进入 Idle 状态");
+            stateMachine.ChangeState(IdleState);
+            FollowTargetPlayer();
+        }
     }
 
     public override void ActivateNpc()

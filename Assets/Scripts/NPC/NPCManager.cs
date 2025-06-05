@@ -6,7 +6,8 @@ using UnityEngine;
 public class NPCManager:MonoBehaviour
 {
     public static NPCManager Instance { get; private set; }
-    private List<NPC> npcList = new List<NPC>();
+    public List<GameObject> npcGameObjectList = new List<GameObject>();
+    public List<NPC> npcList = new List<NPC>();
 
     private void Awake()
     {
@@ -28,11 +29,14 @@ public class NPCManager:MonoBehaviour
 
     private void InitializeNPCManager()
     {
-        NPC[] npcs = GetComponentsInChildren<NPC>();
-        foreach (NPC npc in npcs)
+        // NPC[] npcs = GetComponentsInChildren<NPC>();
+        GameObject [] npcObjects = GameObject.FindGameObjectsWithTag("NPC");
+        foreach (var npc in npcObjects)
         {
-            npcList.Add(npc);
-            npc.DeactivateNpc();
+            npcGameObjectList.Add(npc);
+            NPC npcComponent = npc.GetComponent<NPC>();
+            npcList.Add(npcComponent);
+            npc.GetComponent<NPC>().DeactivateNpc();
         }
     }
 
@@ -43,7 +47,7 @@ public class NPCManager:MonoBehaviour
     
     public void ShowNpc(string npcID)
     {
-        NPC npc = GetNpc(npcID);
+        var npc = npcGameObjectList.Find(n => n.gameObject.name == npcID);
         if (GameStateManager.Instance.GetFlag("Following_" + npcID))
         {
             // 在玩家附近生成
@@ -54,7 +58,7 @@ public class NPCManager:MonoBehaviour
         }
         if (npc)
         {
-            npc.ActivateNpc();
+            npc.GetComponent<NPC>().ActivateNpc();
         }
         else
         {

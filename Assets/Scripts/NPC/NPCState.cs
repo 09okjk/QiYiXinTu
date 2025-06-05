@@ -37,6 +37,8 @@ public class NPCState
         TriggerCalled = false;
     }
     
+    
+    
     public virtual void Update()
     {
         StateTimer -= Time.deltaTime;
