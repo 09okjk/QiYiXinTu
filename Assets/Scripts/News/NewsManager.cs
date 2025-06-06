@@ -107,6 +107,8 @@ namespace News
                 // 显示新闻信息UI
                 newsInfoUI.SetActive(true);
                 OnNewsBookStateChanged?.Invoke(true); // 触发新闻信息状态改变事件
+                
+                
             }
         }
         

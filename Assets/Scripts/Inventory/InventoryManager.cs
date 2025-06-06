@@ -122,6 +122,15 @@ public class InventoryManager : MonoBehaviour
         OnAddItem?.Invoke(item.itemID);
     }
 
+    public void AddItemById(string itemID)
+    {
+        var item = ItemManager.Instance.GetItem(itemID);
+        if (item)
+            AddItem(item);
+        else
+            Debug.LogWarning($"Item with ID {itemID} not found.");
+    }
+
     // 检查是否拥有某个物品
     public bool HasItem(string itemID)
     {

@@ -65,7 +65,18 @@ public class DialogueManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
+    private void Start()
+    {
+    }
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
     // 开始对话，可选择性地添加完成回调
     public async Task StartDialogue(DialogueData dialogue, Action<bool> onComplete = null)
     {
@@ -168,7 +179,7 @@ public class DialogueManager : MonoBehaviour
                 currentNpc = NPCManager.Instance.GetNpc(currentDialogueNode.speaker.speakerID);
                 nPCNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
                 currentDialogueText = nPCDialogueText;
-                nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerID}_{currentDialogueNode.speaker.emotion.ToString()}");
+                nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerName}_{currentDialogueNode.speaker.emotion.ToString()}");
                 nPCDialoguePanel.SetActive(true);
                 break;
             case SpeakerType.System:
@@ -207,22 +218,14 @@ public class DialogueManager : MonoBehaviour
             {
                 foreach (string rewardID in currentDialogueNode.rewardIDs)
                 {
-                    ItemData itemData = ItemManager.Instance.GetItem(rewardID);
-                    if (itemData != null)
-                    {
-                        InventoryManager.Instance.AddItem(itemData);
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"无法找到奖励物品: {rewardID}");
-                    }
+                    InventoryManager.Instance.AddItemById(rewardID);
                 }
             }
-            //TODO: 提供跟随
-            if (currentNpc && currentDialogueNode.isFollow)
-            {
-                currentNpc.FollowTargetPlayer();
-            }
+            // 提供跟随
+            // if (currentNpc && currentDialogueNode.isFollow)
+            // {
+            //     currentNpc.FollowTargetPlayer();
+            // }
             // 在添加监听前先移除
             continueButton.onClick.RemoveAllListeners();
             continueButton.onClick.AddListener(OnDialoguePanelClicked); ;

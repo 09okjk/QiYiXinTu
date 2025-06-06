@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float minimumLoadingTime = 0.5f;
     
+    public bool canSwitchScenes; // 是否允许切换场景
+    
     private bool gameStarted = false;
     
     private void Awake()
@@ -48,6 +50,7 @@ public class GameManager : MonoBehaviour
     
     private void Update()
     {
+        if (!canSwitchScenes) return;
         // 如果游戏尚未开始且检测到任意按键或点击
         if (!gameStarted && (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)))
         {
@@ -122,12 +125,20 @@ public class GameManager : MonoBehaviour
             case "MainMenu":
                 Time.timeScale = 1f; // 确保游戏没有暂停
                 break;
-            case "Room1":
+            case "女生宿舍":
                 // 播放开场动画
-                StartAnimationCotroller.Instance.PlayVideo(0);
+                if(!GameStateManager.Instance.GetFlag("StartAnimationFinished"))
+                    StartAnimationCotroller.Instance.PlayVideo(0);
                 break;
-            case "Scene 2":
-            case "Scene 3":
+            case "outside1":
+                // 触发开场对话
+                DialogueManager.Instance.StartDialogueByID("lide_dialogue");
+                break;
+            case "outside1_1":
+                break;
+            case "In_LiDe":
+                DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
+                break;
             case "Scene 4":
                 // 找到玩家初始位置并放置玩家
                 GameObject playerStart = GameObject.FindGameObjectWithTag("PlayerStart");

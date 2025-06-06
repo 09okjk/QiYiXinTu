@@ -28,6 +28,12 @@ namespace Manager
         private void Start()
         {
             player.gameObject.SetActive(false);
+            
+            if (SceneManager.GetActiveScene().name != "女生宿舍")
+            {
+                player.gameObject.SetActive(true);
+                NPCManager.Instance.ShowNpc("LuXinsheng");
+            }
         }
 
         private void OnEnable()

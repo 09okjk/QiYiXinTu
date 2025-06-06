@@ -126,6 +126,11 @@ public class GameUIManager : MonoBehaviour
                 Debug.LogWarning("LuXinsheng NPC not found.");
             }
         }
+
+        if (dialogueID == "fight_dialogue")
+        {
+            gameUIPanel.SetActive(true);
+        }
     }
 
     public void PlaySceneAnimation()

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class NPC : Entity
 {
@@ -8,6 +9,7 @@ public class NPC : Entity
     [SerializeField] protected float followDistance = 1.5f; // 跟随距离
     [SerializeField] protected internal float followSpeed = 2f; // 跟随速度
     public SpriteRenderer spriteRenderer;
+    public bool isFollowing = false; // 是否跟随玩家
     
     [Header("交互设置")]
     [SerializeField] private float interactionDistance = 2f; // 交互距离
@@ -16,9 +18,8 @@ public class NPC : Entity
     [Header("对话数据")]
     [SerializeField] private List<DialogueData> dialogueDataList; // 对话数据列表
     
-    private bool canInteract = false; // 是否可以交互
+    private bool canInteract = true; // 是否可以交互
     private DialogueData cachedDialogue; // 缓存对话数据
-    protected bool isFollowing = false; // 是否跟随玩家
     private GameObject player; // 玩家引用
     private float defaultSpeed; // 当前速度
     #region State
@@ -60,18 +61,23 @@ public class NPC : Entity
         if (player)
         {
             float distance = Vector2.Distance(transform.position, player.transform.position);
-            bool wasInteractable = canInteract;
-            canInteract = distance <= interactionDistance;
+            // 检查是否在交互距离内
+            bool inInteractionDistance = distance <= interactionDistance;
             
             // 更新交互提示
-            if (interactionIndicator && wasInteractable != canInteract)
-                interactionIndicator.SetActive(canInteract);
-            
-            // 处理交互输入
-            if (canInteract && Input.GetKeyDown(KeyCode.E))
+            if (interactionIndicator && inInteractionDistance && canInteract)
             {
-                Debug.Log($"与{npcData.npcName}交互");
-                Interact();
+                interactionIndicator.SetActive(true);
+                // 处理交互输入
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    Debug.Log($"与{npcData.npcName}交互");
+                    Interact();
+                }
+            }
+            else
+            {
+                interactionIndicator.SetActive(false);
             }
         }
     }
@@ -111,11 +117,26 @@ public class NPC : Entity
                     Debug.LogWarning($"无法找到对话数据: {dialogueID}");
                 }
             }
+            StopFollowing();
         }
     }
     protected virtual void OnDialogueEnd(string obj)
     {
-        
+        int finishedCount = 0;
+        // 检查对话数据列表是否全部完成了，如果是，则进行标志记录
+        foreach (DialogueData dialogueData in dialogueDataList)
+        {
+            if (dialogueData.state == DialogueState.Finished)
+            {
+                finishedCount++;
+            }
+        }
+
+        if (finishedCount == dialogueDataList.Count)
+        {
+            GameStateManager.Instance.SetFlag("FinishAllDialogue_"+ npcData.npcID, true);
+            SetCanInteract(false);
+        }
     }
     
     // 交互方法
@@ -191,7 +212,9 @@ public class NPC : Entity
         
         // 使用PlayerPrefs记录跟随的NPCID
         PlayerPrefs.SetString("FollowingNpcID", npcData.npcID);
-        PlayerPrefs.Save();        
+        PlayerPrefs.Save();
+
+        GameStateManager.Instance.SetFlag("Following_" + npcData.npcID, isFollowing);
         
         // 初始化朝向
         UpdateFacingDirection();
@@ -233,18 +256,21 @@ public class NPC : Entity
         }
     }
     
-    public void StopFollowing()
+    public virtual void StopFollowing()
     {
         // 停止跟随玩家
         isFollowing = false;
         // 清空PlayerPrefs记录跟随的NPCID
         PlayerPrefs.SetString("FollowingNpcID", string.Empty);
         PlayerPrefs.Save();
-        followSpeed = 0;
+        // followSpeed = 0;
         
         // 重置朝向
         if (spriteRenderer != null)
             spriteRenderer.flipX = false;
+        
+        // 清除跟随状态标志
+        GameStateManager.Instance.SetFlag("Following_" + npcData.npcID, false);
     }
 
     #endregion
@@ -252,6 +278,8 @@ public class NPC : Entity
 
     public virtual void ActivateNpc()
     {
+        if (GameStateManager.Instance.GetFlag("Following_" + npcData.npcID))
+            FollowTargetPlayer();
         gameObject.SetActive(true);
     }
     
@@ -260,6 +288,11 @@ public class NPC : Entity
         gameObject.SetActive(false);
     }
     
+    // 设置NPC是否可以交互
+    public void SetCanInteract(bool canInteract)
+    {
+        this.canInteract = canInteract;
+    }
     private void OnDrawGizmosSelected()
     {
         // 编辑器中的可视化辅助，用于显示交互范围

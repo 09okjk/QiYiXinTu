@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f741c0af46ec4c83a7046555c9eef973, type: 3}
+  m_Name: LiFan
+  m_EditorClassIdentifier: 
+  MaxHealth: 100
+  CurrentHealth: 100
+  MaxMana: 100
+  CurrentMana: 100
+  InvincibleTime: 0
+  knockbackDirection: {x: 0, y: 0}
+  KnockbackDuration: 0
+  itemIDs:
+  - "\u58A8\u6C34\u74F6"
+  npcID: LiFan
+  npcName: "\u674E\u5E06"
+  spriteID: "\u674E\u5E06"
+  dialogueIDs:
+  - li_dialogue
+  properties: []

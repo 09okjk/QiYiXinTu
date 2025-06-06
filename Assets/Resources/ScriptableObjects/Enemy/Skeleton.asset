@@ -13,21 +13,17 @@ MonoBehaviour:
   m_Name: Skeleton
   m_EditorClassIdentifier: 
   MaxHealth: 100
-  CurrentHealth: 90
+  CurrentHealth: 5
   MaxMana: 0
   CurrentMana: 0
   InvincibleTime: 0
   knockbackDirection: {x: 2, y: 5}
   KnockbackDuration: 1
-  items:
-  - {fileID: 11400000, guid: f92fcb84f4691d842bec865cba61f20c, type: 2}
-  - {fileID: 11400000, guid: f92fcb84f4691d842bec865cba61f20c, type: 2}
-  - {fileID: 11400000, guid: f92fcb84f4691d842bec865cba61f20c, type: 2}
-  - {fileID: 11400000, guid: f92fcb84f4691d842bec865cba61f20c, type: 2}
+  itemIDs: []
   enemyID: skeleton_001
   enemyName: "\u9AB7\u9AC5001"
   description: "\u654C\u4EBA"
-  enemyType: 3
+  enemyType: 4
   moveSpeed: 2
   idleTime: 2
   battleTime: 1

@@ -9,10 +9,11 @@ namespace UI
     {
         None, // 无交互 
         Talk, // 交谈
-        PickUp, // 拾取物品
+        GetItem, // 获得物品
         Use, // 使用物品
         Open, // 打开
         Close, // 关闭
+        Activate, // 激活
     }
     
     public class InteractiveUI:MonoBehaviour
@@ -63,10 +64,13 @@ namespace UI
                     Debug.Log("Talk interaction triggered.");
                     // 这里可以添加对话框的显示逻辑
                     DialogueManager.Instance.StartDialogueByID(interactionValue);
+                    gameObject.SetActive(false); // 隐藏交互按钮
                     break;
-                case InteractionType.PickUp:
-                    // 处理���取物品逻辑
+                case InteractionType.GetItem:
+                    // 处理获得物品逻辑
                     Debug.Log("Pick up interaction triggered.");
+                    InventoryManager.Instance.AddItemById(interactionValue);
+                    gameObject.SetActive(false); // 隐藏交互按钮
                     break;
                 case InteractionType.Use:
                     // 处理使用物品逻辑
@@ -80,11 +84,25 @@ namespace UI
                     // 处理关闭逻辑
                     Debug.Log("Close interaction triggered.");
                     break;
+                case InteractionType.Activate:
+                    Debug.Log("Activate interaction triggered.");
+                    // 处理激活逻辑
+                    // 找到子物体中名字是interactionValue的物体，并激活它
+                    Transform targetObject = transform.Find(interactionValue);
+                    if (targetObject != null)
+                    {
+                        targetObject.gameObject.SetActive(true);
+                        Debug.Log($"Activated {interactionValue}.");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"No child object found with name {interactionValue}.");
+                    }
+                    break;
                 default:
                     Debug.Log("No valid interaction type selected.");
                     break;
             }
-            gameObject.SetActive(false); // 隐藏交互按钮
         }
     }
 }

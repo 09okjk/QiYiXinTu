@@ -25,7 +25,7 @@ public class Entity:MonoBehaviour
     
     #region Components
 
-    public Animator Anim { get; protected set; }
+    public Animator Anim { get; set; }
     public Rigidbody2D Rb { get; protected set; }
     public EntityFX EntityFX { get; protected set; }
     

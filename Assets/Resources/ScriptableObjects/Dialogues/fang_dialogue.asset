@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: fang_dialogue
   state: 2
-  currentNodeID: node001
+  currentNodeID: 
   nodes:
   - nodeID: node001
     text: "\u65B9\u8001\u5E08\u600E\u4E48\u5728\u8FD9\u91CC\uFF01......\u6211\u4EEC\u9759\u6084\u6084\u8D70\u5F00\u5427\uFF0C\u6211\u4E0D\u592A\u64C5\u957F\u548C\u8001\u5E08\u6253\u4EA4\u9053\u3002"
@@ -34,7 +34,7 @@ MonoBehaviour:
     text: "\u8FD9\u4F4D\u540C\u5B66\uFF0C\u8BF7\u7559\u6B65\u3002"
     speaker:
       speakerID: FangHuaigu
-      speakerName: ???
+      speakerName: "\u65B9\u6000\u53E4"
       speakerType: 1
       emotion: 0
     nextNodeID: node003
@@ -76,7 +76,7 @@ MonoBehaviour:
     text: "\u65E9\u5B89\uFF0C\u539F\u6765\u4F60\u4EEC\u5728\u8FD9\u91CC.......\u5C0F\u8DEF\uFF0C\u6211\u8FD8\u6CA1\u8DDF\u8FD9\u4F4D\u8001\u670B\u53CB\u53D9\u65E7\u5462\uFF0C\u4F60\u4EEC\u5DF2\u7ECF\u5148\u884C\u804A\u4E0A\u4E86\u5417\uFF1F"
     speaker:
       speakerID: FangHuaigu
-      speakerName: ???
+      speakerName: "\u65B9\u6000\u53E4"
       speakerType: 1
       emotion: 0
     nextNodeID: node006

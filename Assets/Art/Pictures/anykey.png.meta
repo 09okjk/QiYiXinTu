@@ -164,9 +164,9 @@ TextureImporter:
       name: book_3
       rect:
         serializedVersion: 2
-        x: 1956
+        x: 2316
         y: 613
-        width: 2091
+        width: 1372
         height: 188
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -196,6 +196,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      anykey_0: -2102832611
       book_0: 3843231544584785974
       book_1: -6053866238764602296
       book_10: -7235471843669919655
