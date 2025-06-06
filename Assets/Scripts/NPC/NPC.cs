@@ -10,15 +10,17 @@ public class NPC : Entity
     [SerializeField] protected internal float followSpeed = 2f; // 跟随速度
     public SpriteRenderer spriteRenderer;
     public bool isFollowing = false; // 是否跟随玩家
+    public bool isActive = true; // NPC是否处于激活状态
     
     [Header("交互设置")]
     [SerializeField] private float interactionDistance = 2f; // 交互距离
     [SerializeField] private GameObject interactionIndicator;// 交互提示UI
+    public bool canInteract = true; // 是否可以交互
     
     [Header("对话数据")]
-    [SerializeField] private List<DialogueData> dialogueDataList; // 对话数据列表
+    public List<string> dialogueIDs; // 对话ID列表
     
-    private bool canInteract = true; // 是否可以交互
+    private List<DialogueData> dialogueDataList; // 对话数据列表
     private DialogueData cachedDialogue; // 缓存对话数据
     private GameObject player; // 玩家引用
     private float defaultSpeed; // 当前速度
@@ -268,9 +270,6 @@ public class NPC : Entity
         // 重置朝向
         if (spriteRenderer != null)
             spriteRenderer.flipX = false;
-        
-        // 清除跟随状态标志
-        GameStateManager.Instance.SetFlag("Following_" + npcData.npcID, false);
     }
 
     #endregion
@@ -278,7 +277,7 @@ public class NPC : Entity
 
     public virtual void ActivateNpc()
     {
-        if (GameStateManager.Instance.GetFlag("Following_" + npcData.npcID))
+        if (isFollowing)
             FollowTargetPlayer();
         gameObject.SetActive(true);
     }

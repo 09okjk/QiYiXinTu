@@ -1,34 +1,34 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+using UnityEngine;
 using Manager;
 using News;
+using Newtonsoft.Json;
+using Formatting = Newtonsoft.Json.Formatting;
 
-public class SaveLoadSystem : MonoBehaviour
+namespace Save
 {
-    public static SaveLoadSystem Instance;
-    private static string SaveDirectory => Application.persistentDataPath + "/Saves/";
-    private static int slotIndex = 0;
+    public class AsyncSaveLoadSystem : MonoBehaviour
+    {
+        private static string SaveDirectory => Application.persistentDataPath + "/Saves/";
     
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+        [Header("Save Settings")]
+        [SerializeField] private bool useJsonFormat = true; // JSON vs Binary
+        [SerializeField] private bool showSaveProgress = true;
+    
+        public static AsyncSaveLoadSystem Instance { get; private set; }
+    
+        // 进度回调
+        public static event Action<float> OnSaveProgress;
+        public static event Action<float> OnLoadProgress;
+        public static event Action<string> OnSaveComplete;
+        public static event Action<string> OnLoadComplete;
 
-    private void Start()
-    {
-        Debug.Log(SaveDirectory);
-    }
+    #region Data
 
     [Serializable]
     public class SaveData
@@ -39,8 +39,6 @@ public class SaveLoadSystem : MonoBehaviour
         public float playerMana;
         public float[] playerPosition = new float[3];
         public Dictionary<string, int> playerSkills = new Dictionary<string, int>();
-        public int playerLevel;
-        public int playerExperience;
 
         // Scene data
         public string currentSceneName;
@@ -86,11 +84,12 @@ public class SaveLoadSystem : MonoBehaviour
     public class NPCSaveData
     {
         public string npcID;
+        public string sceneName; // NPC所在场景
         public float[] position = new float[3];
         public bool isActive;
         public bool isFollowing;
         public bool canInteract;
-        public List<string> completedDialogues = new List<string>();
+        public List<string> dialogueIDs = new List<string>();
         public Dictionary<string, bool> npcFlags = new Dictionary<string, bool>();
     }
 
@@ -114,72 +113,296 @@ public class SaveLoadSystem : MonoBehaviour
         public Dictionary<string, bool> puzzleStates = new Dictionary<string, bool>();
         public List<string> solvedSteps = new List<string>();
     }
-
-    public static void SaveGame(int slotIdx)
+    #endregion
+        
+    private void Awake()
     {
-        slotIndex = slotIdx;
-
-        if (!Directory.Exists(SaveDirectory))
+        if (Instance == null)
         {
-            Directory.CreateDirectory(SaveDirectory);
+            Instance = this;
         }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
-        SaveData saveData = CreateSaveData();
-        string savePath = SaveDirectory + "save_" + slotIndex + ".sav";
+    #region 异步保存方法
 
+    /// <summary>
+    /// 异步保存游戏
+    /// </summary>
+    public static async Task<bool> SaveGameAsync(int slotIdx, IProgress<float> progress = null)
+    {
         try
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fileStream = new FileStream(savePath, FileMode.Create);
-            formatter.Serialize(fileStream, saveData);
-            fileStream.Close();
-            Debug.Log("Game saved to slot " + slotIndex);
+            progress?.Report(0f);
+        
+            // 确保目录存在
+            if (!Directory.Exists(SaveDirectory))
+            {
+                Directory.CreateDirectory(SaveDirectory);
+            }
+
+            progress?.Report(0.1f);
+
+            // 创建保存数据（可能耗时）
+            SaveData saveData = await CreateSaveDataAsync(progress);
+        
+            progress?.Report(0.8f);
+
+            // 写入文件
+            string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
+            bool success = await WriteSaveFileAsync(saveData, savePath);
+        
+            progress?.Report(1f);
+        
+            OnSaveComplete?.Invoke(success ? "保存成功！" : "保存失败！");
+            return success;
         }
         catch (Exception e)
         {
-            Debug.LogError($"Failed to save game: {e.Message}");
+            Debug.LogError($"异步保存失败: {e.Message}");
+            OnSaveComplete?.Invoke("保存失败：" + e.Message);
+            return false;
         }
     }
 
-    private static SaveData CreateSaveData()
+    /// <summary>
+    /// 异步创建保存数据
+    /// </summary>
+    private static async Task<SaveData> CreateSaveDataAsync(IProgress<float> progress = null)
     {
         SaveData saveData = new SaveData();
-
-        // Save player data
-        SavePlayerData(saveData);
-
-        // Save scene data
-        SaveSceneData(saveData);
-
-        // Save NPC data
-        SaveNPCData(saveData);
-
-        // Save inventory data
-        SaveInventoryData(saveData);
-
-        // Save quest data
-        SaveQuestData(saveData);
-
-        // Save game state data
-        SaveGameStateData(saveData);
-
-        // Save enemy data
-        SaveEnemyData(saveData);
-
-        // Save news data
-        SaveNewsData(saveData);
-
-        // Save puzzle data
-        SavePuzzleData(saveData);
-
-        // Save metadata
-        saveData.saveName = "Save " + (slotIndex + 1);
+    
+        // 分步骤保存，每步都可以异步处理
+        await Task.Run(() => SavePlayerData(saveData));
+        progress?.Report(0.2f);
+    
+        await Task.Run(() => SaveSceneData(saveData));
+        progress?.Report(0.3f);
+    
+        await Task.Run(() => SaveNPCData(saveData));
+        progress?.Report(0.4f);
+    
+        await Task.Run(() => SaveInventoryData(saveData));
+        progress?.Report(0.5f);
+    
+        await Task.Run(() => SaveQuestData(saveData));
+        progress?.Report(0.6f);
+    
+        await Task.Run(() => SaveGameStateData(saveData));
+        progress?.Report(0.7f);
+    
+        // 元数据
+        saveData.saveName = "Save " + DateTime.Now.ToString("yyyy-MM-dd HH:mm");
         saveData.saveDate = DateTime.Now;
         saveData.gameVersion = Application.version;
-
+    
         return saveData;
     }
 
+    /// <summary>
+    /// 异步写入保存文件
+    /// </summary>
+    private static async Task<bool> WriteSaveFileAsync(SaveData saveData, string savePath)
+    {
+        try
+        {
+            if (Instance.useJsonFormat)
+            {
+                // JSON格式 - 人类可读，便于调试
+                string jsonData = await Task.Run(() => 
+                    JsonConvert.SerializeObject(saveData, Formatting.Indented));
+            
+                await File.WriteAllTextAsync(savePath, jsonData, Encoding.UTF8);
+            }
+        
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"写入文件失败: {e.Message}");
+            return false;
+        }
+    }
+
+    #endregion
+
+    #region 异步加载方法
+
+    /// <summary>
+    /// 异步加载游戏
+    /// </summary>
+    public static async Task<bool> LoadGameAsync(int slotIdx, IProgress<float> progress = null)
+    {
+        try
+        {
+            progress?.Report(0f);
+        
+            string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
+        
+            if (!File.Exists(savePath))
+            {
+                Debug.LogWarning($"存档文件不存在: {savePath}");
+                OnLoadComplete?.Invoke("存档文件不存在！");
+                return false;
+            }
+
+            progress?.Report(0.1f);
+
+            // 读取文件
+            SaveData saveData = await ReadSaveFileAsync(savePath);
+            if (saveData == null)
+            {
+                OnLoadComplete?.Invoke("存档文件损坏！");
+                return false;
+            }
+
+            progress?.Report(0.5f);
+
+            // 应用数据
+            await ApplySaveDataAsync(saveData, progress);
+        
+            progress?.Report(1f);
+            OnLoadComplete?.Invoke("加载完成！");
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"异步加载失败: {e.Message}");
+            OnLoadComplete?.Invoke("加载失败：" + e.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 异步读取保存文件
+    /// </summary>
+    private static async Task<SaveData> ReadSaveFileAsync(string savePath)
+    {
+        try
+        {
+            if (Instance.useJsonFormat)
+            {
+                string jsonData = await File.ReadAllTextAsync(savePath, Encoding.UTF8);
+                return await Task.Run(() => 
+                    JsonConvert.DeserializeObject<SaveData>(jsonData));
+            }
+            else
+            {
+                // 二进制格式 - 更高效，但不易调试
+                using (FileStream fs = new FileStream(savePath, FileMode.Open, FileAccess.Read))
+                {
+                    BinaryReader reader = new BinaryReader(fs);
+                    string jsonData = reader.ReadString();
+                    return await Task.Run(() => 
+                        JsonConvert.DeserializeObject<SaveData>(jsonData));
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"读取文件失败: {e.Message}");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 异步应用保存数据
+    /// </summary>
+    private static async Task ApplySaveDataAsync(SaveData saveData, IProgress<float> progress = null)
+    {
+        // 检查是否需要切换场景
+        string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        if (currentScene != saveData.currentSceneName)
+        {
+            // 异步场景加载
+            var sceneLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(saveData.currentSceneName);
+        
+            while (!sceneLoad.isDone)
+            {
+                progress?.Report(0.5f + (sceneLoad.progress * 0.3f));
+                await Task.Yield(); // 等待一帧
+            }
+        
+            // 等待场景初始化
+            await Task.Delay(100);
+        }
+
+        progress?.Report(0.8f);
+
+        // 应用各种数据
+        await Task.Run(() => LoadPlayerData(saveData));
+        await Task.Run(() => LoadNPCData(saveData));
+        await Task.Run(() => LoadInventoryData(saveData));
+        await Task.Run(() => LoadQuestData(saveData));
+        await Task.Run(() => LoadGameStateData(saveData));
+        // await Task.Run(() => LoadEnemyData(saveData));
+        // await Task.Run(() => LoadNewsData(saveData));
+        // await Task.Run(() => LoadPuzzleData(saveData));
+    }
+
+    #endregion
+
+    #region 辅助方法
+
+    /// <summary>
+    /// 获取存档信息（异步）
+    /// </summary>
+    public static async Task<SaveDataInfo[]> GetSaveDataInfosAsync()
+    {
+        try
+        {
+            if (!Directory.Exists(SaveDirectory))
+            {
+                return new SaveDataInfo[0];
+            }
+
+            string[] saveFiles = await Task.Run(() => 
+                Directory.GetFiles(SaveDirectory, "save_*.sav"));
+        
+            List<SaveDataInfo> saveInfos = new List<SaveDataInfo>();
+
+            foreach (string filePath in saveFiles)
+            {
+                try
+                {
+                    string fileName = Path.GetFileName(filePath);
+                    int slotIdx = int.Parse(fileName.Substring(5, fileName.Length - 9));
+                
+                    SaveData saveData = await ReadSaveFileAsync(filePath);
+                    if (saveData != null)
+                    {
+                        saveInfos.Add(new SaveDataInfo
+                        {
+                            slotIndex = slotIdx,
+                            saveName = saveData.saveName,
+                            saveDate = saveData.saveDate,
+                            sceneName = saveData.currentSceneName,
+                            playerName = saveData.playerName,
+                            gameVersion = saveData.gameVersion
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"读取存档信息失败: {e.Message}");
+                }
+            }
+
+            return saveInfos.ToArray();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"获取存档列表失败: {e.Message}");
+            return new SaveDataInfo[0];
+        }
+    }
+
+    #endregion
+        
+    // 原有的数据处理方法保持不变
     private static void SavePlayerData(SaveData saveData)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -198,6 +421,10 @@ public class SaveLoadSystem : MonoBehaviour
 
             // Additional player data can be added here
         }
+        else
+        {
+            Debug.LogError("Player not found or PlayerManager is null. Skipping player data save.");
+        }
     }
 
     private static void SaveSceneData(SaveData saveData)
@@ -214,7 +441,7 @@ public class SaveLoadSystem : MonoBehaviour
             {
                 NPCSaveData npcSaveData = new NPCSaveData();
                 npcSaveData.npcID = npc.npcData.npcID;
-                
+                npcSaveData.sceneName = npc.npcData.sceneName; // NPC所在场景
                 Vector3 position = npc.transform.position;
                 npcSaveData.position[0] = position.x;
                 npcSaveData.position[1] = position.y;
@@ -338,87 +565,6 @@ public class SaveLoadSystem : MonoBehaviour
         // }
     }
 
-    public static void LoadGame(int slotIdx)
-    {
-        slotIndex = slotIdx;
-        string savePath = SaveDirectory + "save_" + slotIndex + ".sav";
-
-        if (File.Exists(savePath))
-        {
-            try
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                FileStream fileStream = new FileStream(savePath, FileMode.Open);
-                SaveData saveData = formatter.Deserialize(fileStream) as SaveData;
-                fileStream.Close();
-
-                if (saveData != null)
-                {
-                    ApplySaveData(saveData);
-                    Debug.Log("Game loaded from slot " + slotIndex);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Failed to load game: {e.Message}");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Save file not found in slot " + slotIndex);
-        }
-    }
-
-    private static void ApplySaveData(SaveData saveData)
-    {
-        string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-        if (currentScene != saveData.currentSceneName)
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(saveData.currentSceneName);
-            GameManager.Instance.StartCoroutine(ApplySaveDataAfterSceneLoad(saveData));
-            return;
-        }
-
-        ApplySaveDataDirect(saveData);
-    }
-
-    private static IEnumerator ApplySaveDataAfterSceneLoad(SaveData saveData)
-    {
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        ApplySaveDataDirect(saveData);
-    }
-
-    private static void ApplySaveDataDirect(SaveData saveData)
-    {
-        // Load player data
-        LoadPlayerData(saveData);
-
-        // Load scene data
-        LoadSceneData(saveData);
-
-        // Load NPC data
-        LoadNPCData(saveData);
-
-        // Load inventory data
-        LoadInventoryData(saveData);
-
-        // Load quest data
-        LoadQuestData(saveData);
-
-        // Load game state data
-        LoadGameStateData(saveData);
-
-        // Load enemy data
-        LoadEnemyData(saveData);
-
-        // Load news data
-        LoadNewsData(saveData);
-
-        // Load puzzle data
-        LoadPuzzleData(saveData);
-    }
-
     private static void LoadPlayerData(SaveData saveData)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -452,46 +598,14 @@ public class SaveLoadSystem : MonoBehaviour
     {
         if (NPCManager.Instance != null)
         {
+            List<NPCSaveData> npcSaveDataList = new List<NPCSaveData>(saveData.npcData.Values);
             foreach (var npcPair in saveData.npcData)
             {
                 string npcID = npcPair.Key;
                 NPCSaveData npcSaveData = npcPair.Value;
-                
-                NPC npc = NPCManager.Instance.GetNpc(npcID);
-                if (npc != null)
-                {
-                    // Position
-                    Vector3 position = new Vector3(
-                        npcSaveData.position[0],
-                        npcSaveData.position[1],
-                        npcSaveData.position[2]
-                    );
-                    npc.transform.position = position;
-
-                    // State
-                    if (npcSaveData.isActive)
-                    {
-                        npc.ActivateNpc();
-                    }
-                    else
-                    {
-                        npc.DeactivateNpc();
-                    }
-
-                    if (npcSaveData.isFollowing)
-                    {
-                        npc.FollowTargetPlayer();
-                    }
-
-                    npc.SetCanInteract(npcSaveData.canInteract);
-
-                    // Restore NPC-specific flags
-                    foreach (var flag in npcSaveData.npcFlags)
-                    {
-                        GameStateManager.Instance.SetFlag(flag.Key, flag.Value);
-                    }
-                }
+                npcSaveDataList.Add(npcSaveData);
             }
+            NPCManager.Instance.InitializeNPCManager(npcSaveDataList); // Ensure NPCs are initialized
         }
     }
 
@@ -611,85 +725,5 @@ public class SaveLoadSystem : MonoBehaviour
             // Implementation depends on your puzzle system
         }
     }
-
-    public static SaveDataInfo[] GetSaveDataInfos()
-    {
-        if (!Directory.Exists(SaveDirectory))
-        {
-            return new SaveDataInfo[0];
-        }
-
-        string[] saveFiles = Directory.GetFiles(SaveDirectory, "save_*.sav");
-        SaveDataInfo[] saveDataInfos = new SaveDataInfo[saveFiles.Length];
-
-        for (int i = 0; i < saveFiles.Length; i++)
-        {
-            string fileName = Path.GetFileName(saveFiles[i]);
-            int slotIdx = int.Parse(fileName.Substring(5, fileName.Length - 9));
-
-            try
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                FileStream fileStream = new FileStream(saveFiles[i], FileMode.Open);
-                SaveData saveData = formatter.Deserialize(fileStream) as SaveData;
-                fileStream.Close();
-
-                saveDataInfos[i] = new SaveDataInfo
-                {
-                    slotIndex = slotIdx,
-                    saveName = saveData.saveName,
-                    saveDate = saveData.saveDate,
-                    sceneName = saveData.currentSceneName,
-                    playerName = saveData.playerName,
-                    gameVersion = saveData.gameVersion
-                };
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Error reading save file {fileName}: {e.Message}");
-                saveDataInfos[i] = new SaveDataInfo
-                {
-                    slotIndex = slotIdx,
-                    saveName = "Corrupted Save",
-                    saveDate = DateTime.MinValue,
-                    sceneName = "Unknown"
-                };
-            }
-        }
-
-        System.Array.Sort(saveDataInfos, (a, b) => a.slotIndex.CompareTo(b.slotIndex));
-        return saveDataInfos;
     }
-
-    public static bool DeleteSave(int slotIdx)
-    {
-        string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
-        
-        if (File.Exists(savePath))
-        {
-            try
-            {
-                File.Delete(savePath);
-                Debug.Log($"Save file {slotIdx} deleted successfully");
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Failed to delete save file: {e.Message}");
-                return false;
-            }
-        }
-        
-        return false;
-    }
-}
-
-public class SaveDataInfo
-{
-    public int slotIndex;
-    public string saveName;
-    public DateTime saveDate;
-    public string sceneName;
-    public string playerName;
-    public string gameVersion;
 }

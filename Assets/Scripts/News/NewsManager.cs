@@ -32,7 +32,7 @@ namespace News
         public Button newsInfoCloseButton; // 新闻信息关闭按钮
         
         private NewsData[] newsDataArray; // 存储所有新闻数据的数组
-        private List<NewsData> checkedNewsDataArray; // 存储已读新闻数据的数组
+        public List<NewsData> checkedNewsDataArray; // 存储已读新闻数据的数组
         private NewsData currentNewsData; // 当前新闻数据
         private List<GameObject> newsInfoSlotPool = new List<GameObject>(); // 新闻列表预制体池
         

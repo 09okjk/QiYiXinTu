@@ -31,6 +31,9 @@ namespace UI
 
         private void Start()
         {
+            // TODO: 合并startButton和continueButton为startButton
+            // 当没有存档时，startButton的文本应为“开始游戏”，有存档时应为“继续游戏”
+            
             // 设置各个组件的Animator不启用
             titleImage.gameObject.GetComponent<Animator>().enabled = false;
             startButton.gameObject.GetComponent<Animator>().enabled = false;
@@ -94,6 +97,8 @@ namespace UI
 
         public void EnterGame()
         {
+            // 如果有存档，则继续游戏
+            // if ()
             MenuManager.Instance.StartNewGame();
         }
     }

@@ -8,7 +8,8 @@ namespace Manager
     public class PlayerManager:MonoBehaviour
     {
         public static PlayerManager Instance { get; private set; }
-        public Player player;
+        [SerializeField] private GameObject playerPrefab;
+        [HideInInspector] public Player player;
         
         [SerializeField]
         private List<GameObject> createPlayerPoints = new List<GameObject>();
@@ -17,23 +18,22 @@ namespace Manager
             if (!Instance)
             {
                 Instance = this;
+                DontDestroyOnLoad(gameObject);
             }
             else
             {
                 Debug.LogWarning("Multiple PlayerManager instances found. Destroying duplicate.");
                 Destroy(gameObject);
             }
+            player = Instantiate(playerPrefab).GetComponent<Player>();
+            player.gameObject.name = "Player";
         }
 
         private void Start()
         {
             player.gameObject.SetActive(false);
             
-            if (SceneManager.GetActiveScene().name != "女生宿舍")
-            {
-                player.gameObject.SetActive(true);
-                NPCManager.Instance.ShowNpc("LuXinsheng");
-            }
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         private void OnEnable()
@@ -44,6 +44,18 @@ namespace Manager
         private void OnDisable()
         {
             DialogueManager.Instance.OnDialogueEnd -= CheckDialogueID;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode arg1)
+        {
+            SetPlayer();
+            // 如果是女生宿舍场景，直接显示玩家
+            // if (scene.name == "女生宿舍")
+            // {
+            //     player.gameObject.SetActive(true);
+            //     NPCManager.Instance.ShowNpc("LuXinsheng");
+            // }
         }
 
         private void CheckDialogueID(string dialogueID)
