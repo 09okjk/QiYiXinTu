@@ -14,7 +14,6 @@ public class NPCManager:MonoBehaviour
     public GameObject npcPrefab;
     public List<NPC> npcList = new List<NPC>();
     private NPCData[] npcDataList;
-    private List<GameObject> spawnedNpcPoints = new List<GameObject>(); // 用于存储生成的NPC点
 
     private void Awake()
     {
@@ -33,12 +32,33 @@ public class NPCManager:MonoBehaviour
     
     private void Start()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // SceneManager.sceneLoaded += OnSceneLoaded;
+
+
+    }
+
+    private void LoadAllNpcs()
+    {
+        foreach (var npcData in npcDataList)
+        {
+            GameObject npcObject = Instantiate(npcPrefab,transform);
+            npcObject.name = npcData.npcID; // 设置GameObject名称为NPC ID
+            NPC npcComponent = npcObject.GetComponent<NPC>();
+            npcComponent.npcData = npcData;
+            npcComponent.isFollowing = false;
+            npcComponent.dialogueIDs = npcData.dialogueIDs;
+            npcComponent.isActive = false;
+            npcComponent.canInteract = false;
+            npcComponent.npcData.sceneName = npcData.sceneName;
+            npcGameObjectList.Add(npcObject);
+            npcList.Add(npcComponent);
+            npcObject.SetActive(false);
+        }
     }
 
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        // SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     public void InitializeNPCManager(List<AsyncSaveLoadSystem.NPCSaveData> npcSaveDataList = null)
@@ -50,6 +70,8 @@ public class NPCManager:MonoBehaviour
         {
             Debug.LogWarning("No NPC save data found. Initializing with default NPCs.");
             // TODO: 这里可以添加默认NPC的初始化逻辑
+            // 初始化所有NPC
+            LoadAllNpcs();
         }
         else
         {
@@ -61,7 +83,7 @@ public class NPCManager:MonoBehaviour
                 if (npcData != null)
                 {
                     // 实例化NPC GameObject
-                    GameObject npcObject = Instantiate(npcPrefab);
+                    GameObject npcObject = Instantiate(npcPrefab,transform);
                     npcObject.name = npcData.npcID; // 设置GameObject名称为NPC ID
                     npcObject.transform.position = new Vector3(npcSaveData.position[0], npcSaveData.position[1], npcSaveData.position[2]);
                     NPC npcComponent = npcObject.GetComponent<NPC>();
@@ -79,34 +101,12 @@ public class NPCManager:MonoBehaviour
         }
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode arg1)
-    {
-        if (npcList.Count == 0)
-        {
-            Debug.LogWarning("No NPCs found in the list. Please initialize NPCManager first.");
-            return;
-        }
-        
-        spawnedNpcPoints.Clear();
-        // 查找当前场景中的所有NPC点
-        spawnedNpcPoints.AddRange(GameObject.FindGameObjectsWithTag("NPCPoint"));
-        
-        foreach (var npc in npcList)
-        {
-            if (npc.isActive && !npcGameObjectList.Exists(n => n.name == npc.npcData.npcID) &&
-                scene.name == npc.npcData.sceneName)
-            {
-                ShowNpc(npc.npcData.npcID);
-            }
-        }
-    }
-
     public NPC GetNpc(string npcID)
     {
         return npcList.Find(n => n.npcData.npcID == npcID);
     }
     
-    public void ShowNpc(string npcID)
+    public void ShowNpc(string npcID, GameObject npcPoint = null)
     {
         var npcObject = npcGameObjectList.Find(n => n.gameObject.name == npcID);
         if (!npcObject)
@@ -134,7 +134,7 @@ public class NPCManager:MonoBehaviour
             }
             else
             {
-                npcObject.transform.position = GameObject.Find(NpcPointFormat + npc.npcData.npcID).transform.position;
+                if (npcPoint != null) npcObject.transform.position = npcPoint.transform.position;
             }
             
             npc.ActivateNpc();

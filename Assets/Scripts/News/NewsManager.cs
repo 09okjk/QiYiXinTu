@@ -56,7 +56,6 @@ namespace News
         
         private void Start()
         {
-            PlayerManager.Instance.player.RegisterNewsBookEvent();
             newsInfoUI.SetActive(false); // 隐藏新闻信息UI
             newsInfoBookPanel.SetActive(false); // 隐藏新闻列表UI
             newsInfoPanel.SetActive(false); // 隐藏新闻信息面板UI
@@ -71,7 +70,22 @@ namespace News
             closeButton.onClick.AddListener(CloseNewsInfo); // 绑定关闭按钮事件
             newsInfoCloseButton.onClick.AddListener(ToggleNewsInfoBook); // 绑定新闻信息面板关闭按钮事件
         }
-        
+
+        private void OnEnable()
+        {
+            OnNewsBookStateChanged += OnNewsBookStateChangedHandler; // 订阅新闻信息状态改变事件
+        }
+
+        private void OnDisable()
+        {
+            OnNewsBookStateChanged -= OnNewsBookStateChangedHandler; // 取消订阅新闻信息状态改变事件
+        }
+
+        private void OnNewsBookStateChangedHandler(bool isOpen)
+        {
+            PlayerManager.Instance.player.HandleNewsBookStateChanged(isOpen);
+        }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape) )

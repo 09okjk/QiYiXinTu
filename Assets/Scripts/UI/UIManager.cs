@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Manager;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -145,7 +146,8 @@ public class UIManager : MonoBehaviour
             return;
         }
         
-        PlayerManager.Instance.player.RegisterPopWindowEvent();
+        if (SceneManager.GetActiveScene().name != "MainMenu")
+            PlayerManager.Instance.player.RegisterPopWindowEvent(); 
         
         // 隐藏按钮
         confirmYesButton.gameObject.SetActive(false);
@@ -160,7 +162,7 @@ public class UIManager : MonoBehaviour
         confirmNoButton.onClick.RemoveAllListeners();
 
         // 设置图片
-        if (sprite)
+        if (sprite != null)
         {
             confirmImage.gameObject.SetActive(true);
             confirmImage.sprite = sprite;

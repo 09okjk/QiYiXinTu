@@ -684,12 +684,3 @@ public class SaveLoadSystem : MonoBehaviour
     }
 }
 
-public class SaveDataInfo
-{
-    public int slotIndex;
-    public string saveName;
-    public DateTime saveDate;
-    public string sceneName;
-    public string playerName;
-    public string gameVersion;
-}

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UI
 {
-    public class NextSceneChecker:MonoBehaviour
+    public class NextLevelChecker:MonoBehaviour
     {
         public string nextSceneName;
         public PlayerPointType nextScenePointType;

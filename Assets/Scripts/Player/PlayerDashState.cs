@@ -12,7 +12,7 @@ public class PlayerDashState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        StateTimer = Player.skillManager.dashSkill.dashDuration;
+        StateTimer = SkillManager.Instance.dashSkill.dashDuration;
     }
 
     public override void Update()
@@ -24,7 +24,7 @@ public class PlayerDashState : PlayerState
         //     stateMachine.ChangeState(Player.WallSlideState);
         // }
         
-        Player.SetVelocity(Player.skillManager.dashSkill.dashSpeed * Player.DashDir, 0);
+        Player.SetVelocity(SkillManager.Instance.dashSkill.dashSpeed * Player.DashDir, 0);
         
         if (StateTimer < 0)
         {

@@ -20,7 +20,7 @@ public class NPC : Entity
     [Header("对话数据")]
     public List<string> dialogueIDs; // 对话ID列表
     
-    private List<DialogueData> dialogueDataList; // 对话数据列表
+    private List<DialogueData> dialogueDataList = new List<DialogueData>(); // 对话数据列表
     private DialogueData cachedDialogue; // 缓存对话数据
     private GameObject player; // 玩家引用
     private float defaultSpeed; // 当前速度
@@ -279,6 +279,7 @@ public class NPC : Entity
     {
         if (isFollowing)
             FollowTargetPlayer();
+        interactionIndicator.GetComponent<Canvas>().worldCamera = Camera.main;
         gameObject.SetActive(true);
     }
     
