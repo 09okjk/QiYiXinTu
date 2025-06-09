@@ -99,7 +99,20 @@ public class NPCManager:MonoBehaviour
 
     public NPC GetNpc(string npcID)
     {
-        return npcGameObjectList.Find(n => n.name == npcID).GetComponent<NPC>();
+        var npcGameObject = npcGameObjectList.Find(n => n.name == npcID);
+        if (npcGameObject == null)
+        {
+            Debug.LogError($"NPC with ID {npcID} not found in the list.");
+            return null;
+        }
+        // 确保GameObject上有NPC组件
+        if (!npcGameObject.TryGetComponent<NPC>(out var npc))
+        {
+            Debug.LogError($"NPC component not found on GameObject with ID {npcID}.");
+            return null;
+        }
+        
+        return npc;
     }
     
     public void ShowNpc(string npcID, GameObject npcPoint = null)
