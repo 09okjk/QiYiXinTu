@@ -210,8 +210,9 @@ public class SaveLoadSystem : MonoBehaviour
     {
         if (NPCManager.Instance != null)
         {
-            foreach (NPC npc in NPCManager.Instance.npcList)
+            foreach (GameObject npcObject in NPCManager.Instance.npcGameObjectList)
             {
+                var npc = npcObject.GetComponent<NPC>();
                 NPCSaveData npcSaveData = new NPCSaveData();
                 npcSaveData.npcID = npc.npcData.npcID;
                 
