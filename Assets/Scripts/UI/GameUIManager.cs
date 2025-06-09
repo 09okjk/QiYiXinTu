@@ -113,18 +113,8 @@ public class GameUIManager : MonoBehaviour
         // 处理对话结束后的逻辑
         if (dialogueID == "homework_over")
         {
-            LuXinsheng luXinsheng = NPCManager.Instance.GetNpc("LuXinsheng") as LuXinsheng;
-            if (luXinsheng != null)
-            {
-                luSleepAnimator.gameObject.SetActive(false);
-                luWeekUpAnimator.gameObject.SetActive(true);
-                // luXinsheng.ActivateNpc();
-                // luXinsheng.WeekUp();
-            }
-            else
-            {
-                Debug.LogWarning("LuXinsheng NPC not found.");
-            }
+            luSleepAnimator.gameObject.SetActive(false);
+            luWeekUpAnimator.gameObject.SetActive(true);
         }
 
         if (dialogueID == "fight_dialogue")
@@ -167,20 +157,6 @@ public class GameUIManager : MonoBehaviour
         if (luSleepAnimator != null)
         {
             luSleepAnimator.gameObject.SetActive(true);
-        }
-        else
-        {
-            Debug.LogWarning("Lu Sleep Animator is not assigned.");
-        }
-    }
-    
-    public void StopLuWeekUpAnimation()
-    {
-        if (luWeekUpAnimator != null)
-        {
-            luWeekUpAnimator.StopPlayback();
-            luWeekUpAnimator.gameObject.SetActive(false);
-            // NPCManager.Instance.ShowNpc("LuXinsheng");
         }
         else
         {
