@@ -180,7 +180,7 @@ public class GameUIManager : MonoBehaviour
         {
             luWeekUpAnimator.StopPlayback();
             luWeekUpAnimator.gameObject.SetActive(false);
-            NPCManager.Instance.ShowNpc("LuXinsheng");
+            // NPCManager.Instance.ShowNpc("LuXinsheng");
         }
         else
         {
