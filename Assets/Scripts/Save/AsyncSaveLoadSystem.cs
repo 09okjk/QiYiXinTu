@@ -55,9 +55,7 @@ namespace Save
                 public Dictionary<string, int> itemQuantities = new Dictionary<string, int>();
         
                 // Quest data
-                public List<string> activeQuestIDs = new List<string>();
-                public List<string> completedQuestIDs = new List<string>();
-                public Dictionary<string, List<string>> completedObjectives = new Dictionary<string, List<string>>();
+                public List<QuestSaveData> allQuests = new List<QuestSaveData>();
                 public string currentQuestID;
         
                 // Game state data
@@ -114,6 +112,18 @@ namespace Save
                 public bool isActive;
                 public Dictionary<string, bool> puzzleStates = new Dictionary<string, bool>();
                 public List<string> solvedSteps = new List<string>();
+            }
+            
+            [Serializable]
+            public class QuestSaveData
+            {
+                public string questID;
+                public string questName;
+                public QuestCondition questConditionType; // 任务条件类型
+                public string conditionValue; // 条件值
+                public string questText; // 任务描述文本
+                public string nextQuestID; // 下一个任务ID
+                public bool isCompleted;
             }
             #endregion
                 
@@ -192,7 +202,11 @@ namespace Save
     
             InventoryDataCache inventoryCache = CollectInventoryData();
             progress?.Report(0.5f);
-
+            
+            // TODO:其他数据收集（任务、新闻、谜题等）
+            QuestDataCache questCache = CollectQuestData();
+            
+            
             // 切换到后台线程进行数据处理
             await Task.Run(() =>
             {
@@ -200,7 +214,7 @@ namespace Save
                 ProcessSceneData(saveData, sceneCache);
                 ProcessNPCData(saveData, npcCache);
                 ProcessInventoryData(saveData, inventoryCache);
-                ProcessQuestData(saveData);
+                ProcessQuestData(saveData, questCache);
                 ProcessGameStateData(saveData);
             });
     
@@ -522,6 +536,16 @@ namespace Save
             }
             return cache;
         }
+        
+        private static QuestDataCache CollectQuestData()
+        {
+            QuestDataCache cache = new QuestDataCache();
+            if (QuestManager.Instance != null)
+            {
+                cache.allQuests = QuestManager.Instance.GetAllQuests();
+            }
+            return cache;
+        }
 
         // 在后台线程处理数据的方法
         private static void ProcessPlayerData(SaveData saveData, PlayerDataCache cache)
@@ -589,21 +613,35 @@ namespace Save
             }
         }
 
-        private static void ProcessQuestData(SaveData saveData)
+        private static void ProcessQuestData(SaveData saveData, QuestDataCache cache)
         {
             // 确保不调用Unity API
             if (QuestManager.Instance != null)
             {
-                // 当前任务
-                if (!string.IsNullOrEmpty(QuestManager.Instance.currentQuestID))
+                foreach (var quest in cache.allQuests)
                 {
-                    saveData.currentQuestID = QuestManager.Instance.currentQuestID;
-                    saveData.activeQuestIDs.Add(QuestManager.Instance.currentQuestID);
+                    if (quest.isCompleted)
+                    {
+                        saveData.completedQuestIDs.Add(quest.questID);
+                        saveData.completedObjectives[quest.questID] = quest.completedObjectives;
+                    }
                 }
-
-                // 已完成的任务数据处理
             }
         }
+        // {
+        //     // 确保不调用Unity API
+        //     if (QuestManager.Instance != null)
+        //     {
+        //         // 当前任务
+        //         if (!string.IsNullOrEmpty(QuestManager.Instance.currentQuestID))
+        //         {
+        //             saveData.currentQuestID = QuestManager.Instance.currentQuestID;
+        //             saveData.activeQuestIDs.Add(QuestManager.Instance.currentQuestID);
+        //         }
+        //
+        //         // 已完成的任务数据处理
+        //     }
+        // }
 
         private static void ProcessGameStateData(SaveData saveData)
         {
@@ -692,18 +730,8 @@ namespace Save
         {
             if (QuestManager.Instance != null)
             {
-                // Restore current quest
-                if (!string.IsNullOrEmpty(saveData.currentQuestID))
-                {
-                    QuestManager.Instance.StartQuest(saveData.currentQuestID);
-                }
-
-                // Restore completed quests
-                foreach (string questID in saveData.completedQuestIDs)
-                {
-                    // You'll need to implement a method to mark quests as completed
-                    // QuestManager.Instance.MarkQuestAsCompleted(questID);
-                }
+                QuestManager.Instance.LoadAllQuests(saveData.allQuests);
+                
             }
         }
 
@@ -815,4 +843,9 @@ class NPCDataCache
 class InventoryDataCache
 {
     public List<ItemData> allItems = new List<ItemData>();
+}
+
+class QuestDataCache
+{
+    public List<QuestData> allQuests = new List<QuestData>();
 }

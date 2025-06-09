@@ -2,6 +2,7 @@
 using Manager;
 using Save;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -31,6 +32,7 @@ namespace UI
                     hasTriggered = true;
                     boxCollider.enabled = false; // 禁用碰撞体，防止重复触发
                     GameStateManager.Instance.SetPlayerPointType(nextScenePointType);
+                    GameStateManager.Instance.SetFlag("FirstEntry_" + SceneManager.GetActiveScene().name, false);
                     await AsyncSaveLoadSystem.SaveGameAsync(0);
                     // 触发场景切换逻辑
                     GameManager.Instance.LoadScene(nextSceneName);
