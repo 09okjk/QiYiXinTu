@@ -44,9 +44,13 @@ public class NPCManager:MonoBehaviour
     {
         if (arg0.name != "MainMenu" && arg0.name != "InitalizationScene")
         {
-            // npcGameObjectList.Clear();
-            // 重新加载NPC
-            npcGameObjectList = GetComponentsInChildren<NPC>(true).Select(npc => npc.gameObject).ToList();
+            // 不清空列表，只添加新NPC
+            var newNpcs = GetComponentsInChildren<NPC>(true)
+                .Select(npc => npc.gameObject)
+                .ToList();
+                
+            // 更新列表而非清空
+            npcGameObjectList = newNpcs;
         }
     }
 
@@ -106,20 +110,22 @@ public class NPCManager:MonoBehaviour
 
     public NPC GetNpc(string npcID)
     {
-        var npcGameObject = npcGameObjectList.Find(n => n.name == npcID);
-        if (npcGameObject == null)
+        // 改进查找逻辑，处理(Clone)后缀
+        var npc = npcGameObjectList.Find(n => n.name == npcID || n.name == npcID + "(Clone)");
+    
+        if (npc != null)
         {
-            Debug.LogError($"NPC with ID {npcID} not found in the list.");
-            return null;
+            return npc.GetComponent<NPC>();
         }
-        // 确保GameObject上有NPC组件
-        if (!npcGameObject.TryGetComponent<NPC>(out var npc))
+    
+        // 调试信息
+        Debug.LogError($"NPC with ID {npcID} not found in the list. 当前列表中的NPC:");
+        foreach (var obj in npcGameObjectList)
         {
-            Debug.LogError($"NPC component not found on GameObject with ID {npcID}.");
-            return null;
+            Debug.Log($"列表中的NPC: {obj.name}");
         }
-        
-        return npc;
+    
+        return null;
     }
     
     public void ShowNpc(string npcID, GameObject npcPoint = null)
