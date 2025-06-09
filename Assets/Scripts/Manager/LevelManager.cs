@@ -64,11 +64,12 @@ namespace Manager
         private void InitLevel()
         {
             // 播放场景加载动画
-            if (animationNames.Count > 0)
-            {
-                sceneAnimator.gameObject.SetActive(true);
-                sceneAnimator.Play(animationNames[0]);
-            }
+            // if (animationNames.Count > 0)
+            // {
+            //     sceneAnimator.gameObject.SetActive(true);
+            //     sceneAnimator.Play(animationNames[0]);
+            // }
+            
             // 设置玩家出生点
             if (playerPoint != null)
             {

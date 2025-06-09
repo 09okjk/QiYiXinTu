@@ -40,10 +40,5 @@ namespace UI
             PlayerManager.Instance.player.gameObject.SetActive(true);
             GameUIManager.Instance.PlayLuSleepAnimation();
         }
-
-        public void ShowNpc(string npcID)
-        {
-            NPCManager.Instance.ShowNpc(npcID);
-        }
     }
 }

@@ -33,8 +33,7 @@ public class NPCManager:MonoBehaviour
     private void Start()
     {
         // SceneManager.sceneLoaded += OnSceneLoaded;
-
-
+        LoadAllNpcs();
     }
 
     private void LoadAllNpcs()
@@ -69,9 +68,6 @@ public class NPCManager:MonoBehaviour
         if (npcSaveDataList == null || npcSaveDataList.Count == 0)
         {
             Debug.LogWarning("No NPC save data found. Initializing with default NPCs.");
-            // TODO: 这里可以添加默认NPC的初始化逻辑
-            // 初始化所有NPC
-            LoadAllNpcs();
         }
         else
         {
