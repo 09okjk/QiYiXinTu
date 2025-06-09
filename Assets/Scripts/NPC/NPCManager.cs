@@ -44,7 +44,7 @@ public class NPCManager:MonoBehaviour
     {
         if (arg0.name != "MainMenu" && arg0.name != "InitalizationScene")
         {
-            npcGameObjectList.Clear();
+            // npcGameObjectList.Clear();
             // 重新加载NPC
             npcGameObjectList = GetComponentsInChildren<NPC>(true).Select(npc => npc.gameObject).ToList();
         }
