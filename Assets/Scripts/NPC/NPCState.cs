@@ -27,17 +27,15 @@ public class NPCState
     
         if (Npc.Anim == null)
         {
-            // Debug.LogError("NPC的Anim组件为空");
-            Npc.Anim = Npc.GetComponent<Animator>();
-            // return;
+            Debug.LogError("NPC的Anim组件为空");
+            Npc.Anim = Npc.GetComponentInChildren<Animator>();
+            return;
         }
     
         Npc.Anim.SetBool(_animBoolName, true);
         Rb = Npc.Rb;
         TriggerCalled = false;
     }
-    
-    
     
     public virtual void Update()
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Save;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -14,7 +15,7 @@ namespace Manager
         [SerializeField] private GameObject playerPoint; // 玩家出生点
         [SerializeField] private List<GameObject> npcsPoints; // NPC出生点列表
         [SerializeField] private List<GameObject> enemyPoints; // 敌人出生点列表
-        [SerializeField] private List<GameObject> nextLevelPoints; // 下一关卡传送点列表
+        // [SerializeField] private List<GameObject> nextLevelPoints; // 下一关卡传送点列表
         
         [Header("场景动画")]
         [SerializeField] private Animator sceneAnimator; // 场景动画控制器
@@ -41,6 +42,23 @@ namespace Manager
         {
             sceneAnimator.gameObject.SetActive(false);
             // 初始化关卡
+            if (SceneManager.GetActiveScene().name != "女生宿舍")
+            {
+                // InitLevel();
+            }
+            PlayerManager.Instance.UpdatePlayerCamera(PlayerCamera);
+            AsyncSaveLoadSystem.OnLoadComplete += OnDataLoaded;
+            DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+        }
+
+        private void OnDestroy()
+        {
+            AsyncSaveLoadSystem.OnLoadComplete -= OnDataLoaded;
+            DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
+        }
+
+        private void OnDataLoaded(string obj)
+        {
             if (GameStateManager.Instance.GetFlag("FirstEntry_" + levelName))
             {
                 // 如果是第一次进入该关卡，执行初始化逻辑
@@ -51,14 +69,6 @@ namespace Manager
             {
                 // TODO:从保存的数据中加载关卡状态
             }
-
-            PlayerManager.Instance.UpdatePlayerCamera(PlayerCamera);
-            DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
-        }
-
-        private void OnDestroy()
-        {
-            DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
         }
 
         private void InitLevel()
@@ -104,10 +114,7 @@ namespace Manager
         {
             if (dialogueID == "dialogue_001" && levelName == "女生宿舍")
             {
-                foreach (var nextLevelPoint in nextLevelPoints)
-                {
-                    nextLevelPoint.GetComponent<Collider2D>().isTrigger = true; // 启用传送点碰撞体
-                }
+                GameStateManager.Instance.SetFlag("CanEnter_"+"outside1", true);
             }
         }
     }

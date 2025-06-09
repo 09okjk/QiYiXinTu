@@ -342,6 +342,12 @@ namespace Save
         /// </summary>
         private static async Task ApplySaveDataAsync(SaveData saveData, IProgress<float> progress = null)
         {
+            if (saveData == null)
+            {
+                Debug.LogError("无法应用空的存档数据");
+                return;
+            }
+            
             // 检查是否需要切换场景
             string currentScene = SceneManager.GetActiveScene().name;
             if (currentScene != saveData.currentSceneName || SceneManager.GetActiveScene().name == "MainMenu")
@@ -365,27 +371,35 @@ namespace Save
 
             progress?.Report(0.8f);
 
-            // 直接在主线程调用所有加载方法，不使用Task.Run
-            LoadPlayerData(saveData);
-            await Task.Yield(); // 确保UI可以更新
-            progress?.Report(0.85f);
-    
-            LoadNPCData(saveData);
-            await Task.Yield();
-            progress?.Report(0.9f);
-    
-            LoadInventoryData(saveData);
-            await Task.Yield();
-            progress?.Report(0.95f);
-    
-            LoadQuestData(saveData);
-            LoadGameStateData(saveData);
-            // 其他加载方法...
-            // await Task.Run(() => LoadEnemyData(saveData));
-            // await Task.Run(() => LoadNewsData(saveData));
-            // await Task.Run(() => LoadPuzzleData(saveData));
-    
-            progress?.Report(1f);
+            try
+            {
+                // 直接在主线程调用所有加载方法，不使用Task.Run
+                LoadPlayerData(saveData);
+                await Task.Yield(); // 确保UI可以更新
+                progress?.Report(0.85f);
+
+                LoadNPCData(saveData);
+                await Task.Yield();
+                progress?.Report(0.9f);
+
+                LoadInventoryData(saveData);
+                await Task.Yield();
+                progress?.Report(0.95f);
+
+                LoadQuestData(saveData);
+                LoadGameStateData(saveData);
+                // 其他加载方法...
+                // await Task.Run(() => LoadEnemyData(saveData));
+                // await Task.Run(() => LoadNewsData(saveData));
+                // await Task.Run(() => LoadPuzzleData(saveData));
+
+                progress?.Report(1f);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"应用存档数据失败: {e.Message}");
+                throw;
+            }
         }
 
         #endregion
@@ -615,33 +629,24 @@ namespace Save
 
         private static void ProcessQuestData(SaveData saveData, QuestDataCache cache)
         {
-            // 确保不调用Unity API
-            if (QuestManager.Instance != null)
+            saveData.allQuests.Clear();
+            foreach (var cacheAllQuest in cache.allQuests)
             {
-                foreach (var quest in cache.allQuests)
+                QuestSaveData questSaveData = new QuestSaveData
                 {
-                    if (quest.isCompleted)
-                    {
-                        saveData.completedQuestIDs.Add(quest.questID);
-                        saveData.completedObjectives[quest.questID] = quest.completedObjectives;
-                    }
-                }
+                    questID = cacheAllQuest.questID,
+                    questName = cacheAllQuest.questName,
+                    questConditionType = cacheAllQuest.questConditionType,
+                    conditionValue = cacheAllQuest.conditionValue,
+                    questText = cacheAllQuest.questText,
+                    nextQuestID = cacheAllQuest.nextQuestID,
+                    isCompleted = cacheAllQuest.isCompleted
+                };
+                saveData.allQuests.Add(questSaveData);
             }
+            saveData.currentQuestID = QuestManager.Instance.currentQuestID;
+        
         }
-        // {
-        //     // 确保不调用Unity API
-        //     if (QuestManager.Instance != null)
-        //     {
-        //         // 当前任务
-        //         if (!string.IsNullOrEmpty(QuestManager.Instance.currentQuestID))
-        //         {
-        //             saveData.currentQuestID = QuestManager.Instance.currentQuestID;
-        //             saveData.activeQuestIDs.Add(QuestManager.Instance.currentQuestID);
-        //         }
-        //
-        //         // 已完成的任务数据处理
-        //     }
-        // }
 
         private static void ProcessGameStateData(SaveData saveData)
         {
@@ -676,6 +681,7 @@ namespace Save
                 PlayerManager.Instance.player.playerData.CurrentHealth = saveData.playerHealth;
                 PlayerManager.Instance.player.playerData.CurrentMana = saveData.playerMana;
             }
+            Debug.Log("LoadPlayerData");
         }
 
         private static void LoadSceneData(SaveData saveData)
@@ -685,17 +691,20 @@ namespace Save
 
         private static void LoadNPCData(SaveData saveData)
         {
-            if (NPCManager.Instance != null)
+            if (NPCManager.Instance != null && saveData.npcData != null)
             {
+                // 创建仅一次的NPC数据列表
                 List<NPCSaveData> npcSaveDataList = new List<NPCSaveData>(saveData.npcData.Values);
-                foreach (var npcPair in saveData.npcData)
-                {
-                    string npcID = npcPair.Key;
-                    NPCSaveData npcSaveData = npcPair.Value;
-                    npcSaveDataList.Add(npcSaveData);
-                }
-                NPCManager.Instance.InitializeNPCManager(npcSaveDataList); // Ensure NPCs are initialized
+                
+                // 直接使用已创建的列表
+                Debug.Log($"加载了 {npcSaveDataList.Count} 个NPC数据");
+                NPCManager.Instance.InitializeNPCManager(npcSaveDataList);
             }
+            else
+            {
+                Debug.LogWarning("NPC加载过程中，NPCManager实例或NPC数据为空");
+            }
+            Debug.Log("LoadNPCData");
         }
 
         private static void LoadInventoryData(SaveData saveData)
@@ -724,6 +733,7 @@ namespace Save
                     }
                 }
             }
+            Debug.Log("LoadInventoryData");
         }
 
         private static void LoadQuestData(SaveData saveData)
@@ -731,8 +741,9 @@ namespace Save
             if (QuestManager.Instance != null)
             {
                 QuestManager.Instance.LoadAllQuests(saveData.allQuests);
-                
+                QuestManager.Instance.currentQuestID = saveData.currentQuestID;
             }
+            Debug.Log("LoadQuestData");
         }
 
         private static void LoadGameStateData(SaveData saveData)

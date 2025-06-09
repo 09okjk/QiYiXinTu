@@ -17,7 +17,7 @@ public class QuestManager : MonoBehaviour
     // 当前任务
     public QuestData currentQuest { get; private set; }
     // 当前任务ID
-    public string currentQuestID { get; private set; }
+    public string currentQuestID { get; set; }
     // 任务完成回调
     private Action<bool> onQuestCompleteCallback;
     
@@ -168,14 +168,36 @@ public class QuestManager : MonoBehaviour
     // 加载所有任务数据
     public void LoadAllQuests(List<AsyncSaveLoadSystem.QuestSaveData> quests)
     {
-        allQuests = quests;
-        questDictionary.Clear();
-        foreach (var quest in allQuests)
+        if (quests == null || quests.Count == 0)
         {
-            if (!questDictionary.ContainsKey(quest.questID))
+            Debug.LogWarning("没有任务数据可加载");
+            return;
+        }
+        
+        foreach (var questSaveData in quests)
+        {
+            var quest = allQuests.Find(n => n.questID == questSaveData.questID);
+            if (quest != null)
             {
-                questDictionary.Add(quest.questID, quest);
+                quest.questID = questSaveData.questID;
+                quest.questName = questSaveData.questName;
+                quest.questText = questSaveData.questText;
+                quest.isCompleted = questSaveData.isCompleted;
+                quest.conditionValue = questSaveData.conditionValue;
+                quest.questConditionType = questSaveData.questConditionType;
+                quest.nextQuestID = questSaveData.nextQuestID;
             }
+            // 将questSaveData中的任务ID添加到字典中
+            if (!questDictionary.ContainsKey(questSaveData.questID))
+            {
+                questDictionary.Add(questSaveData.questID, quest);
+            }
+        }
+        
+        allQuests.Clear();
+        foreach (var quest in questDictionary.Values)
+        {
+            allQuests.Add(quest);
         }
     }
     

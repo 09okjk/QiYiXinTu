@@ -29,7 +29,6 @@ public class MenuManager : MonoBehaviour
     
     [Header("Save/Load")]
     [SerializeField] private Transform saveSlotContainer;
-    [SerializeField] private GameObject autoSaveSlot;
     [SerializeField] private GameObject saveSlotPrefab;
     [SerializeField] private int maxSaveSlots = 6;
     
@@ -241,23 +240,33 @@ public class MenuManager : MonoBehaviour
             
             // 使用await等待异步操作完成
             SaveDataInfo[] saveDataInfos = await AsyncSaveLoadSystem.GetSaveDataInfosAsync();
-            
-            // 创建现有保存的插槽
+
+            // 创建一个与maxSaveSlots大小相同的数组，默认值为null
+            SaveDataInfo[] sortedSaveData = new SaveDataInfo[maxSaveSlots];
+
+            // 将现有存档信息放入对应的索引位置
             for (int i = 0; i < saveDataInfos.Length; i++)
             {
-                CreateSaveSlot(i, saveDataInfos[i]);
+                if (saveDataInfos[i].slotIndex >= 0 && saveDataInfos[i].slotIndex < maxSaveSlots)
+                {
+                    sortedSaveData[saveDataInfos[i].slotIndex] = saveDataInfos[i];
+                }
+                else
+                {
+                    Debug.LogWarning($"存档槽索引超出范围: {saveDataInfos[i].slotIndex}");
+                }
+            }
+
+            // 按顺序创建所有存档槽
+            for (int i = 0; i < maxSaveSlots; i++)
+            {
+                CreateSaveSlot(i, sortedSaveData[i]);
             }
             
             // 创建空插槽到最大
             for (int i = saveDataInfos.Length; i < maxSaveSlots; i++)
             {
                 CreateSaveSlot(i, null);
-            }
-            
-            // 检查自动存档槽0，如果没有数据则自动隐藏
-            if (saveDataInfos[0] == null)
-            {
-                autoSaveSlot.SetActive(false);
             }
             
             Debug.Log("存档插槽加载完成");

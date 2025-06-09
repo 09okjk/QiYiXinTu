@@ -9,9 +9,9 @@ namespace UI
     public class NextLevelChecker:MonoBehaviour
     {
         public string nextSceneName;
+        public bool hasTriggered = false;
         public PlayerPointType nextScenePointType;
         private BoxCollider2D boxCollider;
-        private bool hasTriggered = false;
         
         private void Awake()    
         {
@@ -21,7 +21,19 @@ namespace UI
                 Debug.LogError("BoxCollider2D component is missing on this GameObject.");
             }
         }
-        
+
+        private void Update()
+        {
+            if (GameStateManager.Instance.GetFlag("CanEnter_" + nextSceneName))
+            {
+                boxCollider.isTrigger = true;
+            }
+            else
+            {
+                boxCollider.isTrigger = false;
+            }
+        }
+
         private async void OnTriggerEnter2D(Collider2D other)
         {
             try

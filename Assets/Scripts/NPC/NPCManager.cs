@@ -42,20 +42,22 @@ public class NPCManager:MonoBehaviour
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        if (arg0.name != "MainMenu" && arg0.name != "InitalizationScene")
-        {
-            // 不清空列表，只添加新NPC
-            var newNpcs = GetComponentsInChildren<NPC>(true)
-                .Select(npc => npc.gameObject)
-                .ToList();
-                
-            // 更新列表而非清空
-            npcGameObjectList = newNpcs;
-        }
+        // if (arg0.name != "MainMenu" && arg0.name != "InitalizationScene")
+        // {
+        //     // npcGameObjectList.Clear();
+        //     var newNpcs = GetComponentsInChildren<NPC>(true)
+        //         .Select(npc => npc.gameObject)
+        //         .ToList();
+        //         
+        //     // 更新列表而非清空
+        //     npcGameObjectList = newNpcs;
+        // }
     }
 
     private void LoadAllNpcs()
     {
+        // 清空当前NPC列表
+        npcGameObjectList.Clear();
         foreach (var npcData in npcDataList)
         {
             GameObject npcObject = Instantiate(npcPrefab,transform);
@@ -81,28 +83,26 @@ public class NPCManager:MonoBehaviour
         }
         else
         {
-            npcGameObjectList.Clear();
             // 遍历保存的数据，将每个NPC的保存数据转换为NPC对象
             foreach (var npcSaveData in npcSaveDataList)
             {
+                GameObject npcObject = npcGameObjectList.Find(n => n.name == npcSaveData.npcID);
+                npcObject.transform.position = new Vector3(npcSaveData.position[0], npcSaveData.position[1], npcSaveData.position[2]);
+                NPC npcComponent = npcObject.GetComponent<NPC>();
+                // npcComponent.npcData = npcData;
+                npcComponent.isFollowing = npcSaveData.isFollowing;
+                npcComponent.dialogueIDs = npcSaveData.dialogueIDs;
+                npcComponent.isActive = npcSaveData.isActive;
+                npcComponent.canInteract = npcSaveData.canInteract;
+                npcComponent.npcData.sceneName = npcSaveData.sceneName;
                 // 查找对应的NPC配置
-                NPCData npcData = Array.Find(npcDataList, n => n.npcID == npcSaveData.npcID);
-                if (npcData != null)
-                {
-                    // 实例化NPC GameObject
-                    GameObject npcObject = Instantiate(npcPrefab,transform);
-                    npcObject.name = npcData.npcID; // 设置GameObject名称为NPC ID
-                    npcObject.transform.position = new Vector3(npcSaveData.position[0], npcSaveData.position[1], npcSaveData.position[2]);
-                    NPC npcComponent = npcObject.GetComponent<NPC>();
-                    npcComponent.npcData = npcData;
-                    npcComponent.isFollowing = npcSaveData.isFollowing;
-                    npcComponent.dialogueIDs = npcSaveData.dialogueIDs;
-                    npcComponent.isActive = npcSaveData.isActive;
-                    npcComponent.canInteract = npcSaveData.canInteract;
-                    npcComponent.npcData.sceneName = npcSaveData.sceneName;
-                    // 添加到列表中
-                    npcGameObjectList.Add(npcObject);
-                }
+                // NPCData npcData = npcGameObjectList.Find(n => n.name == npcSaveData.npcID)?.GetComponent<NPC>()?.npcData;
+                // if (npcData != null)
+                // {
+                //     // 实例化NPC GameObject
+                //     // 添加到列表中
+                //     // npcGameObjectList.Add(npcObject);
+                // }
             }
         }
     }
@@ -127,14 +127,15 @@ public class NPCManager:MonoBehaviour
         return null;
     }
     
-    public void ShowNpc(string npcID, GameObject npcPoint = null)
+    public void ShowNpc(string npcID, GameObject npcPoint)
     {
-        var npcObject = npcGameObjectList.Find(n => n.gameObject.name == npcID);
+        var npcObject = npcGameObjectList.Find(n => n.name == npcID);
         if (!npcObject)
         {
             Debug.LogError($"NPC with ID {npcID} not found in the list.");
             return;
         }
+        Debug.LogWarning("物体名称： " + npcObject.name);
         
         var npc = npcObject.GetComponent<NPC>();
         if (!npc)
@@ -142,7 +143,6 @@ public class NPCManager:MonoBehaviour
             Debug.LogError($"NPC component not found on GameObject with ID {npcID}.");
             return;
         }
-        
         try
         {
             if (npc.isFollowing)
@@ -155,7 +155,11 @@ public class NPCManager:MonoBehaviour
             }
             else
             {
-                if (npcPoint != null) npcObject.transform.position = npcPoint.transform.position;
+                if (npcPoint != null)
+                {
+                    npcObject.transform.position = npcPoint.transform.position;
+                    Debug.LogWarning("生成NPC: " + npcID + " 在位置: " + npcObject.transform.position);
+                }
             }
             
             if(GameStateManager.Instance.GetFlag("FirstEntry_" + SceneManager.GetActiveScene().name))

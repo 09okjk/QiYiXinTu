@@ -37,6 +37,10 @@ public class SaveSlotUI : MonoBehaviour
         // 启用两个按钮
         loadButton.interactable = true;
         saveButton.interactable = SceneManager.GetActiveScene().name != "MainMenu";
+        if (index == 0)
+        {
+            gameObject.SetActive(true);
+        }
     }
     
     // 设置空槽位
@@ -44,14 +48,24 @@ public class SaveSlotUI : MonoBehaviour
     {
         slotIndex = index;
         isEmpty = true;
+
         
-        slotNameText.text = "空存档"+(index+1);
         dateText.text = "";
         sceneNameText.text = "";
         
         // 只启用保存按钮
         saveButton.interactable = true;
         loadButton.interactable = false;
+        
+        if (slotIndex == 0)
+        {
+            slotNameText.text = "自动保存";
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            slotNameText.text = "空存档";
+        }
     }
     
     private void OnSaveButtonClicked()
@@ -77,8 +91,8 @@ public class SaveSlotUI : MonoBehaviour
     {
         if (!isEmpty)
         {
-            MenuManager.Instance.CloseAllPanels();
             _ = AsyncSaveLoadSystem.LoadGameAsync(slotIndex);
+            MenuManager.Instance.CloseAllPanels();
         }
     }
 }
