@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Manager;
 using Save;
 using UnityEngine;
@@ -31,8 +32,22 @@ public class NPCManager:MonoBehaviour
     
     private void Start()
     {
-        // SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
         LoadAllNpcs();
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        if (arg0.name != "MainMenu" && arg0.name != "InitalizationScene")
+        {
+            npcGameObjectList.Clear();
+            // 重新加载NPC
+            npcGameObjectList = GetComponentsInChildren<NPC>(true).Select(npc => npc.gameObject).ToList();
+        }
     }
 
     private void LoadAllNpcs()
@@ -53,10 +68,6 @@ public class NPCManager:MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        // SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
 
     public void InitializeNPCManager(List<AsyncSaveLoadSystem.NPCSaveData> npcSaveDataList = null)
     {
