@@ -29,6 +29,7 @@ public class MenuManager : MonoBehaviour
     
     [Header("Save/Load")]
     [SerializeField] private Transform saveSlotContainer;
+    [SerializeField] private GameObject autoSaveSlot;
     [SerializeField] private GameObject saveSlotPrefab;
     [SerializeField] private int maxSaveSlots = 6;
     
@@ -251,6 +252,12 @@ public class MenuManager : MonoBehaviour
             for (int i = saveDataInfos.Length; i < maxSaveSlots; i++)
             {
                 CreateSaveSlot(i, null);
+            }
+            
+            // 检查自动存档槽0，如果没有数据则自动隐藏
+            if (saveDataInfos[0] == null)
+            {
+                autoSaveSlot.SetActive(false);
             }
             
             Debug.Log("存档插槽加载完成");

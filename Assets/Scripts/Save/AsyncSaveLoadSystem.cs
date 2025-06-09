@@ -150,7 +150,7 @@ namespace Save
                 progress?.Report(0.1f);
 
                 // 创建保存数据（可能耗时）
-                SaveData saveData = await CreateSaveDataAsync(progress);
+                SaveData saveData = await CreateSaveDataAsync(progress,slotIdx);
             
                 progress?.Report(0.8f);
 
@@ -175,7 +175,7 @@ namespace Save
         /// <summary>
         /// 异步创建保存数据
         /// </summary>
-        private static async Task<SaveData> CreateSaveDataAsync(IProgress<float> progress = null)
+        private static async Task<SaveData> CreateSaveDataAsync(IProgress<float> progress = null, int slotIdx = 0)
         {
             SaveData saveData = new SaveData();
             progress?.Report(0.1f);
@@ -207,7 +207,7 @@ namespace Save
             progress?.Report(0.8f);
 
             // 元数据（无需在异步线程处理）
-            saveData.saveName = "Save " + DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            saveData.saveName = "存档 " + slotIdx;
             saveData.saveDate = DateTime.Now;
             saveData.gameVersion = Application.version;
 
@@ -434,6 +434,8 @@ namespace Save
                     }
                 }
 
+                // 按照存档索引排序
+                saveInfos.Sort((a, b) => a.slotIndex.CompareTo(b.slotIndex));
                 return saveInfos.ToArray();
             }
             catch (Exception e)
