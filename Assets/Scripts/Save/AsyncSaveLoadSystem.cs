@@ -496,8 +496,9 @@ namespace Save
             NPCDataCache cache = new NPCDataCache();
             if (NPCManager.Instance != null)
             {
-                foreach (NPC npc in NPCManager.Instance.npcList)
+                foreach (GameObject npcObject in NPCManager.Instance.npcGameObjectList)
                 {
+                    var npc = npcObject.GetComponent<NPC>();
                     cache.npcData[npc.npcData.npcID] = (
                         npc.npcData.npcID,
                         npc.transform.position,

@@ -12,7 +12,6 @@ public class NPCManager:MonoBehaviour
     public static NPCManager Instance { get; private set; }
     public List<GameObject> npcGameObjectList = new List<GameObject>();
     public GameObject npcPrefab;
-    public List<NPC> npcList = new List<NPC>();
     private NPCData[] npcDataList;
 
     private void Awake()
@@ -50,7 +49,6 @@ public class NPCManager:MonoBehaviour
             npcComponent.canInteract = false;
             npcComponent.npcData.sceneName = npcData.sceneName;
             npcGameObjectList.Add(npcObject);
-            npcList.Add(npcComponent);
             npcObject.SetActive(false);
         }
     }
@@ -63,7 +61,6 @@ public class NPCManager:MonoBehaviour
     public void InitializeNPCManager(List<AsyncSaveLoadSystem.NPCSaveData> npcSaveDataList = null)
     {
         npcGameObjectList.Clear();
-        npcList.Clear();
         
         if (npcSaveDataList == null || npcSaveDataList.Count == 0)
         {
@@ -91,7 +88,6 @@ public class NPCManager:MonoBehaviour
                     npcComponent.npcData.sceneName = npcSaveData.sceneName;
                     // 添加到列表中
                     npcGameObjectList.Add(npcObject);
-                    npcList.Add(npcComponent);
                 }
             }
         }
