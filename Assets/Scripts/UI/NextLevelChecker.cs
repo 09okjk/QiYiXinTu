@@ -1,4 +1,6 @@
-﻿using Manager;
+﻿using System;
+using Manager;
+using Save;
 using UnityEngine;
 
 namespace UI
@@ -9,8 +11,7 @@ namespace UI
         public PlayerPointType nextScenePointType;
         private BoxCollider2D boxCollider;
         private bool hasTriggered = false;
-
-         
+        
         private void Awake()    
         {
             boxCollider = GetComponent<BoxCollider2D>();
@@ -20,16 +21,25 @@ namespace UI
             }
         }
         
-        private void OnTriggerEnter2D(Collider2D other)
+        private async void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Player") && !hasTriggered)
+            try
             {
-                Debug.Log("OnTriggerEnter2D");
-                hasTriggered = true;
-                boxCollider.enabled = false; // 禁用碰撞体，防止重复触发
-                GameStateManager.Instance.SetPlayerPointType(nextScenePointType);
-                // 触发场景切换逻辑
-                GameManager.Instance.LoadScene(nextSceneName);
+                if (other.CompareTag("Player") && !hasTriggered)
+                {
+                    Debug.Log("OnTriggerEnter2D");
+                    hasTriggered = true;
+                    boxCollider.enabled = false; // 禁用碰撞体，防止重复触发
+                    GameStateManager.Instance.SetPlayerPointType(nextScenePointType);
+                    await AsyncSaveLoadSystem.SaveGameAsync(0);
+                    // 触发场景切换逻辑
+                    GameManager.Instance.LoadScene(nextSceneName);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error in NextLevelChecker.OnTriggerEnter2D: {e.Message}\n{e.StackTrace}");
+                throw;
             }
         }
     }
