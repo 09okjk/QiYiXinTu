@@ -128,28 +128,22 @@ public class Player : Entity
         // 如果菜单、背包、新闻库打开，不响应输入
         if (_isMenuOpen || _isInventoryOpen || _isNewsBookOpen || _isPopWindowOpen)
         {
-            Debug.LogWarning($"菜单、背包或新闻库打开，输入被禁用: Menu: {_isMenuOpen}, Inventory: {_isInventoryOpen}, NewsBook: {_isNewsBookOpen}, PopWindow: {_isPopWindowOpen}");
+            // Debug.LogWarning($"菜单、背包或新闻库打开，输入被禁用: Menu: {_isMenuOpen}, Inventory: {_isInventoryOpen}, NewsBook: {_isNewsBookOpen}, PopWindow: {_isPopWindowOpen}");
             return;
         }
         
         // 如果正在与UI交互，不响应输入
         if (GameUIManager.Instance && GameUIManager.Instance.IsInteractingWithUI)
         {
-            Debug.LogWarning("正在与UI交互，输入被禁用");
+            // Debug.LogWarning("正在与UI交互，输入被禁用");
             return;
         }
         
         // 如果正在对话中，不响应输入
         if (DialogueManager.Instance.IsDialogueActive())
         {
-            Debug.LogWarning("正在对话中，输入被禁用");
+            // Debug.LogWarning("正在对话中，输入被禁用");
             return;
-        }
-        
-        // 简单的键盘输入测试
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("空格键被按下，输入系统正常工作");
         }
         
         // if (MenuManager.Instance.IsAnyPanelOpen())
