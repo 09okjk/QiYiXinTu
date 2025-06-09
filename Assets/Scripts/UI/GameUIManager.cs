@@ -164,6 +164,20 @@ public class GameUIManager : MonoBehaviour
         }
     }
     
+    public void StopLuWeekUpAnimation()
+    {
+        if (luWeekUpAnimator != null)
+        {
+            luWeekUpAnimator.StopPlayback();
+            luWeekUpAnimator.gameObject.SetActive(false);
+            NPCManager.Instance.GetNpc("LuXinsheng").ActivateNpc();
+        }
+        else
+        {
+            Debug.LogWarning("Lu Sleep Animator is not assigned.");
+        }
+    }
+    
     // 在UI开始交互时调用
     public void SetInteractingWithUI(bool isInteracting)
     {

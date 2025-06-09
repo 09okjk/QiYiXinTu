@@ -30,7 +30,7 @@ namespace UI
             GameUIManager.Instance.StopSceneAnimation();
             if (dialogueID == "lu_first_dialogue")
             {
-                NPCManager.Instance.GetNpc("LuXinsheng").ActivateNpc();
+                GameUIManager.Instance.StopLuWeekUpAnimation();
             }
         }
 
