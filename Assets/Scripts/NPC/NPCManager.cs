@@ -133,6 +133,15 @@ public class NPCManager:MonoBehaviour
                 if (npcPoint != null) npcObject.transform.position = npcPoint.transform.position;
             }
             
+            if(GameStateManager.Instance.GetFlag("FirstEntry_" + SceneManager.GetActiveScene().name))
+            {
+                // 如果是第一次进入该场景，设置NPC为非激活状态
+                if (npcID == "LuXinsheng")
+                {
+                    npc.DeactivateNpc();
+                    return;
+                }
+            }
             npc.ActivateNpc();
         }
         catch (Exception e)

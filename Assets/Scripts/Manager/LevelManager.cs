@@ -90,14 +90,7 @@ namespace Manager
                     {
                         string npcId = npcPoint.name;
                         // 在每个NPC出生点生成NPC
-                        if (SceneManager.GetActiveScene().name == "女生宿舍")
-                        {
-                            NPCManager.Instance.GetNpc(npcId).DeactivateNpc(); // 初始时不激活NPC
-                        }
-                        else
-                        {
-                            NPCManager.Instance.ShowNpc(npcId, npcPoint);
-                        }
+                        NPCManager.Instance.ShowNpc(npcId, npcPoint);
                     }
                 }
             }

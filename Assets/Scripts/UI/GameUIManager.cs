@@ -168,8 +168,7 @@ public class GameUIManager : MonoBehaviour
     {
         if (luWeekUpAnimator != null)
         {
-            luWeekUpAnimator.StopPlayback();
-            luWeekUpAnimator.gameObject.SetActive(false);
+            luWeekUpAnimator.enabled = false;
             NPCManager.Instance.GetNpc("LuXinsheng").ActivateNpc();
         }
         else
