@@ -75,14 +75,13 @@ public class NPCManager:MonoBehaviour
 
     public void InitializeNPCManager(List<AsyncSaveLoadSystem.NPCSaveData> npcSaveDataList = null)
     {
-        npcGameObjectList.Clear();
-        
         if (npcSaveDataList == null || npcSaveDataList.Count == 0)
         {
             Debug.LogWarning("No NPC save data found. Initializing with default NPCs.");
         }
         else
         {
+            npcGameObjectList.Clear();
             // 遍历保存的数据，将每个NPC的保存数据转换为NPC对象
             foreach (var npcSaveData in npcSaveDataList)
             {
