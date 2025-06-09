@@ -44,6 +44,7 @@ namespace Manager
             if (GameStateManager.Instance.GetFlag("FirstEntry_" + levelName))
             {
                 // 如果是第一次进入该关卡，执行初始化逻辑
+                Debug.Log($"Initializing level: {levelName}");
                 InitLevel();
             }
             else
