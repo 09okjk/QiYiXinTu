@@ -99,7 +99,7 @@ public class NPCManager:MonoBehaviour
 
     public NPC GetNpc(string npcID)
     {
-        return npcList.Find(n => n.npcData.npcID == npcID);
+        return npcGameObjectList.Find(n => n.name == npcID).GetComponent<NPC>();
     }
     
     public void ShowNpc(string npcID, GameObject npcPoint = null)
