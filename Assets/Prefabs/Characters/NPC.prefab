@@ -429,7 +429,7 @@ MonoBehaviour:
   isFollowing: 0
   isActive: 1
   interactionDistance: 2
-  interactionIndicator: {fileID: 6195114081013649416}
+  interactionIndicator: {fileID: 7758635968017876781}
   canInteract: 1
   dialogueIDs: []
 --- !u!61 &512005600884524315
