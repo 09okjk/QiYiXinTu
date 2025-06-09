@@ -74,7 +74,7 @@ public class NPC : Entity
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     Debug.Log($"与{npcData.npcName}交互");
-                    Interact();
+                    TriggerDialogue();
                 }
             }
             else
@@ -138,14 +138,11 @@ public class NPC : Entity
         {
             GameStateManager.Instance.SetFlag("FinishAllDialogue_"+ npcData.npcID, true);
             SetCanInteract(false);
+        }else
+        {
+            // 如果还有未完成的对话，则继续交互
+            SetCanInteract(true);
         }
-    }
-    
-    // 交互方法
-    private void Interact()
-    {
-        // 对话交互
-        TriggerDialogue();
     }
     
     private void TriggerDialogue(string dialogueID = null)
