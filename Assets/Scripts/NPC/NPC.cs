@@ -71,7 +71,7 @@ public class NPC : Entity
         InitializeInteractionUI();
         
         // 设置NPC
-        // SetupNPC();
+        SetupNPC();
         
         defaultSpeed = followSpeed;
         
@@ -316,7 +316,7 @@ public class NPC : Entity
         {
             if (string.IsNullOrEmpty(dialogueID)) continue;
 
-            DialogueData dialogue = Resources.Load<DialogueData>($"ScriptableObjects/Dialogues/{dialogueID}");
+            DialogueData dialogue = DialogueManager.Instance.GetDialogueData(dialogueID);
             if (dialogue != null)
             {
                 dialogueDataList.Add(dialogue);
