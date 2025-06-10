@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Core;
 using UnityEngine;
@@ -47,6 +48,11 @@ public class Entity:MonoBehaviour
     }
     
     protected virtual void Update()
+    {
+        
+    }
+
+    protected virtual void OnDestroy()
     {
         
     }
