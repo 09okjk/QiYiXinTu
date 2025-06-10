@@ -41,20 +41,27 @@ namespace Manager
         private void Start()
         {
             sceneAnimator.gameObject.SetActive(false);
-            // 初始化关卡
-            if (SceneManager.GetActiveScene().name != "女生宿舍")
-            {
-                // InitLevel();
-            }
-            PlayerManager.Instance.UpdatePlayerCamera(PlayerCamera);
             AsyncSaveLoadSystem.OnLoadComplete += OnDataLoaded;
             DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         private void OnDestroy()
         {
             AsyncSaveLoadSystem.OnLoadComplete -= OnDataLoaded;
             DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
+            // 初始化关卡
+            if (arg0.name != "女生宿舍")
+            {
+                InitLevel();
+                CameraManager.Instance.SetCameraActive(true);
+            }
+            PlayerManager.Instance.UpdatePlayerCamera(PlayerCamera);
         }
 
         private void OnDataLoaded(string obj)
