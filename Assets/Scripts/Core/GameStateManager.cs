@@ -22,6 +22,14 @@ public class GameStateManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        InitializeGameFlags();
+    }
+
+    private void InitializeGameFlags()
+    {
+        // 初始化游戏状态标志
+        gameFlags["FirstEntry_"+ "女生宿舍"] = true; // 假设女生宿舍是第一个关卡
+        gameFlags["FirstEntry_" + "outside1"] = true; // 假设outside1是第二个关卡
     }
 
     public void SetPlayerPointType(PlayerPointType pointType)
@@ -41,20 +49,6 @@ public class GameStateManager : MonoBehaviour
             return (PlayerPointType)PlayerPrefs.GetInt("PlayerPointType");
         }
         return PlayerPointType.Right;
-    }
-    
-    // 暂停游戏
-    public void PauseGame()
-    {
-        Time.timeScale = 0f;
-        // 其他暂停逻辑
-    }
-    
-    // 恢复游戏
-    public void ResumeGame()
-    {
-        Time.timeScale = 1f;
-        // 其他恢复逻辑
     }
     
     // 获取标志值，如果标志不存在则返回false
@@ -110,6 +104,11 @@ public class GameStateManager : MonoBehaviour
     // 设置所有标志（用于加载）
     public void SetAllFlags(Dictionary<string, bool> flags)
     {
+        if (flags == null)
+        {
+            Debug.LogWarning("Attempted to set game flags with a null dictionary.");
+            return;
+        }
         gameFlags = new Dictionary<string, bool>(flags);
     }
     

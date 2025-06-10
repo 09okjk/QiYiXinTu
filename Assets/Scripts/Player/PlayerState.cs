@@ -1,11 +1,13 @@
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerState
 {
     protected PlayerStateMachine StateMachine;
     protected Player Player;
     protected Rigidbody2D Rb;
+    protected PlayerInput PlayerInput;
 
     protected float xInput;
     protected float yInput;
@@ -19,6 +21,8 @@ public class PlayerState
         this.Player = player;
         this.StateMachine = stateMachine;
         this._animBoolName = animBoolName;
+        
+        PlayerInput = player.GetComponent<PlayerInput>();
     }
     
     public virtual void Enter()
@@ -31,8 +35,21 @@ public class PlayerState
     public virtual void Update()
     {
         StateTimer -= Time.deltaTime;
-        xInput = Input.GetAxisRaw("Horizontal");
-        yInput = Input.GetAxisRaw("Vertical");
+        
+        // 使用新输入系统
+        if (PlayerInput != null)
+        {
+            // 假设你在输入动作中有名为 "move" 的动作
+            Vector2 moveInput = PlayerInput.actions["move"].ReadValue<Vector2>();
+            xInput = moveInput.x;
+            yInput = moveInput.y;
+            Debug.Log(xInput + " " + yInput);
+        }
+        else
+        {
+            Debug.LogError("PlayerInput component is missing on the Player GameObject.");
+        }
+        
         Player.Anim.SetFloat("yVelocity", Rb.linearVelocity.y);
     }
     

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Save;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SaveSlotUI : MonoBehaviour
 {
@@ -12,9 +14,6 @@ public class SaveSlotUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI sceneNameText;
     [SerializeField] private Button saveButton;
     [SerializeField] private Button loadButton;
-    [SerializeField] private RawImage slotBackground;
-    [SerializeField] private Color emptySlotColor;
-    [SerializeField] private Color existingSlotColor;
     
     private int slotIndex;
     private bool isEmpty;
@@ -25,6 +24,7 @@ public class SaveSlotUI : MonoBehaviour
         loadButton.onClick.AddListener(OnLoadButtonClicked);
     }
 
+    // 设置已存在的槽位
     public void SetupExistingSlot(int index, SaveDataInfo info)
     {
         slotIndex = index;
@@ -34,51 +34,64 @@ public class SaveSlotUI : MonoBehaviour
         dateText.text = info.saveDate.ToString("yyyy-MM-dd HH:mm");
         sceneNameText.text = info.sceneName;
         
-        slotBackground.color = existingSlotColor;
-        
         // 启用两个按钮
-        saveButton.interactable = true;
         loadButton.interactable = true;
+        saveButton.interactable = SceneManager.GetActiveScene().name != "MainMenu";
+        if (index == 0)
+        {
+            gameObject.SetActive(true);
+        }
     }
     
+    // 设置空槽位
     public void SetupEmptySlot(int index)
     {
         slotIndex = index;
         isEmpty = true;
+
         
-        slotNameText.text = "存档"+(index+1);
         dateText.text = "";
         sceneNameText.text = "";
-        
-        slotBackground.color = emptySlotColor;
         
         // 只启用保存按钮
         saveButton.interactable = true;
         loadButton.interactable = false;
+        
+        if (slotIndex == 0)
+        {
+            slotNameText.text = "自动保存";
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            slotNameText.text = "空存档";
+        }
     }
     
-    public void OnSaveButtonClicked()
+    private void OnSaveButtonClicked()
     {
         // 如果槽不为空，请确认覆盖
         if (!isEmpty)
         {
             // 显示确认对话框（需要 UI 管理器实现）
             UIManager.Instance.ShowConfirmDialog(
-                "Overwrite Save?",
-                "Are you sure you want to overwrite this save?",
-                null, () => SaveLoadSystem.SaveGame(slotIndex));
+                "覆盖存档",
+                "此操作将覆盖现有存档，是否继续?",
+                null, 
+                () => _ = AsyncSaveLoadSystem.SaveGameAsync(slotIndex),
+                () => { /* 取消操作 */ });
         }
         else
         {
-            SaveLoadSystem.SaveGame(slotIndex);
+            _ = AsyncSaveLoadSystem.SaveGameAsync(slotIndex);
         }
     }
     
-    public void OnLoadButtonClicked()
+    private void OnLoadButtonClicked()
     {
         if (!isEmpty)
         {
-            SaveLoadSystem.LoadGame(slotIndex);
+            _ = AsyncSaveLoadSystem.LoadGameAsync(slotIndex);
             MenuManager.Instance.CloseAllPanels();
         }
     }

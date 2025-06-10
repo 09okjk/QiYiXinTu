@@ -141,13 +141,13 @@ public class GameManager : MonoBehaviour
                 break;
             case "Scene 4":
                 // 找到玩家初始位置并放置玩家
-                GameObject playerStart = GameObject.FindGameObjectWithTag("PlayerStart");
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                
-                if (playerStart != null && player != null)
-                {
-                    player.transform.position = playerStart.transform.position;
-                }
+                // GameObject playerStart = GameObject.FindGameObjectWithTag("PlayerStart");
+                // GameObject player = GameObject.FindGameObjectWithTag("Player");
+                //
+                // if (playerStart != null && player != null)
+                // {
+                //     player.transform.position = playerStart.transform.position;
+                // }
                 break;
             // 根据需要添加更多场景
         }

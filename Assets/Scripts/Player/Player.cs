@@ -33,7 +33,7 @@ public class Player : Entity
     [SerializeField] private InputActionReference newsBookAction;
     
     public bool isBusy {get; private set;}
-    public SkillManager skillManager { get; private set; }
+    // public SkillManager skillManager { get; private set; }
     
     private bool _isMenuOpen = false;
     private bool _isInventoryOpen = false;
@@ -93,7 +93,7 @@ public class Player : Entity
     {
         base.Start();
         stateMachine.Initialize(IdleState);
-        skillManager = SkillManager.Instance;
+        // skillManager = SkillManager.Instance;
     }
     
     private void OnEnable()
@@ -101,7 +101,7 @@ public class Player : Entity
         inventoryAction.action.Enable();
         menuAction.action.Enable();
         
-        MenuManager.Instance.OnMenuStateChanged += HandleMenuStateChanged;
+        // MenuManager.Instance.OnMenuStateChanged += HandleMenuStateChanged;
         InventoryManager.Instance.OnInventoryStateChanged += HandleInventoryStateChanged;
         inventoryAction.action.performed += OnInventoryToggle;
         menuAction.action.performed += OnMenuToggle;
@@ -113,9 +113,9 @@ public class Player : Entity
         inventoryAction.action.Disable();
         menuAction.action.Disable();
         
-        MenuManager.Instance.OnMenuStateChanged -= HandleMenuStateChanged;
+        // MenuManager.Instance.OnMenuStateChanged -= HandleMenuStateChanged;
         InventoryManager.Instance.OnInventoryStateChanged -= HandleInventoryStateChanged;
-        NewsManager.Instance.OnNewsBookStateChanged -= HandleNewsBookStateChanged;
+        // NewsManager.Instance.OnNewsBookStateChanged -= HandleNewsBookStateChanged;
         inventoryAction.action.performed -= OnInventoryToggle;
         menuAction.action.performed -= OnMenuToggle;
         newsBookAction.action.performed -= OnNewsBookToggle;
@@ -127,15 +127,24 @@ public class Player : Entity
         
         // 如果菜单、背包、新闻库打开，不响应输入
         if (_isMenuOpen || _isInventoryOpen || _isNewsBookOpen || _isPopWindowOpen)
+        {
+            // Debug.LogWarning($"菜单、背包或新闻库打开，输入被禁用: Menu: {_isMenuOpen}, Inventory: {_isInventoryOpen}, NewsBook: {_isNewsBookOpen}, PopWindow: {_isPopWindowOpen}");
             return;
+        }
         
         // 如果正在与UI交互，不响应输入
         if (GameUIManager.Instance && GameUIManager.Instance.IsInteractingWithUI)
+        {
+            // Debug.LogWarning("正在与UI交互，输入被禁用");
             return;
+        }
         
         // 如果正在对话中，不响应输入
         if (DialogueManager.Instance.IsDialogueActive())
+        {
+            // Debug.LogWarning("正在对话中，输入被禁用");
             return;
+        }
         
         // if (MenuManager.Instance.IsAnyPanelOpen())
         //     return;
@@ -146,7 +155,7 @@ public class Player : Entity
         StartCoroutine(nameof(BusyFor), 0.1f);
     }
     
-    private void HandleMenuStateChanged(bool isOpen)
+    public void HandleMenuStateChanged(bool isOpen)
     {
         _isMenuOpen = isOpen;
     }  
@@ -155,13 +164,13 @@ public class Player : Entity
         _isInventoryOpen = isOpen;
     }
     
-    public void RegisterNewsBookEvent()
-    {
-        if (NewsManager.Instance != null)
-        {
-            NewsManager.Instance.OnNewsBookStateChanged += HandleNewsBookStateChanged;
-        }
-    }
+    // public void RegisterNewsBookEvent()
+    // {
+    //     if (NewsManager.Instance != null)
+    //     {
+    //         NewsManager.Instance.OnNewsBookStateChanged += HandleNewsBookStateChanged;
+    //     }
+    // }
     
     public void RegisterPopWindowEvent()
     {
@@ -176,7 +185,7 @@ public class Player : Entity
         _isPopWindowOpen = isOpen;
     }
 
-    private void HandleNewsBookStateChanged(bool isOpen)
+    public void HandleNewsBookStateChanged(bool isOpen)
     {
         _isNewsBookOpen = isOpen;
     }
@@ -210,7 +219,7 @@ public class Player : Entity
             return;
         }
         
-        if (Input.GetKeyDown(KeyCode.LeftShift) && skillManager.dashSkill.CanUseSkill())
+        if (Input.GetKeyDown(KeyCode.LeftShift) && SkillManager.Instance.dashSkill.CanUseSkill())
         {
             SkillManager.Instance.dashSkill.UseSkill();
             DashDir = Input.GetAxisRaw("Horizontal");

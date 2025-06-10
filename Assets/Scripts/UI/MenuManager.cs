@@ -2,10 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Manager;
+using Save;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
+using UI;
 using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
@@ -75,17 +78,35 @@ public class MenuManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        AsyncSaveLoadSystem.OnSaveComplete += OnDataSave;
+        OnMenuStateChanged += OnMenuStateChangedHandler;
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        AsyncSaveLoadSystem.OnSaveComplete -= OnDataSave;
+        OnMenuStateChanged -= OnMenuStateChangedHandler;
     }
+
+    private void OnMenuStateChangedHandler(bool isOpen)
+    {
+        PlayerManager.Instance.player.HandleMenuStateChanged(isOpen);
+    }
+
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Debug.Log($"场景加载：{scene.name}，当前 MenuManager 是否为实例：{this == Instance}");
         // Debug.Log($"当前 TimeScale: {Time.timeScale}");
+    }
+    private void OnDataSave(string obj)
+    {
+        Debug.Log($"数据保存完成: {obj}");
+        if (savePanel.activeSelf)
+        {
+            PopulateSaveSlots();
+        }
     }
     
     // 切换菜单的显示状态
@@ -168,10 +189,18 @@ public class MenuManager : MonoBehaviour
     
     public void OpenSavePanel()
     {
-        CloseAllPanels();
-        savePanel.SetActive(true);
-        OnMenuStateChanged?.Invoke(true);
-        PopulateSaveSlots();
+        try
+        {
+            CloseAllPanels();
+            savePanel.SetActive(true);
+            OnMenuStateChanged?.Invoke(true);
+            PopulateSaveSlots();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("打开保存面板时发生错误: " + e.Message);
+            throw;
+        }
     }
     
     public void CloseSavePanel()
@@ -180,7 +209,7 @@ public class MenuManager : MonoBehaviour
         // 如果当前场景是主菜单，则显示主菜单面板
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            mainMenuPanel.SetActive(true);
+            MainMenuManager.Instance.ShowMainMenuUI();
         }
         else
         {
@@ -194,30 +223,59 @@ public class MenuManager : MonoBehaviour
         settingsPanel.SetActive(false);
         controlsPanel.SetActive(false);
         savePanel.SetActive(false);
+        OnMenuStateChanged?.Invoke(false);
     }
     
     // 保存和加载游戏的插槽
-    private void PopulateSaveSlots()
+    private async void PopulateSaveSlots()
     {
-        // 清除现有的插槽
-        foreach (Transform child in saveSlotContainer)
+        try
         {
-            Destroy(child.gameObject);
+            // 清除现有的插槽
+            foreach (Transform child in saveSlotContainer)
+            {
+                Destroy(child.gameObject);
+            }
+            
+            // 显示加载中提示
+            Debug.Log("正在加载存档信息...");
+            
+            // 使用await等待异步操作完成
+            SaveDataInfo[] saveDataInfos = await AsyncSaveLoadSystem.GetSaveDataInfosAsync();
+
+            // 创建一个与maxSaveSlots大小相同的数组，默认值为null
+            SaveDataInfo[] sortedSaveData = new SaveDataInfo[maxSaveSlots];
+
+            // 将现有存档信息放入对应的索引位置
+            for (int i = 0; i < saveDataInfos.Length; i++)
+            {
+                if (saveDataInfos[i].slotIndex >= 0 && saveDataInfos[i].slotIndex < maxSaveSlots)
+                {
+                    sortedSaveData[saveDataInfos[i].slotIndex] = saveDataInfos[i];
+                }
+                else
+                {
+                    Debug.LogWarning($"存档槽索引超出范围: {saveDataInfos[i].slotIndex}");
+                }
+            }
+
+            // 按顺序创建所有存档槽
+            for (int i = 0; i < maxSaveSlots; i++)
+            {
+                CreateSaveSlot(i, sortedSaveData[i]);
+            }
+            
+            // 创建空插槽到最大
+            for (int i = saveDataInfos.Length; i < maxSaveSlots; i++)
+            {
+                CreateSaveSlot(i, null);
+            }
+            
+            Debug.Log("存档插槽加载完成");
         }
-        
-        // 获取保存的数据信息
-        SaveDataInfo[] saveDataInfos = SaveLoadSystem.GetSaveDataInfos();
-        
-        // 创建现有保存的插槽
-        for (int i = 0; i < saveDataInfos.Length; i++)
+        catch (Exception e)
         {
-            CreateSaveSlot(i, saveDataInfos[i]);
-        }
-        
-        // 创建空插槽到最大
-        for (int i = saveDataInfos.Length; i < maxSaveSlots; i++)
-        {
-            CreateSaveSlot(i, null);
+            Debug.LogError($"加载存档信息失败: {e.Message}\n{e.StackTrace}");
         }
     }
     

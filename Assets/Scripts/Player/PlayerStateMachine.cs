@@ -9,6 +9,7 @@ public class PlayerStateMachine
     public void Initialize(PlayerState startingState)
     {
         CurrentState = startingState;
+        // Debug.LogError("Initializing PlayerStateMachine with state: " + CurrentState.GetType().Name);
         CurrentState.Enter();
     }
     

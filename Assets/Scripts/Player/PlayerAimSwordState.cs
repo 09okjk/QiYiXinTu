@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Manager;
+using UnityEngine;
 
 public class PlayerAimSwordState: PlayerGroundState
 {
@@ -9,7 +10,7 @@ public class PlayerAimSwordState: PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        Player.skillManager.swordSkill.DotsActive(true);
+        SkillManager.Instance.swordSkill.DotsActive(true);
     }
 
     public override void Update()

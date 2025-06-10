@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Save;
 using UnityEngine;
 using TMPro;
 
@@ -16,7 +17,7 @@ public class QuestManager : MonoBehaviour
     // 当前任务
     public QuestData currentQuest { get; private set; }
     // 当前任务ID
-    public string currentQuestID { get; private set; }
+    public string currentQuestID { get; set; }
     // 任务完成回调
     private Action<bool> onQuestCompleteCallback;
     
@@ -27,15 +28,7 @@ public class QuestManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             
-            allQuests.Clear();
-            var questArray = Resources.LoadAll<QuestData>("ScriptableObjects/Quests");
-            foreach (var questData in questArray)
-            {
-                if (questDictionary.TryAdd(questData.questID, questData))
-                {
-                    allQuests.Add(questData);
-                }
-            }
+            InitializeQuest();
         }
         else
         {
@@ -56,6 +49,19 @@ public class QuestManager : MonoBehaviour
         // 取消订阅事件
         DialogueManager.Instance.OnDialogueEnd -= OnConditionFinished;
         InventoryManager.Instance.OnAddItem -= OnConditionFinished;
+    }
+    
+    private void InitializeQuest()
+    {
+        allQuests.Clear();
+        var questArray = Resources.LoadAll<QuestData>("ScriptableObjects/Quests");
+        foreach (var questData in questArray)
+        {
+            if (questDictionary.TryAdd(questData.questID, questData))
+            {
+                allQuests.Add(questData);
+            }
+        }
     }
     
     private void OnConditionFinished(string dialogueID)
@@ -157,6 +163,48 @@ public class QuestManager : MonoBehaviour
     {
         questText.gameObject.SetActive(text != "");
         questText.text = text;
+    }
+    
+    // 加载所有任务数据
+    public void LoadAllQuests(List<AsyncSaveLoadSystem.QuestSaveData> quests)
+    {
+        if (quests == null || quests.Count == 0)
+        {
+            Debug.LogWarning("没有任务数据可加载");
+            return;
+        }
+        
+        foreach (var questSaveData in quests)
+        {
+            var quest = allQuests.Find(n => n.questID == questSaveData.questID);
+            if (quest != null)
+            {
+                quest.questID = questSaveData.questID;
+                quest.questName = questSaveData.questName;
+                quest.questText = questSaveData.questText;
+                quest.isCompleted = questSaveData.isCompleted;
+                quest.conditionValue = questSaveData.conditionValue;
+                quest.questConditionType = questSaveData.questConditionType;
+                quest.nextQuestID = questSaveData.nextQuestID;
+            }
+            // 将questSaveData中的任务ID添加到字典中
+            if (!questDictionary.ContainsKey(questSaveData.questID))
+            {
+                questDictionary.Add(questSaveData.questID, quest);
+            }
+        }
+        
+        allQuests.Clear();
+        foreach (var quest in questDictionary.Values)
+        {
+            allQuests.Add(quest);
+        }
+    }
+    
+    // 获取所有任务
+    public List<QuestData> GetAllQuests()
+    {
+        return new List<QuestData>(allQuests);
     }
     
     public QuestData GetQuest(string questID)

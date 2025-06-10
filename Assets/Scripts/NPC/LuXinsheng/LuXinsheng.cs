@@ -113,11 +113,6 @@ public class LuXinsheng:NPC
     {
         base.ActivateNpc();
         
-        // 测试用-------
-        //if (SceneManager.GetActiveScene().name == "outside1")
-        //    DialogueManager.Instance.StartDialogueByID("lide_dialogue");
-        // 测试用-------
-        
         stateMachine.Initialize(IdleState);
     }
 

@@ -31,32 +31,66 @@ namespace UI
 
         private void Start()
         {
-            // 设置各个组件的Animator不启用
-            titleImage.gameObject.GetComponent<Animator>().enabled = false;
-            startButton.gameObject.GetComponent<Animator>().enabled = false;
-            continueButton.gameObject.GetComponent<Animator>().enabled = false;
-            loadButton.gameObject.GetComponent<Animator>().enabled = false;
-            settingButton.gameObject.GetComponent<Animator>().enabled = false;
-            exitButton.gameObject.GetComponent<Animator>().enabled = false;
+            // TODO: 合并startButton和continueButton为startButton
+            // 当没有存档时，startButton的文本应为“开始游戏”，有存档时应为“继续游戏”
+
+            InitButtonAnimatior();
             
             // 设置按钮的点击事件
-            startButton.onClick.AddListener(OnStartButtonClicked);
-            continueButton.onClick.AddListener(OnStartButtonClicked);
+            startButton.onClick.AddListener(OnLoadButtonClicked);
+            continueButton.onClick.AddListener(OnLoadButtonClicked);
             loadButton.onClick.AddListener(OnLoadButtonClicked);
             settingButton.onClick.AddListener(OnSettingButtonClicked);
             exitButton.onClick.AddListener(OnExitButtonClicked);
         }
 
-        
+        private void InitButtonAnimatior()
+        {
+            titleImage.gameObject.GetComponent<Animator>().enabled = false; // 禁用标题图片的Animator
+            // 需要初始化的按钮和图片
+            var uiElements = new GameObject[]
+            {
+                startButton.gameObject,
+                continueButton.gameObject,
+                loadButton.gameObject,
+                settingButton.gameObject,
+                exitButton.gameObject
+            };
+
+            foreach (var element in uiElements)
+            {
+                var image = element.GetComponent<Image>();
+                if (image)
+                {
+                    var color = image.color;
+                    color.a = 0.12157f; // 设置图片透明度为0.12157
+                    image.color = color;
+                }
+                var text = element.GetComponentInChildren<TMPro.TMP_Text>();
+                if (text != null)
+                {
+                    var alpha = text.alpha;
+                    alpha = 1f; // 设置文本透明度为1
+                    text.alpha = alpha;
+                }
+                var animator = element.GetComponent<Animator>();
+                if (animator != null)
+                {
+                    animator.enabled = false;
+                }
+            }
+        }
+
+
         private void OnStartButtonClicked()
         {
-            titleImage.gameObject.GetComponent<Animator>().enabled = true;
             // EnterGame();
         }
 
         private void OnLoadButtonClicked()
         {
-            MenuManager.Instance.OpenSavePanel();
+            titleImage.gameObject.GetComponent<Animator>().enabled = true;
+            //MenuManager.Instance.OpenSavePanel();
         }
 
         private void OnSettingButtonClicked()
@@ -71,6 +105,12 @@ namespace UI
 
         public void EnableAnimator()
         {
+            if (enableAnimatorCount >= 5)
+            {
+                enableAnimatorCount = 0;
+                return;
+            }
+            
             enableAnimatorCount += 1;
             switch (enableAnimatorCount)
             {
@@ -89,11 +129,22 @@ namespace UI
                 case 5:
                     exitButton.gameObject.GetComponent<Animator>().enabled = true;
                     break;
+                default:
+                    break;
             }
+            Debug.Log($"EnableAnimator计数: {enableAnimatorCount}");
+
         }
 
+        public void ShowMainMenuUI()
+        {
+            InitButtonAnimatior();
+            gameObject.SetActive(true);
+        }
         public void EnterGame()
         {
+            // 如果有存档，则继续游戏
+            // if ()
             MenuManager.Instance.StartNewGame();
         }
     }

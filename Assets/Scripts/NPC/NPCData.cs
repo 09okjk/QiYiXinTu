@@ -9,6 +9,7 @@ public class NPCData : EntityData
     public string npcID;
     public string npcName;
     public string spriteID;
+    public string sceneName; // NPC所在场景名称
     
     [Header("对话ID列表")]
     public List<string> dialogueIDs; // 对话ID，用于动态加载对话数据
