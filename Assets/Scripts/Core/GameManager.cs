@@ -183,20 +183,20 @@ public class GameManager : MonoBehaviour
     private void LoadLastSave()
     {
         // 找到最近的存档
-        SaveDataInfo[] saves = SaveLoadSystem.GetSaveDataInfos();
-        
-        if (saves.Length > 0)
-        {
-            // 按日期排序（最新的在前）
-            System.Array.Sort(saves, (a, b) => b.saveDate.CompareTo(a.saveDate));
-            
-            // 加载最新的存档
-            SaveLoadSystem.LoadGame(saves[0].slotIndex);
-        }
-        else
-        {
-            // 没有找到存档，返回主菜单
-            LoadScene("MainMenu");
-        }
+        // SaveDataInfo[] saves = SaveLoadSystem.GetSaveDataInfos();
+        //
+        // if (saves.Length > 0)
+        // {
+        //     // 按日期排序（最新的在前）
+        //     System.Array.Sort(saves, (a, b) => b.saveDate.CompareTo(a.saveDate));
+        //     
+        //     // 加载最新的存档
+        //     SaveLoadSystem.LoadGame(saves[0].slotIndex);
+        // }
+        // else
+        // {
+        //     // 没有找到存档，返回主菜单
+        //     LoadScene("MainMenu");
+        // }
     }
 }

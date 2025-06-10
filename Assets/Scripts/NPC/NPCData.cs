@@ -10,6 +10,8 @@ public class NPCData : EntityData
     public string npcName;
     public string spriteID;
     public string sceneName; // NPC所在场景名称
+    public bool canInteract = true; // 是否可以与NPC交互
+    public bool isFollowing = false; // 是否跟随玩家
     
     [Header("对话ID列表")]
     public List<string> dialogueIDs; // 对话ID，用于动态加载对话数据

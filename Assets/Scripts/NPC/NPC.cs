@@ -284,6 +284,11 @@ public class NPC : Entity
     {
         gameObject.SetActive(false);
     }
+
+    public virtual void ResetNPC()
+    {
+        
+    }
     
     // 设置NPC是否可以交互
     public void SetCanInteract(bool canInteract)
