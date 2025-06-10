@@ -55,13 +55,21 @@ namespace Manager
 
         private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
         {
-            // 初始化关卡
+            Debug.Log($"场景加载: {arg0.name}");
+    
+            // 确保玩家位置先设置好
             if (arg0.name != "女生宿舍")
             {
                 InitLevel();
+            }
+    
+            // 玩家位置设置完毕后再设置相机
+            if (PlayerCamera != null)
+            {
+                Debug.Log("场景加载后更新相机");
+                PlayerManager.Instance.UpdatePlayerCamera(PlayerCamera);
                 CameraManager.Instance.SetCameraActive(true);
             }
-            PlayerManager.Instance.UpdatePlayerCamera(PlayerCamera);
         }
 
         private void OnDataLoaded(string obj)
