@@ -80,22 +80,32 @@ namespace Manager
 
         private void InitLevel()
         {
-            // 播放场景加载动画
-            // if (animationNames.Count > 0)
-            // {
-            //     sceneAnimator.gameObject.SetActive(true);
-            //     sceneAnimator.Play(animationNames[0]);
-            // }
-            
+            Debug.Log($"初始化关卡: {levelName}");
+    
             // 设置玩家出生点
             if (playerPoint != null)
             {
+                Debug.Log($"设置玩家位置: {playerPoint.transform.position}");
                 PlayerManager.Instance.SetPlayerPosition(playerPoint);
-                // PlayerManager.Instance.SetPlayerInuptCamera();
+                // 确认玩家位置是否设置成功
+                Debug.Log($"设置后的玩家位置: {PlayerManager.Instance.player.transform.position}");
             }
             else
             {
-                Debug.LogWarning("Player point is not set in LevelManager.");
+                Debug.LogError("Player point is null in LevelManager!");
+            }
+    
+            // 先确保玩家已经正确放置，再设置相机
+            if (PlayerCamera != null)
+            {
+                Debug.Log("更新玩家相机引用");
+                PlayerManager.Instance.UpdatePlayerCamera(PlayerCamera);
+                Debug.Log("激活相机");
+                CameraManager.Instance.SetCameraActive(true);
+            }
+            else
+            {
+                Debug.LogError("PlayerCamera is null in LevelManager!");
             }
             
             // 设置NPC出生点
