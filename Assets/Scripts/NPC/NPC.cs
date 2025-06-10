@@ -137,7 +137,11 @@ public class NPC : Entity
     {
         try
         {
-            playerGameObject = GameObject.FindGameObjectWithTag("Player");
+            if (playerGameObject == null)
+            {
+                playerGameObject = GameObject.FindGameObjectWithTag("Player");
+            }
+        
             if (playerGameObject != null)
             {
                 playerTransform = playerGameObject.transform;
@@ -146,8 +150,12 @@ public class NPC : Entity
             else
             {
                 Debug.LogWarning($"NPC {npcData?.npcID} 未找到玩家对象");
-                // 设置重试机制
-                StartCoroutine(RetryPlayerCaching());
+            
+                // 只有在Start方法中才启动重试协程，避免重复启动
+                if (Time.time > 0.1f) // 确保不是在Awake阶段
+                {
+                    StartCoroutine(RetryPlayerCaching());
+                }
             }
         }
         catch (Exception e)
@@ -495,20 +503,29 @@ public class NPC : Entity
     {
         if (playerGameObject == null)
         {
-            Debug.LogError("玩家对象引用为空，无法开始跟随");
-            return;
+            // 尝试重新缓存玩家引用
+            CachePlayerReferences();
+        
+            if (playerGameObject == null)
+            {
+                Debug.LogError("玩家对象引用为空，无法开始跟随");
+            
+                // 启动协程重试
+                StartCoroutine(RetryFollowPlayer());
+                return;
+            }
         }
 
         isFollowing = true;
-        
+    
         // 设置游戏状态标志
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.SetFlag("Following_" + npcData?.npcID, true);
         }
-        
+    
         UpdateFacingDirection();
-        
+    
         Debug.Log($"NPC {npcData?.npcID} 开始跟随玩家");
     }
 
@@ -532,6 +549,43 @@ public class NPC : Entity
         if (Rb != null)
         {
             Rb.MovePosition(Rb.position + direction * followSpeed * Time.fixedDeltaTime);
+        }
+    }
+    
+    // 添加重试跟随的协程
+    private IEnumerator RetryFollowPlayer()
+    {
+        int retryCount = 0;
+        const int maxRetries = 5;
+
+        while (retryCount < maxRetries && playerGameObject == null)
+        {
+            yield return new WaitForSeconds(0.2f);
+        
+            CachePlayerReferences();
+        
+            if (playerGameObject != null)
+            {
+                Debug.Log($"NPC {npcData?.npcID} 延迟跟随玩家成功");
+            
+                isFollowing = true;
+            
+                // 设置游戏状态标志
+                if (GameStateManager.Instance != null)
+                {
+                    GameStateManager.Instance.SetFlag("Following_" + npcData?.npcID, true);
+                }
+            
+                UpdateFacingDirection();
+                yield break;
+            }
+        
+            retryCount++;
+        }
+    
+        if (playerGameObject == null)
+        {
+            Debug.LogError($"NPC {npcData?.npcID} 重试后仍无法找到玩家对象");
         }
     }
     
@@ -570,16 +624,22 @@ public class NPC : Entity
     {
         try
         {
+            // 确保玩家引用存在
+            if (playerGameObject == null)
+            {
+                CachePlayerReferences();
+            }
+        
             if (isFollowing)
             {
                 FollowTargetPlayer();
             }
-            
+        
             // 设置交互UI的相机引用
             SetupInteractionUICamera();
-            
+        
             gameObject.SetActive(true);
-            
+        
             Debug.Log($"NPC {npcData?.npcID} 已激活");
         }
         catch (Exception e)
