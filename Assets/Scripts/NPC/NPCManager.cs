@@ -347,8 +347,7 @@ public class NPCManager : MonoBehaviour
         // 设置NPC数据
         npc.npcData = npcData;
         npc.dialogueIDs = npcData.dialogueIDs;
-        npc.isFollowing = npcData.isFollowing;
-        npc.canInteract = npcData.canInteract;
+        // npc.canInteract = npcData.canInteract;
     }
 
     private void ActivateNPC(GameObject npcObject, NPCData npcData)
@@ -372,7 +371,7 @@ public class NPCManager : MonoBehaviour
 
     private bool ShouldShowNPCInCurrentScene(NPCData npcData)
     {
-        return npcData.sceneName == currentSceneName;
+        return npcData.sceneName == currentSceneName || npcData.sceneName == "AllScenes";
     }
 
     private bool ShouldNPCBeActive(NPCData npcData)
@@ -457,7 +456,7 @@ public class NPCManager : MonoBehaviour
                 }
             }
         }
-        
+        Debug.Log("获取到当前激活的NPC数量: " + activeNPCComponents.Count);
         return activeNPCComponents;
     }
 

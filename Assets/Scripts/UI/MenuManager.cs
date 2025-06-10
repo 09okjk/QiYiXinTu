@@ -91,7 +91,15 @@ public class MenuManager : MonoBehaviour
 
     private void OnMenuStateChangedHandler(bool isOpen)
     {
-        PlayerManager.Instance.player.HandleMenuStateChanged(isOpen);
+        
+        try
+        {
+            PlayerManager.Instance.player.HandleMenuStateChanged(isOpen);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("player 不存在或未初始化，无法处理菜单状态变化: " + e.Message);
+        }
     }
 
 

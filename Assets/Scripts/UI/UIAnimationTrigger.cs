@@ -32,6 +32,11 @@ namespace UI
             {
                 GameUIManager.Instance.StopLuWeekUpAnimation();
             }
+
+            if (dialogueID == "game_start")
+            {
+                PlayerManager.Instance.SetPlayerActive(true);
+            }
         }
 
         public void ActivatePlayerAndNpc(string npcID)

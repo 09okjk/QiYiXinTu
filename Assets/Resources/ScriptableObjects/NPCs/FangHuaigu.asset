@@ -24,6 +24,13 @@ MonoBehaviour:
   npcID: FangHuaigu
   npcName: "\u65B9\u6000\u53E4"
   spriteID: "\u65B9\u6000\u53E4"
+  sceneName: outside1
+  isFollowing: 0
+  canInteract: 1
+  followSpeed: 2
+  followDistance: 1.5
+  interactionDistance: 2
   dialogueIDs:
   - fang_dialogue
+  activationRules: []
   properties: []

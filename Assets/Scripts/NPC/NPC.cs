@@ -71,7 +71,7 @@ public class NPC : Entity
         InitializeInteractionUI();
         
         // 设置NPC
-        SetupNPC();
+        // SetupNPC();
         
         defaultSpeed = followSpeed;
         
@@ -119,8 +119,8 @@ public class NPC : Entity
     {
         if (npcData != null)
         {
-            isFollowing = npcData.isFollowing;
-            canInteract = npcData.canInteract;
+            // isFollowing = npcData.isFollowing;
+            // canInteract = npcData.canInteract;
             dialogueIDs = new List<string>(npcData.dialogueIDs);
         }
     }

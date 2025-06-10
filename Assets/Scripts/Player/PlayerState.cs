@@ -43,7 +43,7 @@ public class PlayerState
             Vector2 moveInput = PlayerInput.actions["move"].ReadValue<Vector2>();
             xInput = moveInput.x;
             yInput = moveInput.y;
-            Debug.Log(xInput + " " + yInput);
+            // Debug.Log(xInput + " " + yInput);
         }
         else
         {
