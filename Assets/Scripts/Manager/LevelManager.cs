@@ -53,12 +53,12 @@ namespace Manager
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
-        private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+        private void OnSceneLoaded(Scene scene, LoadSceneMode arg1)
         {
-            Debug.Log($"场景加载: {arg0.name}");
+            Debug.Log($"场景加载: {scene.name}");
     
             // 确保玩家位置先设置好
-            if (arg0.name != "女生宿舍")
+            if (scene.name != "女生宿舍")
             {
                 InitLevel();
             }
@@ -74,6 +74,7 @@ namespace Manager
 
         private void OnDataLoaded(string obj)
         {
+            Debug.Log("");
             if (GameStateManager.Instance.GetFlag("FirstEntry_" + levelName))
             {
                 // 如果是第一次进入该关卡，执行初始化逻辑

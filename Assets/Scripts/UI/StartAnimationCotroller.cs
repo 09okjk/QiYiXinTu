@@ -98,10 +98,6 @@ namespace UI
         
         private void Update()
         {
-            if (GameStateManager.Instance.GetFlag("StartAnimationFinished"))
-            {
-                return;
-            }
             // 如果正在显示跳过确认UI，处理确认逻辑和计时器
             if (isSkipUIShowing)
             {
