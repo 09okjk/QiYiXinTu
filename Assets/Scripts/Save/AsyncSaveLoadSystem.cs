@@ -65,7 +65,7 @@ namespace Save
                 public Dictionary<string, EnemySaveData> enemyData = new Dictionary<string, EnemySaveData>();
         
                 // News data
-                public List<string> readNewsIDs = new List<string>();
+                public Dictionary<string, bool> newsDictionary = new Dictionary<string, bool>();
         
                 // Puzzle data
                 public Dictionary<string, PuzzleSaveData> puzzleData = new Dictionary<string, PuzzleSaveData>();
@@ -206,7 +206,7 @@ namespace Save
             // TODO:其他数据收集（任务、新闻、谜题等）
             QuestDataCache questCache = CollectQuestData();
             
-            
+            NewsDataCache newsCache = CollectNewsData();
             // 切换到后台线程进行数据处理
             await Task.Run(() =>
             {
@@ -215,6 +215,7 @@ namespace Save
                 ProcessNPCData(saveData, npcCache);
                 ProcessInventoryData(saveData, inventoryCache);
                 ProcessQuestData(saveData, questCache);
+                ProcessNewsData(saveData, newsCache);
                 ProcessGameStateData(saveData);
             });
     
@@ -391,6 +392,8 @@ namespace Save
 
                 LoadQuestData(saveData);
                 LoadGameStateData(saveData);
+
+                LoadNewsData(saveData);
                 // 其他加载方法...
                 // await Task.Run(() => LoadEnemyData(saveData));
                 // await Task.Run(() => LoadNewsData(saveData));
@@ -562,6 +565,16 @@ namespace Save
             }
             return cache;
         }
+        
+        private static NewsDataCache CollectNewsData()
+        {
+            NewsDataCache cache = new NewsDataCache();
+            if (NewsManager.Instance != null)
+            {
+                cache.allNews = NewsManager.Instance.GetNewsDatas();
+            }
+            return cache;
+        }
 
         // 在后台线程处理数据的方法
         private static void ProcessPlayerData(SaveData saveData, PlayerDataCache cache)
@@ -648,6 +661,12 @@ namespace Save
             }
             saveData.currentQuestID = QuestManager.Instance.currentQuestID;
         
+        }
+
+        private static void ProcessNewsData(SaveData saveData, NewsDataCache cache)
+        {
+            saveData.newsDictionary.Clear();
+            saveData.newsDictionary = new Dictionary<string, bool>(cache.allNews);
         }
 
         private static void ProcessGameStateData(SaveData saveData)
@@ -797,11 +816,7 @@ namespace Save
         {
             if (NewsManager.Instance != null)
             {
-                foreach (string newsID in saveData.readNewsIDs)
-                {
-                    // You might need to implement a method to mark news as read
-                    // NewsManager.Instance.MarkNewsAsRead(newsID);
-                }
+                NewsManager.Instance.ApplyNewsDatas(saveData.newsDictionary);
             }
         }
 
@@ -861,4 +876,9 @@ class InventoryDataCache
 class QuestDataCache
 {
     public List<QuestData> allQuests = new List<QuestData>();
+}
+
+class NewsDataCache
+{
+    public Dictionary<string, bool> allNews = new Dictionary<string, bool>();
 }
