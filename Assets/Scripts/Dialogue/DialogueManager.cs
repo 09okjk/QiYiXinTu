@@ -253,7 +253,7 @@ public class DialogueManager : MonoBehaviour
             // }
             // 在添加监听前先移除
             continueButton.onClick.RemoveAllListeners();
-            continueButton.onClick.AddListener(OnDialoguePanelClicked); ;
+            continueButton.onClick.AddListener(OnDialoguePanelClicked);
         }));
     }
     
@@ -342,10 +342,27 @@ public class DialogueManager : MonoBehaviour
     // 点击对话面板事件
     public void OnDialoguePanelClicked()
     {
-        // 跳过打字动画并显示完整文本
-        StopCoroutine(typingCoroutine);
-        isTyping = false;
-        currentDialogueText.text = currentDialogueNode.text;
+        // 如果正在打字，停止打字动画并显示完整文本，但不继续执行后续逻辑
+        if (isTyping)
+        {
+            // 停止打字协程
+            if (typingCoroutine != null)
+            {
+                StopCoroutine(typingCoroutine);
+                typingCoroutine = null;
+            }
+            
+            isTyping = false;
+            currentDialogueText.text = currentDialogueNode.text;
+            
+            // 执行打字完成后的逻辑（发布任务、提供奖励等）
+            ExecuteNodeCompletionLogic();
+            
+            // 停止执行，等待用户再次点击
+            return;
+        }
+        
+        // 如果打字已完成，继续处理选择或下一个节点
         if (currentDialogueNode.choices.Count > 0)
         {
             // 如果有选择，显示选择按钮
@@ -354,7 +371,33 @@ public class DialogueManager : MonoBehaviour
         }
         
         currentNodeID = currentDialogueNode.nextNodeID;
-        DisplayCurrentNode();
+        _ = DisplayCurrentNode();
+    }
+    
+    // 执行节点完成后的逻辑（任务发布、奖励提供等）
+    private void ExecuteNodeCompletionLogic()
+    {
+        // 发布任务
+        if (!string.IsNullOrEmpty(currentDialogueNode.questID))
+        {
+            Debug.Log($"发布任务: {currentDialogueNode.questID}");
+            QuestManager.Instance.StartQuest(currentDialogueNode.questID);
+        }
+        
+        //提供奖励
+        if (currentDialogueNode.rewardIDs.Count > 0)
+        {
+            foreach (string rewardID in currentDialogueNode.rewardIDs)
+            {
+                InventoryManager.Instance.AddItemById(rewardID);
+            }
+        }
+        
+        // 提供跟随
+        // if (currentNpc && currentDialogueNode.isFollow)
+        // {
+        //     currentNpc.FollowTargetPlayer();
+        // }
     }
     
     // 检查对话条件
