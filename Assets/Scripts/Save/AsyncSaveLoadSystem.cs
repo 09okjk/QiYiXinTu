@@ -221,7 +221,10 @@ namespace Save
             progress?.Report(0.8f);
 
             // 元数据（无需在异步线程处理）
-            saveData.saveName = "存档 " + slotIdx;
+            if(slotIdx == 0)
+                saveData.saveName = "自动存档";
+            else
+                saveData.saveName = "存档 " + slotIdx;
             saveData.saveDate = DateTime.Now;
             saveData.gameVersion = Application.version;
 

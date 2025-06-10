@@ -103,8 +103,10 @@ public class MenuManager : MonoBehaviour
     private void OnDataSave(string obj)
     {
         Debug.Log($"数据保存完成: {obj}");
-        // 这里可以添加保存完成后的逻辑，比如提示用户或更新UI
-        PopulateSaveSlots();
+        if (savePanel.activeSelf)
+        {
+            PopulateSaveSlots();
+        }
     }
     
     // 切换菜单的显示状态
