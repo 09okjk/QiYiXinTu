@@ -21,6 +21,7 @@ namespace Save
         [Header("Save Settings")]
         [SerializeField] private bool useJsonFormat = true; // JSON vs Binary
         [SerializeField] private bool showSaveProgress = true;
+        [SerializeField] private bool useGameManagerLoadingScreen = true; // 是否使用GameManager的加载屏幕
     
         public static AsyncSaveLoadSystem Instance { get; private set; }
     
@@ -30,6 +31,7 @@ namespace Save
         public static event Action<string> OnSaveComplete;
         public static event Action<string> OnLoadComplete;
 
+        // ... 保持原有的数据结构定义不变 ...
         #region Data
         
             [Serializable]
@@ -139,9 +141,9 @@ namespace Save
                 public float totalPlayTime;
                 public DateTime gameStartTime;
             }
-            #endregion
+        #endregion
                 
-            private void Awake()
+        private void Awake()
         {
             if (Instance == null)
             {
@@ -163,7 +165,20 @@ namespace Save
         {
             try
             {
+                // 显示加载屏幕（用于保存）
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.ShowLoadingScreen("正在保存游戏...");
+                }
+                
                 progress?.Report(0f);
+                OnSaveProgress?.Invoke(0f);
+                
+                // 更新UI
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0f, "正在保存游戏...");
+                }
             
                 // 确保目录存在
                 if (!Directory.Exists(SaveDirectory))
@@ -172,17 +187,37 @@ namespace Save
                 }
 
                 progress?.Report(0.1f);
+                OnSaveProgress?.Invoke(0.1f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.1f, "收集游戏数据...");
+                }
 
                 // 创建保存数据（可能耗时）
-                SaveData saveData = await CreateSaveDataAsync(progress,slotIdx);
+                SaveData saveData = await CreateSaveDataAsync(progress, slotIdx);
             
                 progress?.Report(0.8f);
+                OnSaveProgress?.Invoke(0.8f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.8f, "写入存档文件...");
+                }
 
                 // 写入文件
                 string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
                 bool success = await WriteSaveFileAsync(saveData, savePath);
             
                 progress?.Report(1f);
+                OnSaveProgress?.Invoke(1f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(1f, success ? "保存完成！" : "保存失败！");
+                    await Task.Delay(500); // 显示结果一段时间
+                    GameManager.Instance.HideLoadingScreen();
+                }
             
                 OnSaveComplete?.Invoke(success ? "保存成功！" : "保存失败！");
                 return success;
@@ -190,10 +225,20 @@ namespace Save
             catch (Exception e)
             {
                 Debug.LogError($"异步保存失败: {e.Message}");
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(1f, "保存失败！");
+                    await Task.Delay(1000);
+                    GameManager.Instance.HideLoadingScreen();
+                }
+                
                 OnSaveComplete?.Invoke("保存失败：" + e.Message);
                 return false;
             }
         }
+        
+        // ... 保持原有的CreateSaveDataAsync和WriteSaveFileAsync方法不变 ...
         
         /// <summary>
         /// 异步创建保存数据
@@ -277,44 +322,102 @@ namespace Save
         {
             try
             {
+                // 显示加载屏幕
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.ShowLoadingScreen("正在加载游戏...");
+                }
+                
                 progress?.Report(0f);
+                OnLoadProgress?.Invoke(0f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0f, "正在加载游戏...");
+                }
             
                 string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
             
                 if (!File.Exists(savePath))
                 {
                     Debug.LogWarning($"存档文件不存在: {savePath}");
+                    
+                    if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                    {
+                        GameManager.Instance.UpdateLoadingProgress(1f, "存档文件不存在！");
+                        await Task.Delay(1000);
+                        GameManager.Instance.HideLoadingScreen();
+                    }
+                    
                     OnLoadComplete?.Invoke("存档文件不存在！");
                     return false;
                 }
 
                 progress?.Report(0.1f);
+                OnLoadProgress?.Invoke(0.1f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.1f, "读取存档文件...");
+                }
 
                 // 读取文件
                 SaveData saveData = await ReadSaveFileAsync(savePath);
                 if (saveData == null)
                 {
+                    if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                    {
+                        GameManager.Instance.UpdateLoadingProgress(1f, "存档文件损坏！");
+                        await Task.Delay(1000);
+                        GameManager.Instance.HideLoadingScreen();
+                    }
+                    
                     OnLoadComplete?.Invoke("存档文件损坏！");
                     return false;
                 }
 
                 progress?.Report(0.5f);
+                OnLoadProgress?.Invoke(0.5f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.5f, "应用游戏数据...");
+                }
 
                 // 应用数据
                 await ApplySaveDataAsync(saveData, progress);
             
                 progress?.Report(1f);
+                OnLoadProgress?.Invoke(1f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(1f, "加载完成！");
+                    await Task.Delay(500);
+                    GameManager.Instance.HideLoadingScreen();
+                }
+                
                 OnLoadComplete?.Invoke("加载完成！");
                 return true;
             }
             catch (Exception e)
             {
                 Debug.LogError($"异步加载失败: {e.Message}");
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(1f, "加载失败！");
+                    await Task.Delay(1000);
+                    GameManager.Instance.HideLoadingScreen();
+                }
+                
                 OnLoadComplete?.Invoke("加载失败：" + e.Message);
                 return false;
             }
         }
 
+        // ... 保持原有的ReadSaveFileAsync方法不变 ...
+        
         /// <summary>
         /// 异步读取保存文件
         /// </summary>
@@ -371,6 +474,11 @@ namespace Save
             string currentScene = SceneManager.GetActiveScene().name;
             if (currentScene != saveData.currentSceneName || SceneManager.GetActiveScene().name == "MainMenu")
             {
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.5f, $"正在切换到场景: {saveData.currentSceneName}");
+                }
+                
                 AsyncOperation sceneLoad;
              
                 if (SceneManager.GetActiveScene().name == "MainMenu")
@@ -380,7 +488,16 @@ namespace Save
             
                 while (sceneLoad is { isDone: false })
                 {
-                    progress?.Report(0.5f + (sceneLoad.progress * 0.3f));
+                    float sceneProgress = 0.5f + (sceneLoad.progress * 0.3f);
+                    progress?.Report(sceneProgress);
+                    OnLoadProgress?.Invoke(sceneProgress);
+                    
+                    if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                    {
+                        GameManager.Instance.UpdateLoadingProgress(sceneProgress, 
+                            $"正在切换到场景: {saveData.currentSceneName} ({sceneLoad.progress:P0})");
+                    }
+                    
                     await Task.Yield(); // 等待一帧
                 }
             
@@ -389,6 +506,12 @@ namespace Save
             }
 
             progress?.Report(0.8f);
+            OnLoadProgress?.Invoke(0.8f);
+            
+            if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+            {
+                GameManager.Instance.UpdateLoadingProgress(0.8f, "应用玩家数据...");
+            }
 
             try
             {
@@ -396,26 +519,40 @@ namespace Save
                 LoadPlayerData(saveData);
                 await Task.Yield(); // 确保UI可以更新
                 progress?.Report(0.85f);
+                OnLoadProgress?.Invoke(0.85f);
+
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.85f, "应用NPC数据...");
+                }
 
                 LoadNPCData(saveData);
                 await Task.Yield();
                 progress?.Report(0.9f);
+                OnLoadProgress?.Invoke(0.9f);
+
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.9f, "应用物品数据...");
+                }
 
                 LoadInventoryData(saveData);
                 await Task.Yield();
                 progress?.Report(0.95f);
+                OnLoadProgress?.Invoke(0.95f);
+
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.95f, "应用游戏状态...");
+                }
 
                 LoadQuestData(saveData);
                 LoadDialogueData(saveData);
                 LoadGameStateData(saveData);
-
                 LoadNewsData(saveData);
-                // 其他加载方法...
-                // await Task.Run(() => LoadEnemyData(saveData));
-                // await Task.Run(() => LoadNewsData(saveData));
-                // await Task.Run(() => LoadPuzzleData(saveData));
 
                 progress?.Report(1f);
+                OnLoadProgress?.Invoke(1f);
             }
             catch (Exception e)
             {
@@ -426,6 +563,8 @@ namespace Save
 
         #endregion
 
+        // ... 保持原有的所有辅助方法、缓存类和数据处理方法不变 ...
+        
         #region 辅助方法
 
         /// <summary>
