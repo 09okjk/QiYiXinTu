@@ -15,12 +15,19 @@ namespace Manager
         
         [Header("场景物体")]
         public Camera PlayerCamera;
-        [SerializeField] private GameObject playerPoint; // 玩家出生点
+        
+        [Header("玩家出生点")]
+        [SerializeField] private GameObject defaultPlayerPoint; // 默认玩家出生点
+        [SerializeField] private GameObject leftPlayerPoint;    // 左侧出生点
+        [SerializeField] private GameObject rightPlayerPoint;   // 右侧出生点
+        [SerializeField] private GameObject middle1PlayerPoint; // 中间1出生点
+        [SerializeField] private GameObject middle2PlayerPoint; // 中间2出生点
+        [SerializeField] private GameObject middle3PlayerPoint; // 中间3出生点
+        
         [SerializeField] private List<GameObject> npcsPoints; // NPC出生点列表
         [SerializeField] private List<GameObject> enemyPoints; // 敌人出生点列表
         [SerializeField] private List<NewsButton> newsObjects; // 新闻按钮列表
         [SerializeField] private GameObject startAinimation; // 开场动画对象
-        // [SerializeField] private List<GameObject> nextLevelPoints; // 下一关卡传送点列表
         
         [Header("场景动画")]
         [SerializeField] private Animator sceneAnimator; // 场景动画控制器
@@ -50,6 +57,36 @@ namespace Manager
             
             // 在Awake中查找NPC点，确保在Start之前完成
             FindNPCPoints();
+            
+            // 自动查找玩家出生点（如果没有手动设置）
+            AutoFindPlayerPoints();
+        }
+        
+        /// <summary>
+        /// 自动查找场景中的玩家出生点
+        /// </summary>
+        private void AutoFindPlayerPoints()
+        {
+            // 如果没有手动设置，尝试通过标签或名称自动查找
+            if (defaultPlayerPoint == null)
+                defaultPlayerPoint = GameObject.FindGameObjectWithTag("PlayerPoint");
+            
+            if (leftPlayerPoint == null)
+                leftPlayerPoint = GameObject.Find("LeftPlayerPoint");
+                
+            if (rightPlayerPoint == null)
+                rightPlayerPoint = GameObject.Find("RightPlayerPoint");
+                
+            if (middle1PlayerPoint == null)
+                middle1PlayerPoint = GameObject.Find("Middle1PlayerPoint");
+                
+            if (middle2PlayerPoint == null)
+                middle2PlayerPoint = GameObject.Find("Middle2PlayerPoint");
+                
+            if (middle3PlayerPoint == null)
+                middle3PlayerPoint = GameObject.Find("Middle3PlayerPoint");
+                
+            Debug.Log($"找到玩家出生点: Default={defaultPlayerPoint != null}, Left={leftPlayerPoint != null}, Right={rightPlayerPoint != null}");
         }
         
         private void Start()
@@ -69,7 +106,6 @@ namespace Manager
             
             // 如果当前场景已经加载，手动调用一次
             OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
-
         }
 
         private void OnDestroy()
@@ -153,12 +189,6 @@ namespace Manager
         /// </summary>
         private bool ShouldInitializeLevel()
         {
-            // 女生宿舍等特殊场景可能需要特殊处理
-            // if (levelName == "女生宿舍")
-            // {
-            //     return GameStateManager.Instance.GetFlag("FirstEntry_" + levelName);
-            // }
-            
             return true; // 其他场景默认都需要初始化
         }
 
@@ -208,13 +238,16 @@ namespace Manager
         }
 
         /// <summary>
-        /// 设置玩家位置
+        /// 根据PlayerPointType设置玩家位置
         /// </summary>
-        private IEnumerator  SetPlayerPosition()
+        private IEnumerator SetPlayerPosition()
         {
-            if (playerPoint == null)
+            // 获取应该使用的玩家出生点
+            GameObject targetPlayerPoint = GetPlayerSpawnPoint();
+            
+            if (targetPlayerPoint == null)
             {
-                Debug.LogError($"玩家出生点未设置在关卡 {levelName} 中!");
+                Debug.LogError($"未找到合适的玩家出生点在关卡 {levelName} 中!");
                 yield break;
             }
 
@@ -224,8 +257,8 @@ namespace Manager
                 yield break;
             }
 
-            Debug.Log($"设置玩家位置: {playerPoint.transform.position}");
-            PlayerManager.Instance.SetPlayerPosition(playerPoint);
+            Debug.Log($"设置玩家位置: {targetPlayerPoint.transform.position} (类型: {GameStateManager.Instance.GetPlayerPointType()})");
+            PlayerManager.Instance.SetPlayerPosition(targetPlayerPoint);
             
             // 等待一帧确保位置设置生效
             yield return null;
@@ -235,6 +268,41 @@ namespace Manager
             {
                 Debug.Log($"玩家位置设置成功: {PlayerManager.Instance.player.transform.position}");
             }
+        }
+
+        /// <summary>
+        /// 根据PlayerPointType获取对应的玩家出生点
+        /// </summary>
+        private GameObject GetPlayerSpawnPoint()
+        {
+            if (GameStateManager.Instance == null)
+            {
+                Debug.LogWarning("GameStateManager.Instance 为空，使用默认出生点");
+                return defaultPlayerPoint;
+            }
+
+            PlayerPointType pointType = GameStateManager.Instance.GetPlayerPointType();
+            
+            GameObject selectedPoint = pointType switch
+            {
+                PlayerPointType.Left => leftPlayerPoint,
+                PlayerPointType.Right => rightPlayerPoint,
+                PlayerPointType.Middle1 => middle1PlayerPoint,
+                PlayerPointType.Middle2 => middle2PlayerPoint,
+                PlayerPointType.Middle3 => middle3PlayerPoint,
+                PlayerPointType.None => defaultPlayerPoint,
+                _ => defaultPlayerPoint
+            };
+
+            // 如果指定的出生点不存在，回退到默认点
+            if (selectedPoint == null)
+            {
+                Debug.LogWarning($"指定的出生点类型 {pointType} 不存在，使用默认出生点");
+                selectedPoint = defaultPlayerPoint;
+            }
+
+            Debug.Log($"选择玩家出生点: {pointType} -> {selectedPoint?.name}");
+            return selectedPoint;
         }
 
         /// <summary>
@@ -420,5 +488,34 @@ namespace Manager
         {
             return isLevelInitialized;
         }
+
+        #region 调试和辅助方法
+
+        /// <summary>
+        /// 手动设置玩家出生点类型（调试用）
+        /// </summary>
+        [ContextMenu("设置玩家出生点为Left")]
+        public void SetPlayerPointTypeToLeft()
+        {
+            if (GameStateManager.Instance != null)
+            {
+                GameStateManager.Instance.SetPlayerPointType(PlayerPointType.Left);
+                Debug.Log("设置玩家出生点类型为Left");
+            }
+        }
+
+        /// <summary>
+        /// 显示当前玩家出生点类型（调试用）
+        /// </summary>
+        [ContextMenu("显示当前玩家出生点类型")]
+        public void ShowCurrentPlayerPointType()
+        {
+            if (GameStateManager.Instance != null)
+            {
+                Debug.Log($"当前玩家出生点类型: {GameStateManager.Instance.GetPlayerPointType()}");
+            }
+        }
+
+        #endregion
     }
 }
