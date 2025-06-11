@@ -126,9 +126,6 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f; // 确保游戏没有暂停
                 break;
             case "女生宿舍":
-                // 播放开场动画
-                if(!GameStateManager.Instance.GetFlag("StartAnimationFinished"))
-                    StartAnimationCotroller.Instance.PlayVideo(0);
                 break;
             case "outside1":
                 // 触发开场对话

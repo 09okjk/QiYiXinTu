@@ -17,6 +17,7 @@ namespace Manager
         [SerializeField] private GameObject playerPoint; // 玩家出生点
         [SerializeField] private List<GameObject> npcsPoints; // NPC出生点列表
         [SerializeField] private List<GameObject> enemyPoints; // 敌人出生点列表
+        [SerializeField] private GameObject startAinimation; // 开场动画对象
         // [SerializeField] private List<GameObject> nextLevelPoints; // 下一关卡传送点列表
         
         [Header("场景动画")]
@@ -63,6 +64,10 @@ namespace Manager
                 DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
             }
             SceneManager.sceneLoaded += OnSceneLoaded;
+            
+            // 如果当前场景已经加载，手动调用一次
+            OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+
         }
 
         private void OnDestroy()
@@ -147,10 +152,10 @@ namespace Manager
         private bool ShouldInitializeLevel()
         {
             // 女生宿舍等特殊场景可能需要特殊处理
-            if (levelName == "女生宿舍")
-            {
-                return GameStateManager.Instance.GetFlag("FirstEntry_" + levelName);
-            }
+            // if (levelName == "女生宿舍")
+            // {
+            //     return GameStateManager.Instance.GetFlag("FirstEntry_" + levelName);
+            // }
             
             return true; // 其他场景默认都需要初始化
         }
@@ -200,7 +205,7 @@ namespace Manager
         /// <summary>
         /// 设置玩家位置
         /// </summary>
-        private IEnumerator SetPlayerPosition()
+        private IEnumerator  SetPlayerPosition()
         {
             if (playerPoint == null)
             {
@@ -347,6 +352,7 @@ namespace Manager
             // 如果是第一次进入，设置对应的标志
             if (GameStateManager.Instance != null)
             {
+                startAinimation.gameObject.SetActive(GameStateManager.Instance.GetFlag("FirstEntry_" + levelName));
                 GameStateManager.Instance.SetFlag("FirstEntry_" + levelName, false);
             }
         }

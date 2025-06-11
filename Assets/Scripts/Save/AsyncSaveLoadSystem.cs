@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 using UnityEngine;
 using Manager;
 using News;
@@ -57,22 +57,21 @@ namespace Save
                 // Quest data
                 public List<QuestSaveData> allQuests = new List<QuestSaveData>();
                 public string currentQuestID;
-        
-                // Game state data
-                public Dictionary<string, bool> flags = new Dictionary<string, bool>();
+                
+                // Dialogue data
+                public List<DialogueSaveData> allDialogues = new List<DialogueSaveData>();
         
                 // Enemy data
                 public Dictionary<string, EnemySaveData> enemyData = new Dictionary<string, EnemySaveData>();
         
                 // News data
-                public List<string> readNewsIDs = new List<string>();
+                public Dictionary<string, bool> newsDictionary = new Dictionary<string, bool>();
         
                 // Puzzle data
                 public Dictionary<string, PuzzleSaveData> puzzleData = new Dictionary<string, PuzzleSaveData>();
         
-                // Game time data
-                public float totalPlayTime;
-                public DateTime gameStartTime;
+                // Game state data
+                public GameStateSaveData GameStateSaveData = new GameStateSaveData();
         
                 // Save metadata
                 public string saveName;
@@ -90,7 +89,6 @@ namespace Save
                 public bool isFollowing;
                 public bool canInteract;
                 public List<string> dialogueIDs = new List<string>();
-                public Dictionary<string, bool> npcFlags = new Dictionary<string, bool>();
             }
         
             [Serializable]
@@ -124,6 +122,22 @@ namespace Save
                 public string questText; // 任务描述文本
                 public string nextQuestID; // 下一个任务ID
                 public bool isCompleted;
+            }
+            
+            [Serializable]
+            public class DialogueSaveData
+            {
+                public string dialogueID;
+                public DialogueState dialogueState;
+                public string currentNodeID;
+            }
+            
+            [Serializable]
+            public class GameStateSaveData
+            {
+                public Dictionary<string, bool> flags = new Dictionary<string, bool>();
+                public float totalPlayTime;
+                public DateTime gameStartTime;
             }
             #endregion
                 
@@ -180,7 +194,6 @@ namespace Save
                 return false;
             }
         }
-
         
         /// <summary>
         /// 异步创建保存数据
@@ -205,8 +218,9 @@ namespace Save
             
             // TODO:其他数据收集（任务、新闻、谜题等）
             QuestDataCache questCache = CollectQuestData();
-            
-            
+            DialogueDataCache dialogueCache = CollectDialogueData();
+            NewsDataCache newsCache = CollectNewsData();
+            GameStateDataCache gameStateCache = CollectGameStateData();
             // 切换到后台线程进行数据处理
             await Task.Run(() =>
             {
@@ -215,7 +229,9 @@ namespace Save
                 ProcessNPCData(saveData, npcCache);
                 ProcessInventoryData(saveData, inventoryCache);
                 ProcessQuestData(saveData, questCache);
-                ProcessGameStateData(saveData);
+                ProcessDialogueData(saveData, dialogueCache);
+                ProcessNewsData(saveData, newsCache);
+                ProcessGameStateData(saveData, gameStateCache);
             });
     
             progress?.Report(0.8f);
@@ -390,7 +406,10 @@ namespace Save
                 progress?.Report(0.95f);
 
                 LoadQuestData(saveData);
+                LoadDialogueData(saveData);
                 LoadGameStateData(saveData);
+
+                LoadNewsData(saveData);
                 // 其他加载方法...
                 // await Task.Run(() => LoadEnemyData(saveData));
                 // await Task.Run(() => LoadNewsData(saveData));
@@ -476,6 +495,28 @@ namespace Save
             }
         }
         
+        // 异步删除存档文件
+        public static async Task<bool> DeleteSaveFileAsync(int slotIdx)
+        {
+            try
+            {
+                string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
+                if (File.Exists(savePath))
+                {
+                    await Task.Run(() => File.Delete(savePath));
+                    Debug.Log($"存档 {slotIdx} 已删除");
+                    return true;
+                }
+                Debug.LogWarning($"存档文件不存在: {savePath}");
+                return false;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"删除存档失败: {e.Message}");
+                return false;
+            }
+        }
+        
         // 检查文件是否为JSON格式
         private static async Task<bool> IsJsonFileAsync(Stream filePath)
         {
@@ -536,7 +577,8 @@ namespace Save
                         npc.transform.position,
                         npc.gameObject.activeSelf,
                         npc.isFollowing,
-                        npc.npcData.sceneName
+                        npc.npcData.sceneName,
+                        npc.canInteract
                     );
                 }
             }
@@ -559,6 +601,38 @@ namespace Save
             if (QuestManager.Instance != null)
             {
                 cache.allQuests = QuestManager.Instance.GetAllQuests();
+            }
+            return cache;
+        }
+        
+        private static DialogueDataCache CollectDialogueData()
+        {
+            DialogueDataCache cache = new DialogueDataCache();
+            if (DialogueManager.Instance != null)
+            {
+                cache.allDialogues = DialogueManager.Instance.GetDialogueDataDictionary().Values.ToList();
+            }
+            return cache;
+        }
+        
+        private static NewsDataCache CollectNewsData()
+        {
+            NewsDataCache cache = new NewsDataCache();
+            if (NewsManager.Instance != null)
+            {
+                cache.allNews = NewsManager.Instance.GetNewsDatas();
+            }
+            return cache;
+        }
+        
+        private static GameStateDataCache CollectGameStateData()
+        {
+            GameStateDataCache cache = new GameStateDataCache();
+            if (GameStateManager.Instance != null)
+            {
+                cache.flags = GameStateManager.Instance.GetAllFlags();
+                cache.totalPlayTime = 1f;
+                cache.gameStartTime = DateTime.Today;
             }
             return cache;
         }
@@ -587,7 +661,7 @@ namespace Save
         {
             foreach (var npcEntry in cache.npcData)
             {
-                var (npcID, position, isActive, isFollowing, sceneName) = npcEntry.Value;
+                var (npcID, position, isActive, isFollowing, sceneName,canInteract) = npcEntry.Value;
 
                 NPCSaveData npcSaveData = new NPCSaveData();
                 npcSaveData.npcID = npcID;
@@ -597,16 +671,7 @@ namespace Save
                 npcSaveData.position[2] = position.z;
                 npcSaveData.isActive = isActive;
                 npcSaveData.isFollowing = isFollowing;
-
-                // 从GameStateManager获取标志 - 这里需要确保GameStateManager.GetAllFlags()是线程安全的
-                foreach (var flag in GameStateManager.Instance.GetAllFlags())
-                {
-                    if (flag.Key.Contains(npcID))
-                    {
-                        npcSaveData.npcFlags[flag.Key] = flag.Value;
-                    }
-                }
-
+                npcSaveData.canInteract = canInteract;
                 saveData.npcData[npcID] = npcSaveData;
             }
         }
@@ -647,16 +712,37 @@ namespace Save
                 saveData.allQuests.Add(questSaveData);
             }
             saveData.currentQuestID = QuestManager.Instance.currentQuestID;
+        }
         
+        private static void ProcessDialogueData(SaveData saveData, DialogueDataCache cache)
+        {
+            saveData.allDialogues.Clear();
+            foreach (var dialogue in cache.allDialogues)
+            {
+                DialogueSaveData dialogueSaveData = new DialogueSaveData
+                {
+                    dialogueID = dialogue.dialogueID,
+                    dialogueState = dialogue.state,
+                    currentNodeID = dialogue.currentNodeID
+                };
+                saveData.allDialogues.Add(dialogueSaveData);
+            }
         }
 
-        private static void ProcessGameStateData(SaveData saveData)
+        private static void ProcessNewsData(SaveData saveData, NewsDataCache cache)
         {
-            // 确保不调用Unity API
-            if (GameStateManager.Instance != null)
+            saveData.newsDictionary.Clear();
+            saveData.newsDictionary = new Dictionary<string, bool>(cache.allNews);
+        }
+
+        private static void ProcessGameStateData(SaveData saveData, GameStateDataCache cache)
+        {
+            saveData.GameStateSaveData = new GameStateSaveData
             {
-                saveData.flags = GameStateManager.Instance.GetAllFlags();
-            }
+                flags = new Dictionary<string, bool>(cache.flags),
+                totalPlayTime = cache.totalPlayTime,
+                gameStartTime = cache.gameStartTime,
+            };
         }
         #endregion
             
@@ -738,6 +824,14 @@ namespace Save
             Debug.Log("LoadInventoryData");
         }
 
+        private static void LoadDialogueData(SaveData saveData)
+        {
+            if (DialogueManager.Instance != null)
+            {
+                DialogueManager.Instance.LoadDialogueData(saveData.allDialogues);
+            }
+        }
+
         private static void LoadQuestData(SaveData saveData)
         {
             if (QuestManager.Instance != null)
@@ -752,7 +846,7 @@ namespace Save
         {
             if (GameStateManager.Instance != null)
             {
-                GameStateManager.Instance.SetAllFlags(saveData.flags);
+                GameStateManager.Instance.SetAllFlags(saveData.GameStateSaveData.flags);
             }
         }
 
@@ -797,11 +891,7 @@ namespace Save
         {
             if (NewsManager.Instance != null)
             {
-                foreach (string newsID in saveData.readNewsIDs)
-                {
-                    // You might need to implement a method to mark news as read
-                    // NewsManager.Instance.MarkNewsAsRead(newsID);
-                }
+                NewsManager.Instance.ApplyNewsDatas(saveData.newsDictionary);
             }
         }
 
@@ -849,8 +939,8 @@ class SceneDataCache
 
 class NPCDataCache
 {
-    public Dictionary<string, (string npcID, Vector3 position, bool isActive, bool isFollowing, string sceneName)> npcData = 
-        new Dictionary<string, (string, Vector3, bool, bool, string)>();
+    public Dictionary<string, (string npcID, Vector3 position, bool activeSelf, bool isFollowing, string sceneName, bool canInteract)> npcData = 
+        new Dictionary<string, (string, Vector3, bool, bool, string,bool)>();
 }
 
 class InventoryDataCache
@@ -861,4 +951,21 @@ class InventoryDataCache
 class QuestDataCache
 {
     public List<QuestData> allQuests = new List<QuestData>();
+}
+
+class DialogueDataCache
+{
+    public List<DialogueData> allDialogues = new List<DialogueData>();
+}
+
+class NewsDataCache
+{
+    public Dictionary<string, bool> allNews = new Dictionary<string, bool>();
+}
+
+class GameStateDataCache
+{
+    public Dictionary<string, bool> flags = new Dictionary<string, bool>();
+    public float totalPlayTime;
+    public DateTime gameStartTime;
 }

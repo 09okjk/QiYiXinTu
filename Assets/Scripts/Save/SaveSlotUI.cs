@@ -14,6 +14,7 @@ public class SaveSlotUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI sceneNameText;
     [SerializeField] private Button saveButton;
     [SerializeField] private Button loadButton;
+    [SerializeField] private Button deleteButton; // 删除按钮（如果需要的话）
     
     private int slotIndex;
     private bool isEmpty;
@@ -22,6 +23,7 @@ public class SaveSlotUI : MonoBehaviour
     {
         saveButton.onClick.AddListener(OnSaveButtonClicked);
         loadButton.onClick.AddListener(OnLoadButtonClicked);
+        deleteButton.onClick.AddListener(OnDeleteButtonClicked);
     }
 
     // 设置已存在的槽位
@@ -93,6 +95,25 @@ public class SaveSlotUI : MonoBehaviour
         {
             _ = AsyncSaveLoadSystem.LoadGameAsync(slotIndex);
             MenuManager.Instance.CloseAllPanels();
+        }
+    }
+    
+    private void OnDeleteButtonClicked()
+    {
+        // 如果槽不为空，请确认删除
+        if (!isEmpty)
+        {
+            // 显示确认对话框（需要 UI 管理器实现）
+            UIManager.Instance.ShowConfirmDialog(
+                "删除存档",
+                "此操作将删除现有存档，是否继续?",
+                null,
+                () =>
+                {
+                    _ = AsyncSaveLoadSystem.DeleteSaveFileAsync(slotIndex);
+                    MenuManager.Instance.OpenSavePanel();
+                },
+                () => { /* 取消操作 */ });
         }
     }
 }

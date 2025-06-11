@@ -24,6 +24,13 @@ MonoBehaviour:
   npcID: LuXinsheng
   npcName: "\u8DEF\u85AA\u58F0"
   spriteID: "\u8DEF\u85AA\u58F0"
+  sceneName: AllScenes
+  isFollowing: 0
+  canInteract: 1
+  followSpeed: 2
+  followDistance: 1.5
+  interactionDistance: 2
   dialogueIDs:
   - fight_over_dialogue
+  activationRules: []
   properties: []

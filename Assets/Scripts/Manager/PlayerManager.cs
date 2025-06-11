@@ -12,7 +12,7 @@ namespace Manager
         
         [Header("玩家设置")]
         [SerializeField] private GameObject playerPrefab;
-        [SerializeField] private bool autoCreatePlayer = true;
+        [SerializeField] private bool autoCreatePlayer = false;
         
         [HideInInspector] public Player player;
         
@@ -210,7 +210,11 @@ namespace Manager
             // 确保玩家在设置位置后是激活的
             if (!player.gameObject.activeInHierarchy)
             {
-                SetPlayerActive(true);
+                if (SceneManager.GetActiveScene().name != "女生宿舍")
+                    SetPlayerActive(true);
+                
+                if (!GameStateManager.Instance.GetFlag("FirstEntry_" + SceneManager.GetActiveScene().name))
+                    SetPlayerActive(true);
             }
             
             isPlayerInitialized = true;

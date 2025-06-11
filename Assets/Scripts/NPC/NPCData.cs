@@ -12,8 +12,8 @@ public class NPCData : EntityData
     public string sceneName; // NPC所在场景名称
     
     [Header("行为设置")]
-    public bool isFollowing = false; // 是否跟随玩家
-    public bool canInteract = true; // 是否可以交互
+    // public bool isFollowing = false; // 是否跟随玩家
+    // public bool canInteract = true; // 是否可以交互
     public float followSpeed = 2f; // 跟随速度
     public float followDistance = 1.5f; // 跟随距离
     public float interactionDistance = 2f; // 交互距离

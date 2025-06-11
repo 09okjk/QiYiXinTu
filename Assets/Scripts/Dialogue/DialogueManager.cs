@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core;
 using Manager;
+using Save;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -49,6 +50,7 @@ public class DialogueManager : MonoBehaviour
     private TextMeshProUGUI currentDialogueText;
     // Npc对象
     private NPC currentNpc;
+    private Dictionary<string, DialogueData> dialogueDataDictionary = new Dictionary<string, DialogueData>();
     
     // 对话结束事件
     public event Action<string> OnDialogueEnd;
@@ -64,6 +66,9 @@ public class DialogueManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+        // 获取所有对话数据
+        InitDialogueDictionary();
     }
 
     private void Start()
@@ -74,6 +79,25 @@ public class DialogueManager : MonoBehaviour
         if (Instance == this)
         {
             Instance = null;
+        }
+    }
+    
+    private void InitDialogueDictionary()
+    {   
+        var dialogueArray = Resources.LoadAll<DialogueData>("ScriptableObjects/Dialogues");
+        foreach (var dialogueData in dialogueArray)
+        {
+            if (dialogueData != null && !string.IsNullOrEmpty(dialogueData.dialogueID))
+            {
+                if (!dialogueDataDictionary.ContainsKey(dialogueData.dialogueID))
+                {
+                    dialogueDataDictionary.Add(dialogueData.dialogueID, dialogueData);
+                }
+                else
+                {
+                    Debug.LogWarning($"重复的对话ID: {dialogueData.dialogueID}");
+                }
+            }
         }
     }
 
@@ -129,6 +153,7 @@ public class DialogueManager : MonoBehaviour
         if (string.IsNullOrEmpty(currentNodeID) )
         {
             currentDialogue.state = DialogueState.Finished;
+            
             EndDialogue();
             return;
         }
@@ -228,7 +253,7 @@ public class DialogueManager : MonoBehaviour
             // }
             // 在添加监听前先移除
             continueButton.onClick.RemoveAllListeners();
-            continueButton.onClick.AddListener(OnDialoguePanelClicked); ;
+            continueButton.onClick.AddListener(OnDialoguePanelClicked);
         }));
     }
     
@@ -317,10 +342,27 @@ public class DialogueManager : MonoBehaviour
     // 点击对话面板事件
     public void OnDialoguePanelClicked()
     {
-        // 跳过打字动画并显示完整文本
-        StopCoroutine(typingCoroutine);
-        isTyping = false;
-        currentDialogueText.text = currentDialogueNode.text;
+        // 如果正在打字，停止打字动画并显示完整文本，但不继续执行后续逻辑
+        if (isTyping)
+        {
+            // 停止打字协程
+            if (typingCoroutine != null)
+            {
+                StopCoroutine(typingCoroutine);
+                typingCoroutine = null;
+            }
+            
+            isTyping = false;
+            currentDialogueText.text = currentDialogueNode.text;
+            
+            // 执行打字完成后的逻辑（发布任务、提供奖励等）
+            ExecuteNodeCompletionLogic();
+            
+            // 停止执行，等待用户再次点击
+            return;
+        }
+        
+        // 如果打字已完成，继续处理选择或下一个节点
         if (currentDialogueNode.choices.Count > 0)
         {
             // 如果有选择，显示选择按钮
@@ -329,15 +371,41 @@ public class DialogueManager : MonoBehaviour
         }
         
         currentNodeID = currentDialogueNode.nextNodeID;
-        DisplayCurrentNode();
+        _ = DisplayCurrentNode();
+    }
+    
+    // 执行节点完成后的逻辑（任务发布、奖励提供等）
+    private void ExecuteNodeCompletionLogic()
+    {
+        // 发布任务
+        if (!string.IsNullOrEmpty(currentDialogueNode.questID))
+        {
+            Debug.Log($"发布任务: {currentDialogueNode.questID}");
+            QuestManager.Instance.StartQuest(currentDialogueNode.questID);
+        }
+        
+        //提供奖励
+        if (currentDialogueNode.rewardIDs.Count > 0)
+        {
+            foreach (string rewardID in currentDialogueNode.rewardIDs)
+            {
+                InventoryManager.Instance.AddItemById(rewardID);
+            }
+        }
+        
+        // 提供跟随
+        // if (currentNpc && currentDialogueNode.isFollow)
+        // {
+        //     currentNpc.FollowTargetPlayer();
+        // }
     }
     
     // 检查对话条件
     private bool CheckCondition()
     {
-        Debug.Log($"当前对话ID: {currentDialogue.dialogueID}");
-        Debug.Log($"当前对话节点ID: {currentDialogueNode.nodeID}");
-        Debug.Log($"当前对话条件类型: {currentDialogueNode.conditionType}");
+        // Debug.Log($"当前对话ID: {currentDialogue.dialogueID}");
+        // Debug.Log($"当前对话节点ID: {currentDialogueNode.nodeID}");
+        // Debug.Log($"当前对话条件类型: {currentDialogueNode.conditionType}");
         switch (currentDialogueNode.conditionType)
         {
             case DialogueConditionType.None:
@@ -437,7 +505,7 @@ public class DialogueManager : MonoBehaviour
         {
             string playerName = PlayerManager.Instance.player.playerData.playerName;
             currentDialogueNode.text = currentDialogueNode.text.Replace("{playerName}", playerName);
-            Debug.Log($"对话文本已设置: {currentDialogueText.text}");
+            // Debug.Log($"对话文本已设置: {currentDialogueText.text}");
         }
         catch (Exception e)
         {
@@ -456,15 +524,40 @@ public class DialogueManager : MonoBehaviour
         }
         
         // 从指定路径加载对话数据
-        DialogueData dialogue = Resources.Load<DialogueData>($"ScriptableObjects/Dialogues/{dialogueID}");
+        DialogueData dialogue = dialogueDataDictionary.GetValueOrDefault(dialogueID);
         
         if (dialogue == null)
         {
             Debug.LogWarning($"无法找到对话数据: {dialogueID}");
             return null;
         }
-        
         return dialogue;
+    }
+
+    public Dictionary<string, DialogueData> GetDialogueDataDictionary()
+    {
+        return dialogueDataDictionary;
+    }
+
+    public void LoadDialogueData(List<AsyncSaveLoadSystem.DialogueSaveData> dialogueSaveDatas)
+    {
+        foreach (var dialogueSaveData in dialogueSaveDatas)
+        {
+            var dialogue = dialogueDataDictionary[dialogueSaveData.dialogueID];
+            if (dialogue != null)
+            {
+                // 更新对话状态
+                dialogue.state = dialogueSaveData.dialogueState;
+                // 更新当前节点ID
+                dialogue.currentNodeID = dialogueSaveData.currentNodeID;
+                dialogueDataDictionary[dialogueSaveData.dialogueID] = dialogue;
+            }
+            else
+            {
+                Debug.LogWarning($"无法找到对话数据: {dialogueSaveData.dialogueID}");
+            }
+            
+        }
     }
     
     public bool IsDialogueFinished(string dialogueID)

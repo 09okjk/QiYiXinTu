@@ -4095,8 +4095,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 717ee04c0da0486596d1b8a279a302bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcGameObjectList: []
   npcPrefab: {fileID: 7864850018175732794, guid: 1ad5d14eee44aa846b1545cbfc37934b, type: 3}
+  initialPoolSize: 10
+  useObjectPool: 1
 --- !u!4 &1071374920
 Transform:
   m_ObjectHideFlags: 0
@@ -5031,6 +5032,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 2474861459886892633, guid: 806d474f9425bdc41abc0aed76787693, type: 3}
+  autoCreatePlayer: 1
   player: {fileID: 0}
 --- !u!1 &1402382466
 GameObject:

@@ -33,20 +33,10 @@ namespace UI
                 Destroy(gameObject);
                 return;
             }
-            
-            // 打开加载屏幕/黑屏，隐藏游戏场景
-            if (loadingScreen != null)
-            {
-                loadingScreen.SetActive(true);
-            }
         }
         
         private void Start()
         {
-            if (GameStateManager.Instance.GetFlag("StartAnimationFinished"))
-            {
-                return;
-            }
             // 设置视频播放器的播放速度
             videoPlayer.playbackSpeed = 1.0f;
             
@@ -75,6 +65,19 @@ namespace UI
                 GameUIManager.Instance.PlaySceneAnimation();
             }
             //videoPlayer.gameObject.SetActive(false); // 确保视频播放器初始状态为不激活
+            if (GameStateManager.Instance.GetFlag("StartAnimationFinished"))
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            gameObject.SetActive(true);
+            
+            // 打开加载屏幕/黑屏，隐藏游戏场景
+            if (loadingScreen != null)
+            {
+                loadingScreen.SetActive(true);
+            }
+            PlayVideo(0);
         }
         
         private void OnVideoPrepared(VideoPlayer source)

@@ -97,6 +97,29 @@ namespace News
             }
         }
 
+        public void ApplyNewsDatas(Dictionary<string,bool> newsDatas)
+        {
+            // 保存新闻数据到持久化存储
+            foreach (var newsData in newsDatas)
+            {
+                NewsData data = System.Array.Find(newsDataArray, n => n.newsID == newsData.Key);
+                if (data != null)
+                {
+                    data.isRead = newsData.Value; // 更新新闻的已读状态
+                }
+            }
+        }
+        
+        public Dictionary<string, bool> GetNewsDatas()
+        {
+            // 获取新闻数据的字典形式
+            Dictionary<string, bool> newsDataDict = new Dictionary<string, bool>();
+            foreach (var newsData in newsDataArray)
+            {
+                newsDataDict[newsData.newsID] = newsData.isRead; // 将新闻ID和已读状态添加到字典
+            }
+            return newsDataDict;
+        }
         
         # region 显示单个新闻
         public void OpenNewsInfo(string newsID)
