@@ -68,6 +68,11 @@ namespace News
             {
                 Debug.Log($"设置新闻数据: {data.newsID}");
                 newsData = data;
+                if (newsData.isRead)
+                {
+                    shadowImage.gameObject.SetActive(false); // 隐藏阴影效果
+                    gameObject.SetActive(false); // 如果新闻已读，隐藏按钮
+                }
             }
             else
             {
