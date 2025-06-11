@@ -34,6 +34,9 @@ public class DialogueManager : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource dialogueAudioSource; // 可选：对话音效
     
+    [Header("Game Pause Settings")]
+    [SerializeField] private bool pauseGameDuringDialogue = true; // 是否在对话期间暂停游戏
+    
     // 当前对话数据和节点索引
     private DialogueData currentDialogue;
     // 当前对话节点
@@ -52,8 +55,14 @@ public class DialogueManager : MonoBehaviour
     private NPC currentNpc;
     private Dictionary<string, DialogueData> dialogueDataDictionary = new Dictionary<string, DialogueData>();
     
+    // 游戏暂停相关
+    private float previousTimeScale;
+    private bool wasGamePaused = false;
+    
     // 对话结束事件
     public event Action<string> OnDialogueEnd;
+    // 对话开始事件
+    public event Action<string> OnDialogueStart;
     
     private void Awake()
     {
@@ -74,6 +83,7 @@ public class DialogueManager : MonoBehaviour
     private void Start()
     {
     }
+    
     private void OnDestroy()
     {
         if (Instance == this)
@@ -101,6 +111,67 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    #region 游戏暂停相关方法
+
+    /// <summary>
+    /// 暂停游戏
+    /// </summary>
+    private void PauseGame()
+    {
+        if (!pauseGameDuringDialogue) return;
+        
+        // 保存当前的时间缩放
+        previousTimeScale = Time.timeScale;
+        wasGamePaused = previousTimeScale == 0f;
+        
+        // 设置时间缩放为0来暂停游戏
+        Time.timeScale = 0f;
+        
+        // 暂停音频监听器（可选）
+        AudioListener.pause = true;
+        
+        Debug.Log("游戏已暂停 - 对话开始");
+    }
+
+    /// <summary>
+    /// 恢复游戏
+    /// </summary>
+    private void ResumeGame()
+    {
+        if (!pauseGameDuringDialogue) return;
+        
+        // 只有当游戏之前没有被暂停时才恢复
+        if (!wasGamePaused)
+        {
+            Time.timeScale = previousTimeScale;
+        }
+        
+        // 恢复音频监听器（可选）
+        AudioListener.pause = false;
+        
+        Debug.Log("游戏已恢复 - 对话结束");
+    }
+
+    /// <summary>
+    /// 设置是否在对话期间暂停游戏
+    /// </summary>
+    /// <param name="shouldPause">是否暂停</param>
+    public void SetPauseGameDuringDialogue(bool shouldPause)
+    {
+        pauseGameDuringDialogue = shouldPause;
+    }
+
+    /// <summary>
+    /// 检查游戏是否因对话而暂停
+    /// </summary>
+    /// <returns>是否暂停</returns>
+    public bool IsGamePausedByDialogue()
+    {
+        return pauseGameDuringDialogue && IsDialogueActive() && Time.timeScale == 0f;
+    }
+
+    #endregion
+
     // 开始对话，可选择性地添加完成回调
     public async Task StartDialogue(DialogueData dialogue, Action<bool> onComplete = null)
     {
@@ -126,6 +197,12 @@ public class DialogueManager : MonoBehaviour
         {
             currentNodeID = currentDialogue.currentNodeID;
         }
+        
+        // 暂停游戏
+        PauseGame();
+        
+        // 触发对话开始事件
+        OnDialogueStart?.Invoke(currentDialogue.dialogueID);
         
         dialoguePanel.SetActive(true);
         await DisplayCurrentNode();
@@ -275,7 +352,9 @@ public class DialogueManager : MonoBehaviour
                 dialogueAudioSource.Play();
             }
             
-            yield return new WaitForSeconds(typewriterSpeed);
+            // 使用 WaitForSecondsRealtime 而不是 WaitForSeconds
+            // 这样即使 Time.timeScale = 0，打字效果仍然可以正常工作
+            yield return new WaitForSecondsRealtime(typewriterSpeed);
         }
         
         isTyping = false;
@@ -479,6 +558,10 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         dialoguePanel.SetActive(false);
+        
+        // 恢复游戏
+        ResumeGame();
+        
         // 对话结束时的回调或事件
         OnDialogueEnd?.Invoke(currentDialogue.dialogueID);// 全局事件
         
@@ -497,7 +580,6 @@ public class DialogueManager : MonoBehaviour
     {
         return dialoguePanel.activeSelf;
     }
-    
 
     private void CurrentDialogueTextCheck()
     {
@@ -564,4 +646,32 @@ public class DialogueManager : MonoBehaviour
     {
         return GetDialogueData(dialogueID)?.state == DialogueState.Finished;
     }
+
+    #region 应急恢复方法
+
+    /// <summary>
+    /// 强制结束对话并恢复游戏（应急使用）
+    /// </summary>
+    [ContextMenu("强制结束对话")]
+    public void ForceEndDialogue()
+    {
+        if (IsDialogueActive())
+        {
+            Debug.LogWarning("强制结束对话");
+            EndDialogue();
+        }
+    }
+
+    /// <summary>
+    /// 强制恢复游戏时间（应急使用）
+    /// </summary>
+    [ContextMenu("强制恢复游戏时间")]
+    public void ForceResumeGame()
+    {
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+        Debug.LogWarning("强制恢复游戏时间");
+    }
+
+    #endregion
 }
