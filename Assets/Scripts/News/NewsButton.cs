@@ -8,6 +8,7 @@ namespace News
         public string newsID;
         public Button newsButton;
         public Image shadowImage; // 用于显示按钮的阴影效果
+        private NewsData newsData;
         
         private void Awake()
         {
@@ -41,7 +42,12 @@ namespace News
             // 确保NewsManager实例存在
             if (NewsManager.Instance != null)
             {
-                NewsManager.Instance.OpenNewsInfo(newsID);
+                if (newsData == null)
+                {
+                    Debug.LogError("新闻数据未设置，无法打开新闻信息");
+                    return;
+                }
+                NewsManager.Instance.OpenNewsInfo(newsData);
                 shadowImage.gameObject.SetActive(false);
                 gameObject.SetActive(false); // 隐藏按钮
             }
@@ -51,10 +57,22 @@ namespace News
             }
         }
         
-        // 添加手动测试方法，可以从Inspector中调用
-        public void TestButtonClick()
+        public void SetNewsData(NewsData data)
         {
-            OnNewsButtonClicked();
+            if (newsData == null)
+            {
+                return;
+            }
+            
+            if(newsID == data.newsID)
+            {
+                Debug.Log($"设置新闻数据: {data.newsID}");
+                newsData = data;
+            }
+            else
+            {
+                Debug.LogError("新闻ID不匹配: " + newsID + " != " + data.newsID);
+            }
         }
     }
 }
