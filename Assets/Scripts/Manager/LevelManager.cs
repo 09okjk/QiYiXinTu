@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using News;
 using Save;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,7 @@ namespace Manager
         [SerializeField] private GameObject playerPoint; // 玩家出生点
         [SerializeField] private List<GameObject> npcsPoints; // NPC出生点列表
         [SerializeField] private List<GameObject> enemyPoints; // 敌人出生点列表
+        [SerializeField] private List<NewsButton> newsObjects; // 新闻按钮列表
         [SerializeField] private GameObject startAinimation; // 开场动画对象
         // [SerializeField] private List<GameObject> nextLevelPoints; // 下一关卡传送点列表
         
@@ -194,6 +196,9 @@ namespace Manager
             // 步骤4: 生成敌人（如果需要）
             yield return StartCoroutine(SpawnEnemies());
             
+            // 步骤5: 生成新闻物体
+            yield return StartCoroutine(SpawnNewsObjects());
+            
             // 标记初始化完成
             isLevelInitialized = true;
             Debug.Log($"关卡 {levelName} 初始化完成");
@@ -339,6 +344,31 @@ namespace Manager
             }
             
             Debug.Log("敌人生成完成");
+        }
+
+        /// <summary>
+        /// 生成新闻物体
+        /// </summary>
+        private IEnumerator SpawnNewsObjects()
+        {
+            if (newsObjects == null || newsObjects.Count == 0)
+            {
+                Debug.Log($"关卡 {levelName} 中没有新闻物体");
+                yield break;
+            }
+            
+            Debug.Log($"开始生成 {newsObjects.Count} 个新闻物体");
+
+            foreach (var newsObject in newsObjects)
+            {
+                var news = NewsManager.Instance.GetNewsByID(newsObject.newsID);
+                if (news == null)
+                {
+                    Debug.LogWarning($"未找到新闻ID: {newsObject.newsID}");
+                    continue;
+                }
+                newsObject.SetNewsData(news);
+            }
         }
 
         /// <summary>

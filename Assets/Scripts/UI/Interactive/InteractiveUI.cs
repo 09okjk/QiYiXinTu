@@ -18,13 +18,14 @@ namespace UI
     
     public class InteractiveUI:MonoBehaviour
     {
+        public string interactionName; // 交互名称
         public SpriteRenderer interactImage; // 交互按钮
         public InteractionType interactionType = InteractionType.None; // 交互类型
-        public string interactionValue; // 交互值
-
+        public string interactionValue; // 交互后触发值
+        private bool isActive = true; // 是否激活交互
         protected virtual void Awake()
         {
-            
+            isActive = GameStateManager.Instance.GetFlag("CanInteract_" + interactionName);
         }
 
         protected virtual void Start()
@@ -34,6 +35,8 @@ namespace UI
 
         protected virtual void Update()
         {
+            if(!isActive)
+                gameObject.SetActive(false); // 如果交互按钮被禁用，则隐藏它
         }
 
         protected virtual void OnTriggerEnter2D(Collider2D other)
@@ -53,10 +56,17 @@ namespace UI
                 interactImage.gameObject.SetActive(false);
             }
         }
+        
+        protected void SetActive(bool active)
+        {
+            isActive = active;
+            GameStateManager.Instance.SetFlag("CanInteract_" + interactionName, active);
+        }
 
         protected void OnInteractButtonClicked()
         {
             interactImage.gameObject.SetActive(false); // 隐藏交互按钮
+            SetActive(false); // 禁用交互按钮
             switch (interactionType)
             {
                 case InteractionType.Talk:
