@@ -432,6 +432,9 @@ MonoBehaviour:
   interactionIndicator: {fileID: 7758635968017876781}
   canInteract: 1
   dialogueIDs: []
+  specialScenes:
+  - outside1
+  dialogueConfig: {fileID: 0}
 --- !u!61 &512005600884524315
 BoxCollider2D:
   m_ObjectHideFlags: 0

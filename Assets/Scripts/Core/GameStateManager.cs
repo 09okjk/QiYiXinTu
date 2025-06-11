@@ -30,6 +30,11 @@ public class GameStateManager : MonoBehaviour
         // 初始化游戏状态标志
         gameFlags["FirstEntry_"+ "女生宿舍"] = true; // 假设女生宿舍是第一个关卡
         gameFlags["CanInteract_"+"LuSleep"] = true; // LuSleep是一个对象的交互标志
+        gameFlags["CanInteract_"+"shi_dialogue"] = true; // LuSleep是一个对象的交互标志
+        gameFlags["CanInteract_"+"li_dialogue"] = true; // LuSleep是一个对象的交互标志
+        gameFlags["CanInteract_"+"zhang_dialogue"] = true; // LuSleep是一个对象的交互标志
+        gameFlags["CanInteract_"+"xiao_dialogue"] = true; // LuSleep是一个对象的交互标志
+        gameFlags["CanInteract_"+"rift_1955_dialogue"] = true; // LuSleep是一个对象的交互标志
         gameFlags["FirstEntry_" + "outside1"] = true; // 假设outside1是第二个关卡
     }
 

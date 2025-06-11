@@ -22,13 +22,16 @@ EditorBuildSettings:
     guid: 95fef63e60b28dc46ac8c1defee16c67
   - enabled: 1
     path: Assets/Scenes/In_LiDe.unity
-    guid: f8b4b8b6824b16148bdaeffc32f932f6
+    guid: 575d8b88b72e7c641b3579aa228c750f
   - enabled: 1
     path: Assets/Scenes/In_LiDe_2.unity
-    guid: 7cff53e63c6a0854495ecdb207b8d820
+    guid: d2164965c6f2ea54f983fff6b8b47a6d
   - enabled: 1
     path: Assets/Scenes/In_LiDe_3.unity
-    guid: 9d5a7434f13506d46803f3539f33b3d4
+    guid: 81e24a25f65bccb43bd3f6dcb2607a81
+  - enabled: 1
+    path: Assets/Scenes/Space_Time.unity
+    guid: fdda6cad88c47f641b1c070f4c4d7a00
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: lu_first_dialogue
   state: 2
-  currentNodeID: node001
+  currentNodeID: node008
   nodes:
   - nodeID: node001
     text: "\u54CE\u2014\u2014\uFF1F\uFF1F\uFF01\u4ECE\u5929\u800C\u964D\u7684\u5723\u8BDE\u8001\u2026\u2026\u67E5\u5BDD\u8001\u5E08\uFF1F\uFF1F"

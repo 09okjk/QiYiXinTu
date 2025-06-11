@@ -51,10 +51,10 @@ public class GameManager : MonoBehaviour
         gameStarted = false;
         
         // 初始时隐藏加载屏幕
-        if (loadingScreen != null)
-        {
-            loadingScreen.SetActive(false);
-        }
+        // if (loadingScreen != null)
+        // {
+        //     loadingScreen.SetActive(false);
+        // }
     }
     
     private void Update()

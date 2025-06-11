@@ -192,7 +192,7 @@ public class NPC : Entity
 
     private IEnumerator DelayedEventSubscription()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.01f);
         SubscribeToEvents();
     }
 
@@ -211,6 +211,8 @@ public class NPC : Entity
                 DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
                 hasSubscribedToEvents = true;
                 Debug.Log($"NPC {npcData?.npcID} 成功订阅对话事件");
+                if(SceneManager.GetActiveScene().name == "女生宿舍")
+                    OnDialogueEnd("lu_first_dialogue");
             }
             else
             {

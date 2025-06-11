@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: shi_dialogue
   state: 2
-  currentNodeID: node001
+  currentNodeID: node002
   nodes:
   - nodeID: node001
     text: "\u5947\u5F02\u73B0\u8C61\uFF1F\u65F6\u7A7A\u88C2\u7F1D\uFF1F\u4F60\u5728\u8BF4\u4EC0\u4E48\uFF01\u6211\u53EF\u662F\u575A\u5B9A\u7684\u552F\u7269\u4E3B\u4E49......\u800C\u4E14\u5C31\u7B97\u771F\u771F\u3001\u771F\u6709\u602A\u7269\u6211\u6211\u6211\u6211\u4E5F\u2014\u2014"

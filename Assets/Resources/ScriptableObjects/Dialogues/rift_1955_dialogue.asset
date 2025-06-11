@@ -289,9 +289,9 @@ MonoBehaviour:
   - nodeID: node020
     text: ......
     speaker:
-      speakerID: all
-      speakerName: "\u4F17\u4EBA"
-      speakerType: 1
+      speakerID: System
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
       emotion: 0
     nextNodeID: 
     choices:

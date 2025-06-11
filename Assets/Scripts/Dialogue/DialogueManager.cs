@@ -278,7 +278,7 @@ public class DialogueManager : MonoBehaviour
                 break;
             case SpeakerType.NpcNotice:
             case SpeakerType.Npc:
-                currentNpc = NPCManager.Instance.GetNpc(currentDialogueNode.speaker.speakerID);
+                // currentNpc = NPCManager.Instance.GetNpc(currentDialogueNode.speaker.speakerID);
                 nPCNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
                 currentDialogueText = nPCDialogueText;
                 nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerName}_{currentDialogueNode.speaker.emotion.ToString()}");

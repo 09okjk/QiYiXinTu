@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: lide_dialogue
   state: 2
-  currentNodeID: node001
+  currentNodeID: node007
   nodes:
   - nodeID: node001
     text: "\u600E\u4E48\u5566\uFF1F"
@@ -105,7 +105,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node007
-    text: "\u4ECA\u5929\u4E5F\u591A\u5E26\u4F60\u901B\u4E00\u901B\u6821\u56ED\u5427\uFF0C\u5982\u679C\u7559\u610F\u5230\u6821\u56ED\u91CC\u53D1\u751F\u7684\u6709\u8DA3\u65B0\u95FB\u9EBB\u70E6{playerName}\u63D0\u9192\u6211\u54E6\uFF01"
+    text: "\u4ECA\u5929\u4E5F\u591A\u5E26\u4F60\u901B\u4E00\u901B\u6821\u56ED\u5427\uFF0C\u5982\u679C\u7559\u610F\u5230\u6821\u56ED\u91CC\u53D1\u751F\u7684\u6709\u8DA3\u65B0\u95FB\u9EBB\u70E6123\u63D0\u9192\u6211\u54E6\uFF01"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"

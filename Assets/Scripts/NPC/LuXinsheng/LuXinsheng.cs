@@ -238,7 +238,11 @@ public class LuXinsheng : NPC
     {
         base.OnDialogueEnd(dialogueID);
         
-        if (dialogueConfig == null) return;
+        if (dialogueConfig == null)
+        {
+            Debug.LogWarning("对话配置未加载，无法处理对话结束");
+            return;
+        }
 
         try
         {

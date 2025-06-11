@@ -537,6 +537,16 @@ namespace Manager
                 }
                 GameStateManager.Instance.SetFlag("FirstEntry_" + levelName, false);
             }
+
+            if (SceneManager.GetActiveScene().name == "In_LiDe")
+            {
+                DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
+            }
+
+            if (SceneManager.GetActiveScene().name == "Space_Time")
+            {
+                DialogueManager.Instance.StartDialogueByID("rift_1955_dialogue");
+            }
         }
 
         /// <summary>

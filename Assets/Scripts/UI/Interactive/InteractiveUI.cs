@@ -22,7 +22,7 @@ namespace UI
         public SpriteRenderer interactImage; // 交互按钮
         public InteractionType interactionType = InteractionType.None; // 交互类型
         public string interactionValue; // 交互后触发值
-        private bool isActive = true; // 是否激活交互
+        public bool isActive = true; // 是否激活交互
         protected virtual void Awake()
         {
             isActive = GameStateManager.Instance.GetFlag("CanInteract_" + interactionName);
