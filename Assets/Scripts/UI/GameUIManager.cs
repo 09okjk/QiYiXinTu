@@ -43,7 +43,7 @@ public class GameUIManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -54,7 +54,8 @@ public class GameUIManager : MonoBehaviour
     private void Start()
     {
         // 不显示游戏UI
-        gameUIPanel.SetActive(false);
+        if (SceneManager.GetActiveScene().name == "女生宿舍")
+            gameUIPanel.SetActive(false);
         luSleepAnimator.gameObject.SetActive(false);
         luWeekUpAnimator.gameObject.SetActive(false);
         
@@ -169,7 +170,7 @@ public class GameUIManager : MonoBehaviour
         if (luWeekUpAnimator != null)
         {
             luWeekUpAnimator.gameObject.SetActive(false);
-            NPCManager.Instance.GetNpc("LuXinsheng").ActivateNpc();
+            NPCManager.Instance.GetNPC("LuXinsheng").ActivateNpc();
         }
         else
         {

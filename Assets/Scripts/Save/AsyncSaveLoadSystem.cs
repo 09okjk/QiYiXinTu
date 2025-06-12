@@ -165,20 +165,7 @@ namespace Save
         {
             try
             {
-                // 显示加载屏幕（用于保存）
-                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-                {
-                    GameManager.Instance.ShowLoadingScreen("正在保存游戏...");
-                }
-                
-                progress?.Report(0f);
                 OnSaveProgress?.Invoke(0f);
-                
-                // 更新UI
-                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-                {
-                    GameManager.Instance.UpdateLoadingProgress(0f, "正在保存游戏...");
-                }
             
                 // 确保目录存在
                 if (!Directory.Exists(SaveDirectory))
@@ -186,35 +173,21 @@ namespace Save
                     Directory.CreateDirectory(SaveDirectory);
                 }
 
-                progress?.Report(0.1f);
                 OnSaveProgress?.Invoke(0.1f);
-                
-                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-                {
-                    GameManager.Instance.UpdateLoadingProgress(0.1f, "收集游戏数据...");
-                }
 
                 // 创建保存数据（可能耗时）
                 SaveData saveData = await CreateSaveDataAsync(progress, slotIdx);
             
-                progress?.Report(0.8f);
                 OnSaveProgress?.Invoke(0.8f);
-                
-                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-                {
-                    GameManager.Instance.UpdateLoadingProgress(0.8f, "写入存档文件...");
-                }
 
                 // 写入文件
                 string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
                 bool success = await WriteSaveFileAsync(saveData, savePath);
             
-                progress?.Report(1f);
                 OnSaveProgress?.Invoke(1f);
                 
                 if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
                 {
-                    GameManager.Instance.UpdateLoadingProgress(1f, success ? "保存完成！" : "保存失败！");
                     await Task.Delay(500); // 显示结果一段时间
                     GameManager.Instance.HideLoadingScreen();
                 }
@@ -228,7 +201,6 @@ namespace Save
                 
                 if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
                 {
-                    GameManager.Instance.UpdateLoadingProgress(1f, "保存失败！");
                     await Task.Delay(1000);
                     GameManager.Instance.HideLoadingScreen();
                 }
@@ -383,7 +355,7 @@ namespace Save
                 {
                     GameManager.Instance.UpdateLoadingProgress(0.5f, "应用游戏数据...");
                 }
-
+                Debug.Log($"saveData.GameStateSaveData.flags[FirstEntry_女生宿舍]: {saveData.GameStateSaveData.flags["FirstEntry_女生宿舍"]}");
                 // 应用数据
                 await ApplySaveDataAsync(saveData, progress);
             
@@ -480,9 +452,13 @@ namespace Save
                 }
                 
                 AsyncOperation sceneLoad;
-             
-                if (SceneManager.GetActiveScene().name == "MainMenu")
+
+                GameStateManager.Instance.SetFlag("UseSaveLoadingScene", true);
+                if (SceneManager.GetActiveScene().name == "MainMenu" && saveData.GameStateSaveData.flags["FirstEntry_女生宿舍"])
+                {
+                    Debug.Log($"加载女生宿舍场景，Scene.name:{SceneManager.GetActiveScene().name}, FirstEntry_女生宿舍: {GameStateManager.Instance.GetFlag("FirstEntry_女生宿舍")}");
                     sceneLoad = SceneManager.LoadSceneAsync("女生宿舍");
+                }
                 else
                     sceneLoad = SceneManager.LoadSceneAsync(saveData.currentSceneName);
             

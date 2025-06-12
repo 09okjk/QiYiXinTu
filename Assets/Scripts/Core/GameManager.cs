@@ -211,7 +211,6 @@ public class GameManager : MonoBehaviour
                 break;
             case "outside1":
                 // 触发开场对话
-                DialogueManager.Instance.StartDialogueByID("lide_dialogue");
                 break;
             case "outside1_1":
                 break;

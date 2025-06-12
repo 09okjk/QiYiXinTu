@@ -369,21 +369,6 @@ public class MenuManager : MonoBehaviour
         #endif
     }
     
-    // 开始新游戏
-    public async void StartNewGame()
-    {
-        try
-        {
-            // 重置游戏数据
-            await SceneManager.LoadSceneAsync("女生宿舍");
-            GameManager.Instance.OnGameEvent("GameStarted");
-        }
-        catch (Exception e)
-        {
-            throw; 
-        }
-    }
-    
     // 检测是否有UI面板打开
     public bool IsAnyPanelOpen()
     {

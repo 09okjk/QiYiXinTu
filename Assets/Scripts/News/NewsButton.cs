@@ -8,7 +8,7 @@ namespace News
         public string newsID;
         public Button newsButton;
         public Image shadowImage; // 用于显示按钮的阴影效果
-        private NewsData newsData;
+        public NewsData newsData;
         
         private void Awake()
         {

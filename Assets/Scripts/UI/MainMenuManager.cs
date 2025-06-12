@@ -141,11 +141,5 @@ namespace UI
             InitButtonAnimatior();
             gameObject.SetActive(true);
         }
-        public void EnterGame()
-        {
-            // 如果有存档，则继续游戏
-            // if ()
-            MenuManager.Instance.StartNewGame();
-        }
     }
 }

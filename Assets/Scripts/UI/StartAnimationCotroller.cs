@@ -77,7 +77,7 @@ namespace UI
             {
                 loadingScreen.SetActive(true);
             }
-            PlayVideo(0);
+            //PlayVideo(0);
         }
         
         private void OnVideoPrepared(VideoPlayer source)

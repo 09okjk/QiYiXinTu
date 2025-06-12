@@ -237,7 +237,7 @@ namespace Manager
             string oldName = player.playerData.playerName;
             player.playerData.playerName = newName;
             
-            Debug.Log($"玩家名称从 '{oldName}' 更改为 '{newName}'");
+            Debug.Log($"玩家名称从 '{oldName}' 更改为 '{player.playerData.playerName}'");
             
             // 触发相关对话
             TriggerNameChangeDialogue();

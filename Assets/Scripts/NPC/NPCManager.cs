@@ -143,7 +143,7 @@ public class NPCManager : MonoBehaviour
 
         foreach (var npcData in allNpcDataList)
         {
-            if (npcData != null && npcData.sceneName == currentSceneName)
+            if (npcData != null && npcData.sceneName == currentSceneName || npcData.sceneName == "AllScenes")
             {
                 currentSceneNPCs.Add(npcData);
             }

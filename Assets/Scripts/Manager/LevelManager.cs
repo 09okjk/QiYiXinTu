@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using News;
 using Save;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -159,10 +160,20 @@ namespace Manager
         private void TryInitializeLevel()
         {
             // 只有当数据和场景都加载完成且未初始化时才进行初始化
-            if (isDataLoaded && isSceneLoaded && !isLevelInitialized)
+            if (isDataLoaded  && isSceneLoaded && !isLevelInitialized)
             {
                 // 添加小延迟确保所有组件都已准备就绪
                 StartCoroutine(DelayedInitLevel());
+            }
+            else
+            {
+                // 如果未使用保存加载场景，则直接延迟初始化
+                if (!GameStateManager.Instance.GetFlag("UseSaveLoadingScene"))
+                {
+                    // 添加小延迟确保所有组件都已准备就绪
+                    StartCoroutine(DelayedInitLevel());
+                }
+                Debug.Log($"关卡 {levelName} 尚未准备好进行初始化: 数据加载={isDataLoaded}, 场景加载={isSceneLoaded}, 已初始化={isLevelInitialized}");
             }
         }
 
@@ -417,7 +428,7 @@ namespace Manager
                     string npcId = npcPoint.name;
                     Debug.Log($"生成NPC: {npcId} 在位置: {npcPoint.transform.position}");
                     
-                    NPCManager.Instance.ShowNpc(npcId, npcPoint);
+                    NPCManager.Instance.ShowNPC(npcId, npcPoint);
                     
                     // 更新进度（如果正在显示加载屏幕）
                     if (showLoadingScreen && GameManager.Instance != null && GameManager.Instance.IsLoadingScreenActive())
@@ -523,10 +534,13 @@ namespace Manager
         /// <summary>
         /// 关卡初始化完成回调
         /// </summary>
-        private void OnLevelInitialized()
+        private async void OnLevelInitialized()
         {
             // 可以在这里添加初始化完成后的逻辑
             Debug.Log($"关卡 {levelName} 完全初始化完成");
+            
+            // 将UseSaveLoadingScene标志设置为默认的false
+            GameStateManager.Instance.SetFlag("UseSaveLoadingScene",false);
             
             // 如果是第一次进入，设置对应的标志
             if (GameStateManager.Instance != null)
@@ -537,16 +551,31 @@ namespace Manager
                 }
                 GameStateManager.Instance.SetFlag("FirstEntry_" + levelName, false);
             }
+            
+            var isSave =await AsyncSaveLoadSystem.SaveGameAsync(0);
 
-            if (SceneManager.GetActiveScene().name == "In_LiDe")
+            if (isSave)
             {
-                DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
+                if (levelName == "女生宿舍")
+                {
+                    StartAnimationCotroller.Instance.PlayVideo(0);
+                }
+                if (levelName == "outside1")
+                {
+                    DialogueManager.Instance.StartDialogueByID("lide_dialogue");
+                }
+
+                if (levelName == "In_LiDe")
+                {
+                    DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
+                }
+
+                if (levelName == "Space_Time")
+                {
+                    DialogueManager.Instance.StartDialogueByID("rift_1955_dialogue");
+                }
             }
 
-            if (SceneManager.GetActiveScene().name == "Space_Time")
-            {
-                DialogueManager.Instance.StartDialogueByID("rift_1955_dialogue");
-            }
         }
 
         /// <summary>

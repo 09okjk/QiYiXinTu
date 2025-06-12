@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa9729b0c5174d399b8cd7f64f8da848, type: 3}
+  m_Name: fight_jiaolv
+  m_EditorClassIdentifier: 
+  questID: fight_jiaolv
+  questName: "\u5F00\u53D1\u8F6F\u4EF6"
+  questConditionType: 0
+  conditionValue: 
+  questText: "\u4F7F\u7528\u653B\u51FB\u6280\u80FD\u51FB\u5012\u7126\u8651\u5B9E\u4F53\u3002"
+  nextQuestID: 
+  isCompleted: 0
