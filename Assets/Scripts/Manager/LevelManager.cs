@@ -448,7 +448,6 @@ namespace Manager
                     Debug.LogWarning("发现空的NPC出生点引用");
                 }
             }
-            
             Debug.Log("NPC生成完成");
         }
 
@@ -591,6 +590,11 @@ namespace Manager
                     GameStateManager.Instance.SetFlag("CanEnter_outside1", true);
                     Debug.Log("女生宿舍对话完成，设置outside1可进入标志");
                 }
+            }
+
+            if (dialogueID == "fang_dialogue")
+            {
+                GameStateManager.Instance.SetFlag("CanEnter_"+"In_LiDe", true);
             }
         }
 

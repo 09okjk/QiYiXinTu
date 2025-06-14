@@ -735,7 +735,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &85504585
 Transform:
   m_ObjectHideFlags: 0
@@ -975,7 +975,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &116208701
 Transform:
   m_ObjectHideFlags: 0
@@ -2377,7 +2377,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &241939846
 Transform:
   m_ObjectHideFlags: 0
@@ -3600,7 +3600,7 @@ GameObject:
   - component: {fileID: 348403800}
   - component: {fileID: 348403802}
   - component: {fileID: 348403801}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Interactive_Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5633,6 +5633,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &578084989
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 578084990}
+  m_Layer: 6
+  m_Name: LuXinsheng
+  m_TagString: NPCPoint
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &578084990
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578084989}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.11, y: -0.39, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &598035479
 GameObject:
   m_ObjectHideFlags: 0
@@ -5643,7 +5674,7 @@ GameObject:
   m_Component:
   - component: {fileID: 598035480}
   - component: {fileID: 598035481}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Notice_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9516,7 +9547,7 @@ GameObject:
   - component: {fileID: 1354622502}
   - component: {fileID: 1354622504}
   - component: {fileID: 1354622503}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: animator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9548,7 +9579,7 @@ Animator:
   m_GameObject: {fileID: 1354622501}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ae7438da177eb32448efeb106bf232b9, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1dd0dba71360875428e0c903bedf9c4e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -13634,7 +13665,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1996234023}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: FangHuaiGu
   m_TagString: NPC
   m_Icon: {fileID: 0}
@@ -14142,6 +14173,7 @@ MonoBehaviour:
   interactionType: 6
   interactionValue: In_LiDe_Trigger
   isActive: 1
+  nextLevelGameObject: {fileID: 1748469451}
 --- !u!1001 &2080207028
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15106,3 +15138,4 @@ SceneRoots:
   - {fileID: 668898776}
   - {fileID: 646560168}
   - {fileID: 1996234023}
+  - {fileID: 578084990}

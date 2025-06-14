@@ -45,6 +45,8 @@ namespace UI
                     boxCollider.enabled = false; // 禁用碰撞体，防止重复触发
                     GameStateManager.Instance.SetPlayerPointType(nextScenePointType);
                     GameStateManager.Instance.SetFlag("FirstEntry_" + SceneManager.GetActiveScene().name, false);
+                    // 触发场景切换前的事件
+                    GameManager.Instance.TriggerSceneChangeEvent(SceneManager.GetActiveScene().name);
                     // await AsyncSaveLoadSystem.SaveGameAsync(0);
                     // 触发场景切换逻辑
                     GameManager.Instance.LoadScene(nextSceneName);

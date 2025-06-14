@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     // 加载进度事件
     public static event Action<float> OnLoadingProgress;
     public static event Action<string> OnLoadingStatusChanged;
+    public static event Action<string> OnBeforeLevelChange;
     
     private void Awake()
     {
@@ -194,7 +195,8 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // 隐藏加载界面
-        HideLoadingScreen();
+        if (scene.name == "MainMenu")
+            HideLoadingScreen();
         InitializeScene(scene.name);
     }
     
@@ -215,7 +217,6 @@ public class GameManager : MonoBehaviour
             case "outside1_1":
                 break;
             case "In_LiDe":
-                DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
                 break;
             case "Scene 4":
                 break;
@@ -245,6 +246,15 @@ public class GameManager : MonoBehaviour
                 
             // 根据需要添加更多事件
         }
+    }
+    
+    public void TriggerSceneChangeEvent(string sceneName)
+    {
+        // 在切换场景前触发事件
+        OnBeforeLevelChange?.Invoke(sceneName);
+        
+        // 这里可以添加其他需要在场景切换前执行的逻辑
+        Debug.Log($"触发场景切换事件: {sceneName}");
     }
     
     // 加载最近的保存

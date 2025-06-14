@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: fight_over_dialogue
   m_EditorClassIdentifier: 
   dialogueID: fight_over_dialogue
-  state: 2
+  state: 0
   currentNodeID: node005
   nodes:
   - nodeID: node001

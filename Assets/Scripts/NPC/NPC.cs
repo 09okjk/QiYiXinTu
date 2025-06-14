@@ -204,6 +204,7 @@ public class NPC : Entity
     {
         if (hasSubscribedToEvents) return;
 
+        GameManager.OnBeforeLevelChange += OnBeforeLevelChange;
         try
         {
             if (DialogueManager.Instance != null)
@@ -249,6 +250,7 @@ public class NPC : Entity
 
     private void UnsubscribeFromEvents()
     {
+        GameManager.OnBeforeLevelChange -= OnBeforeLevelChange;
         try
         {
             if (hasSubscribedToEvents && DialogueManager.Instance != null)
@@ -282,7 +284,14 @@ public class NPC : Entity
             // 初始化跟随状态
             if (!isFollowing)
             {
-                StopFollowing();
+                if(GameStateManager.Instance.GetFlag("Following_" + npcData.npcID))
+                {
+                    FollowTargetPlayer();
+                }
+                else
+                {
+                    StopFollowing();
+                }
             }
         }
         catch (Exception e)
@@ -488,6 +497,15 @@ public class NPC : Entity
 
     #region 跟随系统
 
+    private void OnBeforeLevelChange(string sceneName)
+    {
+        // 记录NPC跟随状态
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.SetFlag("Following_" + npcData?.npcID, isFollowing);
+        }
+    }
+    
     private bool ShouldFollowPlayer()
     {
         if (!isFollowing || playerTransform == null) return false;

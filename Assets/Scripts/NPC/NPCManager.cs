@@ -261,12 +261,15 @@ public class NPCManager : MonoBehaviour
 
             // 设置NPC位置
             SetNPCPosition(npcObject, npcPoint, npcData);
+            Debug.Log($"NPC {npcID} 位置设置完成");
             
             // 配置NPC组件
             ConfigureNPCComponent(npcObject, npcData);
+            Debug.Log($"NPC {npcID} 组件配置完成");
             
             // 激活NPC
             ActivateNPC(npcObject, npcData);
+            Debug.Log($"NPC {npcID} 激活完成");
             
             return true;
         }
@@ -307,7 +310,12 @@ public class NPCManager : MonoBehaviour
     private void SetNPCPosition(GameObject npcObject, GameObject npcPoint, NPCData npcData)
     {
         var npc = npcObject.GetComponent<NPC>();
-        
+        if (npc == null)
+        {
+            Debug.LogError($"NPC对象 {npcData.npcID} 上未找到NPC组件");
+            return;
+        }
+        npc.isFollowing = GameStateManager.Instance.GetFlag("Following_" + npcData.npcID);
         if (npc != null && npc.isFollowing)
         {
             // 跟随玩家的NPC
@@ -315,7 +323,7 @@ public class NPCManager : MonoBehaviour
         }
         else if (npcPoint != null)
         {
-            // 固定位置的NPC
+            // 设置到指定的NPC点位置
             npcObject.transform.position = npcPoint.transform.position;
             Debug.Log($"NPC {npcData.npcID} 设置到位置: {npcPoint.transform.position}");
         }
@@ -537,22 +545,6 @@ public class NPCManager : MonoBehaviour
     public void DebugShowPoolStatus()
     {
         Debug.Log($"对象池大小: {npcPool.Count}");
-    }
-
-    #endregion
-
-    #region 兼容性方法 (保持API兼容)
-
-    [System.Obsolete("使用 ShowNPC 代替")]
-    public void ShowNpc(string npcID, GameObject npcPoint)
-    {
-        ShowNPC(npcID, npcPoint);
-    }
-
-    [System.Obsolete("使用 GetNPC 代替")]
-    public NPC GetNpc(string npcID)
-    {
-        return GetNPC(npcID);
     }
 
     #endregion

@@ -28,14 +28,42 @@ public class GameStateManager : MonoBehaviour
     private void InitializeGameFlags()
     {
         // 初始化游戏状态标志
+
+        #region 场景切换触发器-Flag
+        
+        gameFlags["CanEnter_"+ "outside1_1"] = true; // 假设outside1_1是一个场景
+        gameFlags["CanEnter_"+ "In_LiDe_2"] = true; 
+        gameFlags["CanEnter_"+ "In_LiDe_3"] = true; 
+
+        #endregion
+
+        #region 第一次进入关卡-Flag
+
         gameFlags["FirstEntry_"+ "女生宿舍"] = true; // 假设女生宿舍是第一个关卡
-        gameFlags["CanInteract_"+"LuSleep"] = true; // LuSleep是一个对象的交互标志
-        gameFlags["CanInteract_"+"shi_dialogue"] = true; // LuSleep是一个对象的交互标志
-        gameFlags["CanInteract_"+"li_dialogue"] = true; // LuSleep是一个对象的交互标志
-        gameFlags["CanInteract_"+"zhang_dialogue"] = true; // LuSleep是一个对象的交互标志
-        gameFlags["CanInteract_"+"xiao_dialogue"] = true; // LuSleep是一个对象的交互标志
-        gameFlags["CanInteract_"+"rift_1955_dialogue"] = true; // LuSleep是一个对象的交互标志
         gameFlags["FirstEntry_" + "outside1"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "outside1_1"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "In_LiDe"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "In_LiDe_2"] = true; // 假设outside1是第二个关卡
+        
+        #endregion
+
+        #region 对话触发器—Flag
+
+        gameFlags["CanInteract_"+"fang_dialogue"] = true; 
+        gameFlags["CanInteract_"+"shi_dialogue"] = true; 
+        gameFlags["CanInteract_"+"li_dialogue"] = true; 
+        gameFlags["CanInteract_"+"zhang_dialogue"] = true; 
+        gameFlags["CanInteract_"+"xiao_dialogue"] = true; 
+        gameFlags["CanInteract_"+"rift_1955_dialogue"] = true; 
+
+        #endregion
+
+        #region 特殊触发器-Flag
+        
+        gameFlags["CanInteract_"+"LuSleep"] = true; // LuSleep是一个对象的交互标志
+        gameFlags["CanInteract_"+"milk_tea"] = true; // milk_tea是一个对象的交互标志
+
+        #endregion
     }
 
     public void SetPlayerPointType(PlayerPointType pointType)

@@ -80,7 +80,7 @@ namespace UI
                     // 处理获得物品逻辑
                     Debug.Log("Pick up interaction triggered.");
                     InventoryManager.Instance.AddItemById(interactionValue);
-                    gameObject.SetActive(false); // 隐藏交互按钮
+                    GameStateManager.Instance.SetFlag("CanInteract_" + interactionName, false);
                     break;
                 case InteractionType.Use:
                     // 处理使用物品逻辑

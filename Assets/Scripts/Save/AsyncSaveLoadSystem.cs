@@ -189,7 +189,6 @@ namespace Save
                 if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
                 {
                     await Task.Delay(500); // 显示结果一段时间
-                    GameManager.Instance.HideLoadingScreen();
                 }
             
                 OnSaveComplete?.Invoke(success ? "保存成功！" : "保存失败！");
@@ -202,7 +201,6 @@ namespace Save
                 if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
                 {
                     await Task.Delay(1000);
-                    GameManager.Instance.HideLoadingScreen();
                 }
                 
                 OnSaveComplete?.Invoke("保存失败：" + e.Message);
@@ -318,7 +316,6 @@ namespace Save
                     {
                         GameManager.Instance.UpdateLoadingProgress(1f, "存档文件不存在！");
                         await Task.Delay(1000);
-                        GameManager.Instance.HideLoadingScreen();
                     }
                     
                     OnLoadComplete?.Invoke("存档文件不存在！");
@@ -341,7 +338,6 @@ namespace Save
                     {
                         GameManager.Instance.UpdateLoadingProgress(1f, "存档文件损坏！");
                         await Task.Delay(1000);
-                        GameManager.Instance.HideLoadingScreen();
                     }
                     
                     OnLoadComplete?.Invoke("存档文件损坏！");
@@ -366,7 +362,6 @@ namespace Save
                 {
                     GameManager.Instance.UpdateLoadingProgress(1f, "加载完成！");
                     await Task.Delay(500);
-                    GameManager.Instance.HideLoadingScreen();
                 }
                 
                 OnLoadComplete?.Invoke("加载完成！");
@@ -380,7 +375,6 @@ namespace Save
                 {
                     GameManager.Instance.UpdateLoadingProgress(1f, "加载失败！");
                     await Task.Delay(1000);
-                    GameManager.Instance.HideLoadingScreen();
                 }
                 
                 OnLoadComplete?.Invoke("加载失败：" + e.Message);
