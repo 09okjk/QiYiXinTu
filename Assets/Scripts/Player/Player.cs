@@ -70,6 +70,24 @@ public class Player : Entity
     protected override void Awake()
     {
         base.Awake();
+        // 确保baseData已赋值
+        if (baseData == null)
+        {
+            Debug.LogError("Player的baseData未赋值，请在Inspector中设置PlayerData");
+            // 尝试从Resources文件夹加载默认的PlayerData
+            baseData = Resources.Load<PlayerData>("ScriptableObjects/Player/DefaultPlayerData");
+            if (baseData == null)
+            {
+                Debug.LogError("无法加载默认PlayerData，请确保存在默认配置");
+            }
+        }
+    
+        // 验证baseData类型
+        if (baseData != null && !(baseData is PlayerData))
+        {
+            Debug.LogError($"Player的baseData类型错误，期望PlayerData，实际为{baseData.GetType()}");
+        }
+        
         stateMachine = new PlayerStateMachine();
         
         IdleState = new PlayerIdleState(this, stateMachine, "Idle");

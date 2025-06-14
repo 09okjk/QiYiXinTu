@@ -145,7 +145,7 @@ namespace Manager
             {
                 GameObject playerObject = Instantiate(playerPrefab, transform);
                 player = playerObject.GetComponent<Player>();
-                
+        
                 if (player == null)
                 {
                     Debug.LogError("PlayerPrefab 上未找到 Player 组件！");
@@ -153,25 +153,32 @@ namespace Manager
                     return;
                 }
 
-                // 使用运行时数据副本
-                if (runtimePlayerData != null)
+                // 验证Player的baseData
+                if (player.baseData == null)
                 {
-                    player.baseData = runtimePlayerData;
+                    Debug.LogError("Player预制体的baseData未赋值！");
+                    Destroy(playerObject);
+                    return;
+                }
+        
+                if (!(player.baseData is PlayerData))
+                {
+                    Debug.LogError($"Player预制体的baseData类型错误！期望PlayerData，实际为{player.baseData.GetType()}");
+                    Destroy(playerObject);
+                    return;
                 }
 
                 playerObject.name = "Player";
-                
-                // 初始状态设为非激活，等待场景设置完成后激活
                 SetPlayerActive(false);
-                
-                Debug.Log("玩家创建成功");
+        
+                Debug.Log($"玩家创建成功，playerData: {player.playerData?.playerName ?? "未设置名称"}");
             }
             catch (Exception e)
             {
-                Debug.LogError($"创建玩家时发生错误: {e.Message}");
+                Debug.LogError($"创建玩家时发生错误: {e.Message}\nStackTrace: {e.StackTrace}");
             }
         }
-
+        
         private IEnumerator DelayedEventSubscription()
         {
             // 等待一帧确保所有Manager都已初始化
@@ -300,20 +307,25 @@ namespace Manager
                 return;
             }
 
-            // 修改运行时数据副本，不会污染原始资源
-            if (runtimePlayerData != null)
+            // 添加更详细的检查
+            if (player == null)
             {
-                string oldName = runtimePlayerData.playerName;
-                runtimePlayerData.playerName = newName;
-                Debug.Log($"玩家名称从 '{oldName}' 更改为 '{newName}'");
-                
-                // 触发相关对话
-                TriggerNameChangeDialogue();
+                Debug.LogError("玩家对象为空，请先创建玩家");
+                return;
             }
-            else
+
+            if (player.playerData == null)
             {
-                Debug.LogError("运行时玩家数据为空，无法更改名称");
+                Debug.LogError("玩家数据组件未初始化，请检查Player预制体上的PlayerData组件");
+                return;
             }
+
+            string oldName = player.playerData.playerName;
+            player.playerData.playerName = newName;
+    
+            Debug.Log($"玩家名称从 '{oldName}' 更改为 '{newName}'");
+    
+            TriggerNameChangeDialogue();
         }
 
         private void TriggerNameChangeDialogue()

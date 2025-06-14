@@ -73,18 +73,38 @@ public class UIManager : MonoBehaviour
             // 检查对话ID并显示相应的输入框
             if (dialogueID == "fight_over_dialogue")
             {
+                // 在调用前验证PlayerManager状态
+                if (PlayerManager.Instance == null)
+                {
+                    Debug.LogError("PlayerManager.Instance 为空");
+                    return;
+                }
+            
+                if (PlayerManager.Instance.player == null)
+                {
+                    Debug.LogError("PlayerManager.Instance.player 为空");
+                    return;
+                }
+            
                 await InputFieldWindow(
                     "你的名字是？", 
                     "请输入你的名字：", 
-                    PlayerManager.Instance.ChangePlayerName
+                    (name) => {
+                        if (!string.IsNullOrEmpty(name))
+                        {
+                            PlayerManager.Instance.ChangePlayerName(name);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("输入的名字为空");
+                        }
+                    }
                 );
-            
             }
         }
         catch (Exception e)
         {
-            Debug.LogError($"Error in CheckDialogueID: {e.Message}");
-            throw; 
+            Debug.LogError($"Error in CheckDialogueID: {e.Message}\nStackTrace: {e.StackTrace}");
         }
     }
 
