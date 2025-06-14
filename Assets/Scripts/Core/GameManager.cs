@@ -157,7 +157,11 @@ public class GameManager : MonoBehaviour
     }
     
     #endregion
-    
+
+    public void ResetAllData()
+    {
+        DialogueManager.Instance.ResetData();
+    }
     public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadSceneAsync(sceneName));

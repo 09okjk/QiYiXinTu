@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
@@ -70,22 +71,20 @@ public class SaveSlotUI : MonoBehaviour
         }
     }
     
-    private void OnSaveButtonClicked()
+    private async void OnSaveButtonClicked()
     {
-        // 如果槽不为空，请确认覆盖
         if (!isEmpty)
         {
-            // 显示确认对话框（需要 UI 管理器实现）
             UIManager.Instance.ShowConfirmDialog(
                 "覆盖存档",
                 "此操作将覆盖现有存档，是否继续?",
-                null, 
-                () => _ = AsyncSaveLoadSystem.SaveGameAsync(slotIndex),
+                null,
+                async () => await SaveWithReset(),
                 () => { /* 取消操作 */ });
         }
         else
         {
-            _ = AsyncSaveLoadSystem.SaveGameAsync(slotIndex);
+            await SaveWithReset();
         }
     }
     
@@ -115,5 +114,14 @@ public class SaveSlotUI : MonoBehaviour
                 },
                 () => { /* 取消操作 */ });
         }
+    }
+
+    private async Task SaveWithReset()
+    {
+        // 1. 先执行重置
+        GameManager.Instance.ResetAllData();
+    
+        // 2. 完成后再执行保存操作
+        await AsyncSaveLoadSystem.SaveGameAsync(slotIndex);
     }
 }
