@@ -16,6 +16,11 @@ namespace Manager
         
         [HideInInspector] public Player player;
         
+        // 原始玩家数据（只读）
+        private PlayerData originalPlayerData;
+        // 运行时玩家数据副本
+        private PlayerData runtimePlayerData;
+        
         // 玩家状态
         private bool isPlayerInitialized = false;
         private Camera currentCamera;
@@ -25,6 +30,7 @@ namespace Manager
         private void Awake()
         {
             InitializeSingleton();
+            LoadOriginalPlayerData();
             
             if (autoCreatePlayer)
             {
@@ -41,6 +47,7 @@ namespace Manager
         private void OnDestroy()
         {
             UnsubscribeFromEvents();
+            CleanupRuntimeData();
         }
 
         #endregion
@@ -59,6 +66,64 @@ namespace Manager
             {
                 Debug.LogWarning("发现多个PlayerManager实例，销毁重复实例");
                 Destroy(gameObject);
+            }
+        }
+
+        /// <summary>
+        /// 加载原始玩家数据（只读）
+        /// </summary>
+        private void LoadOriginalPlayerData()
+        {
+            try
+            {
+                // 假设玩家数据存储在Resources文件夹中
+                originalPlayerData = Resources.Load<PlayerData>("ScriptableObjects/Player/DefaultPlayerData");
+                
+                if (originalPlayerData != null)
+                {
+                    // 使用增强后的工具类创建运行时副本
+                    runtimePlayerData = Utils.ScriptableObjectUtils.CreatePlayerDataCopy(originalPlayerData);
+                    Debug.Log("成功加载并创建玩家数据运行时副本");
+                }
+                else
+                {
+                    Debug.LogWarning("未找到原始玩家数据，将使用默认设置");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"加载玩家数据时发生错误: {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 重置玩家数据到原始状态
+        /// </summary>
+        public void ResetPlayerData()
+        {
+            if (originalPlayerData != null && runtimePlayerData != null)
+            {
+                Utils.ScriptableObjectUtils.ResetToOriginal(originalPlayerData, runtimePlayerData);
+                
+                // 如果玩家对象存在，重新应用数据
+                if (player != null)
+                {
+                    player.baseData = runtimePlayerData;
+                }
+                
+                Debug.Log("已重置玩家数据到原始状态");
+            }
+        }
+
+        /// <summary>
+        /// 清理运行时数据
+        /// </summary>
+        private void CleanupRuntimeData()
+        {
+            if (runtimePlayerData != null)
+            {
+                Utils.ScriptableObjectUtils.SafeDestroyRuntimeCopy(runtimePlayerData);
+                runtimePlayerData = null;
             }
         }
 
@@ -86,6 +151,12 @@ namespace Manager
                     Debug.LogError("PlayerPrefab 上未找到 Player 组件！");
                     Destroy(playerObject);
                     return;
+                }
+
+                // 使用运行时数据副本
+                if (runtimePlayerData != null)
+                {
+                    player.baseData = runtimePlayerData;
                 }
 
                 playerObject.name = "Player";
@@ -142,6 +213,7 @@ namespace Manager
                 if (DialogueManager.Instance != null)
                 {
                     DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
+                    Debug.Log("成功取消订阅对话结束事件");
                 }
             }
             catch (Exception e)
@@ -228,19 +300,20 @@ namespace Manager
                 return;
             }
 
-            if (player?.playerData == null)
+            // 修改运行时数据副本，不会污染原始资源
+            if (runtimePlayerData != null)
             {
-                Debug.LogError("玩家数据为空，无法更改名称");
-                return;
+                string oldName = runtimePlayerData.playerName;
+                runtimePlayerData.playerName = newName;
+                Debug.Log($"玩家名称从 '{oldName}' 更改为 '{newName}'");
+                
+                // 触发相关对话
+                TriggerNameChangeDialogue();
             }
-
-            string oldName = player.playerData.playerName;
-            player.playerData.playerName = newName;
-            
-            Debug.Log($"玩家名称从 '{oldName}' 更改为 '{player.playerData.playerName}'");
-            
-            // 触发相关对话
-            TriggerNameChangeDialogue();
+            else
+            {
+                Debug.LogError("运行时玩家数据为空，无法更改名称");
+            }
         }
 
         private void TriggerNameChangeDialogue()
@@ -393,6 +466,24 @@ namespace Manager
             return currentCamera;
         }
 
+        /// <summary>
+        /// 获取运行时玩家数据（用于游戏逻辑）
+        /// </summary>
+        /// <returns>运行时玩家数据副本</returns>
+        public PlayerData GetRuntimePlayerData()
+        {
+            return runtimePlayerData;
+        }
+
+        /// <summary>
+        /// 获取原始玩家数据（只读）
+        /// </summary>
+        /// <returns>原始玩家数据</returns>
+        public PlayerData GetOriginalPlayerData()
+        {
+            return originalPlayerData;
+        }
+
         #endregion
 
         #region 调试方法
@@ -408,6 +499,28 @@ namespace Manager
             
             isPlayerInitialized = false;
             CreatePlayer();
+        }
+
+        [ContextMenu("重置玩家数据")]
+        public void DebugResetPlayerData()
+        {
+            ResetPlayerData();
+        }
+
+        [ContextMenu("显示玩家数据信息")]
+        public void DebugShowPlayerDataInfo()
+        {
+            if (runtimePlayerData != null)
+            {
+                Debug.Log($"玩家名称: {runtimePlayerData.playerName}");
+                Debug.Log($"当前生命值: {runtimePlayerData.CurrentHealth}/{runtimePlayerData.MaxHealth}");
+                Debug.Log($"当前法力值: {runtimePlayerData.CurrentMana}/{runtimePlayerData.MaxMana}");
+                Debug.Log($"移动速度: {runtimePlayerData.moveSpeed}");
+            }
+            else
+            {
+                Debug.LogWarning("运行时玩家数据为空");
+            }
         }
 
         #endregion

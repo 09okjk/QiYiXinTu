@@ -93,11 +93,15 @@ public class DialogueManager : MonoBehaviour,IDataResettable
     {
         if (Instance == this)
         {
+            // 清理运行时副本
+            foreach (var runtimeDialogue in originalDialogueDataDictionary.Values)
+            {
+                ScriptableObjectUtils.SafeDestroyRuntimeCopy(runtimeDialogue);
+            }
+            originalDialogueDataDictionary.Clear();
+        
             Instance = null;
         }
-        
-        // 清理运行时副本
-        ClearRuntimeCopies();
     }
     
     #region IDataResettable Implementation
@@ -140,8 +144,9 @@ public class DialogueManager : MonoBehaviour,IDataResettable
             {
                 if (!originalDialogueDataDictionary.ContainsKey(dialogueData.dialogueID))
                 {
-                    originalDialogueDataDictionary.Add(dialogueData.dialogueID, dialogueData);
-                    Debug.Log($"加载原始对话数据: {dialogueData.dialogueID}");
+                    // 使用您现有的深度复制方法
+                    var runtimeCopy = Utils.ScriptableObjectUtils.CreateDialogueDataCopy(dialogueData);
+                    originalDialogueDataDictionary.Add(dialogueData.dialogueID, runtimeCopy);
                 }
                 else
                 {
@@ -149,9 +154,6 @@ public class DialogueManager : MonoBehaviour,IDataResettable
                 }
             }
         }
-        
-        // 创建运行时副本
-        CreateRuntimeCopies();
     }
     
     /// <summary>
@@ -187,17 +189,21 @@ public class DialogueManager : MonoBehaviour,IDataResettable
     /// <summary>
     /// 重置所有对话数据到初始状态
     /// </summary>
+    // 添加重置方法
     public void ResetAllDialogueData()
     {
-        Debug.Log("重置所有对话数据到初始状态");
-        
         // 清理现有的运行时副本
-        ClearRuntimeCopies();
-        
-        // 重新创建干净的运行时副本
-        CreateRuntimeCopies();
-        
-        Debug.Log("所有对话数据已重置");
+        foreach (var runtimeDialogue in originalDialogueDataDictionary.Values)
+        {
+            Utils.ScriptableObjectUtils.SafeDestroyRuntimeCopy(runtimeDialogue);
+        }
+    
+        originalDialogueDataDictionary.Clear();
+    
+        // 重新创建副本
+        InitDialogueDictionary();
+    
+        Debug.Log("已重置所有对话数据到原始状态");
     }
     
     /// <summary>

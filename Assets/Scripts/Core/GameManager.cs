@@ -4,6 +4,8 @@ using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using Manager;
+using News;
 
 public class GameManager : MonoBehaviour
 {
@@ -158,10 +160,47 @@ public class GameManager : MonoBehaviour
     
     #endregion
 
-    public void ResetAllData()
+    /// <summary>
+    /// 重置所有游戏数据到原始状态
+    /// 在开始新游戏时调用
+    /// </summary>
+    public void ResetAllGameData()
     {
-        DialogueManager.Instance.ResetData();
+        Debug.Log("开始重置所有游戏数据到原始状态...");
+
+        // 重置对话系统数据
+        if (DialogueManager.Instance != null)
+        {
+            DialogueManager.Instance.ResetAllDialogueData();
+        }
+
+        // 重置NPC系统数据
+        if (NPCManager.Instance != null)
+        {
+            NPCManager.Instance.ResetAllNPCData();
+        }
+
+        // 重置任务系统数据
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.ResetAllQuestData();
+        }
+
+        // 重置新闻系统数据
+        if (NewsManager.Instance != null)
+        {
+            NewsManager.Instance.ResetAllNewsData();
+        }
+
+        // 重置玩家数据
+        if (PlayerManager.Instance != null)
+        {
+            PlayerManager.Instance.ResetPlayerData();
+        }
+
+        Debug.Log("所有游戏数据已重置到原始状态");
     }
+    
     public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadSceneAsync(sceneName));

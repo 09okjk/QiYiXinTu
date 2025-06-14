@@ -119,7 +119,7 @@ public class SaveSlotUI : MonoBehaviour
     private async Task SaveWithReset()
     {
         // 1. 先执行重置
-        GameManager.Instance.ResetAllData();
+        GameManager.Instance.ResetAllGameData();
     
         // 2. 完成后再执行保存操作
         await AsyncSaveLoadSystem.SaveGameAsync(slotIndex);
