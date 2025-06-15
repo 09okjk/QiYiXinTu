@@ -79,7 +79,7 @@ public class SaveSlotUI : MonoBehaviour
                 "覆盖存档",
                 "此操作将覆盖现有存档，是否继续?",
                 null,
-                async () => await SaveWithReset(),
+                async () => await SaveGame(),
                 () => { /* 取消操作 */ });
         }
         else
@@ -116,6 +116,11 @@ public class SaveSlotUI : MonoBehaviour
         }
     }
 
+    private async Task SaveGame()
+    {
+        await AsyncSaveLoadSystem.SaveGameAsync(slotIndex);
+    }
+    
     private async Task SaveWithReset()
     {
         // 1. 先执行重置

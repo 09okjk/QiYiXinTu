@@ -432,36 +432,52 @@ namespace Save
                 Debug.LogError("无法应用空的存档数据");
                 return;
             }
-    
+            
             // 检查是否需要切换场景
             string currentScene = SceneManager.GetActiveScene().name;
-            AsyncOperation sceneLoad;
- 
-            if (currentScene != saveData.currentSceneName || SceneManager.GetActiveScene().name == "MainMenu")
-                sceneLoad = SceneManager.LoadSceneAsync("女生宿舍");
-            else
-                sceneLoad = SceneManager.LoadSceneAsync(saveData.currentSceneName);
-
-            while (sceneLoad is { isDone: false })
+            
+            // 修复：始终加载存档中保存的场景，而不是硬编码的"女生宿舍"
+            if (currentScene != saveData.currentSceneName)
             {
-                progress?.Report(0.5f + (sceneLoad.progress * 0.3f));
-                await Task.Yield(); // 等待一帧
+                AsyncOperation sceneLoad;
+                
+                // 验证场景名称是否有效
+                if (string.IsNullOrEmpty(saveData.currentSceneName))
+                {
+                    Debug.LogError("存档中的场景名称为空，无法加载");
+                    return;
+                }
+                
+                Debug.Log($"从场景 '{currentScene}' 切换到 '{saveData.currentSceneName}'");
+                sceneLoad = SceneManager.LoadSceneAsync(saveData.currentSceneName);
+            
+                while (sceneLoad is { isDone: false })
+                {
+                    progress?.Report(0.5f + (sceneLoad.progress * 0.3f));
+                    await Task.Yield(); // 等待一帧
+                }
+            
+                // 增加等待时间，确保场景完全初始化
+                await Task.Delay(500); // 从100ms增加到500ms
+                
+                Debug.Log($"场景切换完成：{SceneManager.GetActiveScene().name}");
+            }
+            else
+            {
+                Debug.Log($"当前场景已是目标场景：{currentScene}");
             }
 
-            // 增加等待时间，确保场景完全初始化
-            await Task.Delay(500); // 从100ms增加到500ms
-            
             progress?.Report(0.8f);
 
             try
             {
-                // 直接在主线程调用所有加载方法，不使用Task.Run
-                LoadPlayerData(saveData);
+                // 添加场景数据加载（这个调用在原代码中缺失）
+                LoadSceneData(saveData);
                 await Task.Yield();
                 progress?.Report(0.82f);
 
-                // 添加场景数据加载
-                LoadSceneData(saveData);
+                // 加载玩家数据
+                LoadPlayerData(saveData);
                 await Task.Yield();
                 progress?.Report(0.84f);
 
@@ -476,11 +492,11 @@ namespace Save
                 LoadQuestData(saveData);
                 await Task.Yield();
                 progress?.Report(0.9f);
-        
+                
                 LoadDialogueData(saveData);
                 await Task.Yield();
                 progress?.Report(0.92f);
-        
+                
                 LoadGameStateData(saveData);
                 await Task.Yield();
                 progress?.Report(0.94f);
@@ -491,8 +507,10 @@ namespace Save
 
                 // 最后加载敌人数据
                 LoadEnemyData(saveData);
-        
+                
                 progress?.Report(1f);
+                
+                Debug.Log($"存档加载完成，当前场景：{SceneManager.GetActiveScene().name}");
             }
             catch (Exception e)
             {
@@ -636,7 +654,7 @@ namespace Save
         private static SceneDataCache CollectSceneData()
         {
             SceneDataCache cache = new SceneDataCache();
-            cache.sceneName = SceneManager.GetActiveScene().name;
+            cache.sceneName = SceneManager.GetActiveScene().name == "MainMenu" ? "女生宿舍" : SceneManager.GetActiveScene().name;
             cache.pointType = GameStateManager.Instance.GetPlayerPointType();
             return cache;
         }
