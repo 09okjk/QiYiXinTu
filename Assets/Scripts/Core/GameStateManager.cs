@@ -44,6 +44,7 @@ public class GameStateManager : MonoBehaviour
         gameFlags["FirstEntry_" + "outside1_1"] = true; // 假设outside1是第二个关卡
         gameFlags["FirstEntry_" + "In_LiDe"] = true; // 假设outside1是第二个关卡
         gameFlags["FirstEntry_" + "In_LiDe_2"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "In_LiDe_3"] = true; // 假设outside1是第二个关卡
         
         #endregion
 
@@ -62,7 +63,8 @@ public class GameStateManager : MonoBehaviour
         
         gameFlags["CanInteract_"+"LuSleep"] = true; // LuSleep是一个对象的交互标志
         gameFlags["CanInteract_"+"milk_tea"] = true; // milk_tea是一个对象的交互标志
-
+        gameFlags["IsNewGame"] = true; // 标志是否为新游戏
+        
         #endregion
     }
 

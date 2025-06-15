@@ -253,6 +253,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f; // 确保游戏没有暂停
                 break;
             case "女生宿舍":
+                GameStateManager.Instance.SetFlag("IsNewGame", false);
                 break;
             case "outside1":
                 // 触发开场对话

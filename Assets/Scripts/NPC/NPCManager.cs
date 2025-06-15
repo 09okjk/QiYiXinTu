@@ -397,7 +397,6 @@ public class NPCManager : MonoBehaviour
         // 设置NPC数据
         npc.npcData = npcData;
         npc.dialogueIDs = npcData.dialogueIDs;
-        // npc.canInteract = npcData.canInteract;
     }
 
     private void ActivateNPC(GameObject npcObject, NPCData npcData)
@@ -431,9 +430,10 @@ public class NPCManager : MonoBehaviour
         {
             string firstEntryFlag = "FirstEntry_" + currentSceneName;
             bool isFirstEntry = GameStateManager.Instance.GetFlag(firstEntryFlag);
+			Debug.Log($"NPC {npcData.npcID} 在场景 {currentSceneName} 的第一次进入状态: {isFirstEntry}");
             
             // 根据NPC的特殊配置决定是否激活
-            return !IsNPCSpeciallyDeactivated(npcData, isFirstEntry);
+            return IsNPCSpeciallyDeactivated(npcData, isFirstEntry);
         }
         
         return true; // 默认激活
@@ -443,11 +443,15 @@ public class NPCManager : MonoBehaviour
     {
         // 可以在NPCData中添加特殊规则字段，而不是硬编码
         // 这里暂时保留原逻辑但使其可配置
-        if (isFirstEntry && npcData.npcID == "LuXinsheng")
+        if (isFirstEntry && npcData.npcID == "LuXinsheng" && SceneManager.GetActiveScene().name != "女生宿舍")
         {
             return true;
         }
-        
+        if (!isFirstEntry)
+        {
+            return true;
+        }
+
         return false;
     }
 
@@ -507,6 +511,15 @@ public class NPCManager : MonoBehaviour
             }
         }
         Debug.Log("获取到当前激活的NPC数量: " + activeNPCComponents.Count);
+        if(activeNPCComponents.Count == 0)
+        {
+            Debug.LogWarning("当前没有激活的NPC,尝试添加默认NPC-路薪声");
+            var luXinsheng = GetNPC("LuXinsheng");
+            if (luXinsheng != null)
+            {
+                activeNPCComponents.Add(luXinsheng);
+            }
+        }
         return activeNPCComponents;
     }
 

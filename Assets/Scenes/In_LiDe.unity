@@ -6007,7 +6007,7 @@ Transform:
   m_GameObject: {fileID: 828183475}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.5767975, y: -0.52, z: 0}
+  m_LocalPosition: {x: -2.5767975, y: -1.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6732,7 +6732,7 @@ Transform:
   m_GameObject: {fileID: 998920977}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.893203, y: -0.52, z: 0}
+  m_LocalPosition: {x: 15.893203, y: -1.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9727,9 +9727,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04db1c3d47fc4ce5abf3377b132ebbee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: In_LiDe2
+  nextSceneName: In_LiDe_2
   hasTriggered: 0
-  nextScenePointType: 2
+  nextScenePointType: 1
 --- !u!61 &1431151511
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13724,7 +13724,7 @@ Transform:
   m_GameObject: {fileID: 2043795818}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 62.663204, y: -0.52, z: 0}
+  m_LocalPosition: {x: 62.663204, y: -1.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14433,7 +14433,7 @@ Transform:
   m_GameObject: {fileID: 2107346453}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.5, y: -0.52, z: 0}
+  m_LocalPosition: {x: -2.5, y: -1.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

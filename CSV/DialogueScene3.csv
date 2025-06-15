@@ -17,11 +17,7 @@ lide_fight_over_xin_dialogue,node002,system,旁白,System,Neutral,庆幸的是�
 xiao_dialogue,node001,LuXinsheng,路薪声,Npc,Neutral,这是我上广告策划课认识的同学，我去打招呼吧......小芃！上午好——啊，是不是打扰到你了？,node002,,,FALSE,,,,,,,,
 xiao_dialogue,node002,XiaoPeng,小芃,Npc,Neutral,你来的正是时候啊，你知道王老师刚刚让我们组重新设计策划案吗？太离谱了！他和我们说什么'设计的营销活动不够年轻化'，可我们问卷显示40%用户其实偏好怀旧风啊！,node003,,,FALSE,,,,,,,,
 xiao_dialogue,node003,LuXinsheng,路薪声,Npc,Neutral,啊，可是快期末了，改动太大会不会根本来不及啊......太为难人了。我来帮帮忙吧，方便给我们看看你们组的问卷调研的问题吗？,node004,,,FALSE,,,,,,,,
-xiao_dialogue,node004,system,旁白,System,Neutral,"......第7题：'您对于xxx的品牌印象是？（多选）'
-① 充满童年回忆
-② 设计过时
-③ 价格亲民
-④ 质量可靠」......",node005,,,FALSE,,,,,,,,
+xiao_dialogue,node004,system,旁白,System,Neutral,第7题：'您对于xxx的品牌印象是？（多选）'1、充满童年回忆。2、设计过时。3、价格亲民。4、质量可靠,node005,,,FALSE,,,,,,,,
 xiao_dialogue,node005,system,旁白,System,Neutral,翻看到这里时，你发现这份问卷的问题设计稍微有一点问题，而这或许恰好是解决问题的关键。,,,,FALSE,,,（指出问卷设计的问题所在）,node006,（建议不要参考调研的数据）,node006,,
 xiao_dialogue,node006,player,playerName,Player,Neutral,让'童年回忆'和'过时'出现在同一题里，就像是在询问'你是喜欢晴天还是讨厌下雨'。受访者可能同时勾选①②，但这不代表他们认为'怀旧=落后'。,node007,,,FALSE,,,,,,,,
 xiao_dialogue,node007,LuXinsheng,路薪声,Npc,Neutral,哦！我明白了！也就是说选①的人或许是觉得经典，但是选②也可能是在吐槽包装！所以其实我们可以保留原来的主题的策划内容。,node008,,,FALSE,,,,,,,,

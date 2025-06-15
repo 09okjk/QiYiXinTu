@@ -172,8 +172,12 @@ namespace Manager
                 {
                     // 添加小延迟确保所有组件都已准备就绪
                     StartCoroutine(DelayedInitLevel());
+                    Debug.Log($"关卡 {levelName} 已经准备好进行初始化: 数据加载={isDataLoaded}, 场景加载={isSceneLoaded}, 已初始化={isLevelInitialized}");
                 }
-                Debug.Log($"关卡 {levelName} 尚未准备好进行初始化: 数据加载={isDataLoaded}, 场景加载={isSceneLoaded}, 已初始化={isLevelInitialized}");
+                else
+                {
+                    Debug.Log($"关卡 {levelName} 尚未准备好进行初始化: 数据加载={isDataLoaded}, 场景加载={isSceneLoaded}, 已初始化={isLevelInitialized}");
+                }
             }
         }
 

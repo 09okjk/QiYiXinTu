@@ -47,7 +47,7 @@ namespace UI
                     GameStateManager.Instance.SetFlag("FirstEntry_" + SceneManager.GetActiveScene().name, false);
                     // 触发场景切换前的事件
                     GameManager.Instance.TriggerSceneChangeEvent(SceneManager.GetActiveScene().name);
-                    // await AsyncSaveLoadSystem.SaveGameAsync(0);
+                    await AsyncSaveLoadSystem.SaveGameAsync(0);
                     // 触发场景切换逻辑
                     GameManager.Instance.LoadScene(nextSceneName);
                 }

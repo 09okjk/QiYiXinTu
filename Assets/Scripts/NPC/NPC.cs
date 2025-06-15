@@ -474,6 +474,7 @@ public class NPC : Entity
 
     private void OnAllDialoguesCompleted()
     {
+        Debug.Log($"Npc:{name}的所有对话已完成");
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.SetFlag("FinishAllDialogue_" + npcData?.npcID, true);
@@ -503,6 +504,7 @@ public class NPC : Entity
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.SetFlag("Following_" + npcData?.npcID, isFollowing);
+            Debug.Log("记录NPC跟随状态: " + isFollowing);
         }
     }
     

@@ -90,6 +90,7 @@ namespace Save
                 public bool isFollowing;
                 public bool canInteract;
                 public List<string> dialogueIDs = new List<string>();
+                public Dictionary<string, DialogueState> dialogueStates = new Dictionary<string, DialogueState>(); // 新增：对话状态
             }
         
             [Serializable]
@@ -206,8 +207,6 @@ namespace Save
                 return false;
             }
         }
-        
-        // ... 保持原有的CreateSaveDataAsync和WriteSaveFileAsync方法不变 ...
         
         /// <summary>
         /// 异步创建保存数据
@@ -664,6 +663,7 @@ namespace Save
             NPCDataCache cache = new NPCDataCache();
             if (NPCManager.Instance != null)
             {
+                Debug.Log("开始收集 NPC data...");
                 foreach (var npc in NPCManager.Instance.GetActiveNPCs())
                 {
                     // 获取NPC的对话ID列表和状态
@@ -791,6 +791,7 @@ namespace Save
                 npcSaveData.isFollowing = isFollowing;
                 npcSaveData.canInteract = canInteract;
                 npcSaveData.dialogueIDs = dialogueIDs; // 保存对话ID列表
+                npcSaveData.dialogueStates = dialogueStates; // 保存对话状态
                 saveData.npcData[npcID] = npcSaveData;
             }
         }
