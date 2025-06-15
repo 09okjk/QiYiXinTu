@@ -435,94 +435,70 @@ namespace Save
                 Debug.LogError("无法应用空的存档数据");
                 return;
             }
-            
+    
             // 检查是否需要切换场景
             string currentScene = SceneManager.GetActiveScene().name;
             if (currentScene != saveData.currentSceneName || SceneManager.GetActiveScene().name == "MainMenu")
             {
-                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-                {
-                    GameManager.Instance.UpdateLoadingProgress(0.5f, $"正在切换到场景: {saveData.currentSceneName}");
-                }
-                
                 AsyncOperation sceneLoad;
-
-                GameStateManager.Instance.SetFlag("UseSaveLoadingScene", true);
-                if (SceneManager.GetActiveScene().name == "MainMenu" && saveData.GameStateSaveData.flags["FirstEntry_女生宿舍"])
-                {
-                    Debug.Log($"加载女生宿舍场景，Scene.name:{SceneManager.GetActiveScene().name}, FirstEntry_女生宿舍: {GameStateManager.Instance.GetFlag("FirstEntry_女生宿舍")}");
+     
+                if (SceneManager.GetActiveScene().name == "MainMenu")
                     sceneLoad = SceneManager.LoadSceneAsync("女生宿舍");
-                }
                 else
                     sceneLoad = SceneManager.LoadSceneAsync(saveData.currentSceneName);
-            
+    
                 while (sceneLoad is { isDone: false })
                 {
-                    float sceneProgress = 0.5f + (sceneLoad.progress * 0.3f);
-                    progress?.Report(sceneProgress);
-                    OnLoadProgress?.Invoke(sceneProgress);
-                    
-                    if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-                    {
-                        GameManager.Instance.UpdateLoadingProgress(sceneProgress, 
-                            $"正在切换到场景: {saveData.currentSceneName} ({sceneLoad.progress:P0})");
-                    }
-                    
+                    progress?.Report(0.5f + (sceneLoad.progress * 0.3f));
                     await Task.Yield(); // 等待一帧
                 }
-            
-                // 等待场景初始化
-                await Task.Delay(100);
+    
+                // 增加等待时间，确保场景完全初始化
+                await Task.Delay(500); // 从100ms增加到500ms
             }
 
             progress?.Report(0.8f);
-            OnLoadProgress?.Invoke(0.8f);
-            
-            if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-            {
-                GameManager.Instance.UpdateLoadingProgress(0.8f, "应用玩家数据...");
-            }
 
             try
             {
                 // 直接在主线程调用所有加载方法，不使用Task.Run
                 LoadPlayerData(saveData);
-                await Task.Yield(); // 确保UI可以更新
-                progress?.Report(0.85f);
-                OnLoadProgress?.Invoke(0.85f);
+                await Task.Yield();
+                progress?.Report(0.82f);
 
-                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-                {
-                    GameManager.Instance.UpdateLoadingProgress(0.85f, "应用NPC数据...");
-                }
+                // 添加场景数据加载
+                LoadSceneData(saveData);
+                await Task.Yield();
+                progress?.Report(0.84f);
 
                 LoadNPCData(saveData);
                 await Task.Yield();
-                progress?.Report(0.9f);
-                OnLoadProgress?.Invoke(0.9f);
-
-                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-                {
-                    GameManager.Instance.UpdateLoadingProgress(0.9f, "应用物品数据...");
-                }
+                progress?.Report(0.86f);
 
                 LoadInventoryData(saveData);
                 await Task.Yield();
-                progress?.Report(0.95f);
-                OnLoadProgress?.Invoke(0.95f);
-
-                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
-                {
-                    GameManager.Instance.UpdateLoadingProgress(0.95f, "应用游戏状态...");
-                }
+                progress?.Report(0.88f);
 
                 LoadQuestData(saveData);
+                await Task.Yield();
+                progress?.Report(0.9f);
+        
                 LoadDialogueData(saveData);
+                await Task.Yield();
+                progress?.Report(0.92f);
+        
                 LoadGameStateData(saveData);
-                LoadNewsData(saveData);
+                await Task.Yield();
+                progress?.Report(0.94f);
 
+                LoadNewsData(saveData);
+                await Task.Yield();
+                progress?.Report(0.96f);
+
+                // 最后加载敌人数据
+                LoadEnemyData(saveData);
+        
                 progress?.Report(1f);
-                OnLoadProgress?.Invoke(1f);
             }
             catch (Exception e)
             {
@@ -530,10 +506,7 @@ namespace Save
                 throw;
             }
         }
-
         #endregion
-
-        // ... 保持原有的所有辅助方法、缓存类和数据处理方法不变 ...
         
         #region 辅助方法
 
@@ -669,7 +642,7 @@ namespace Save
         private static SceneDataCache CollectSceneData()
         {
             SceneDataCache cache = new SceneDataCache();
-            cache.sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            cache.sceneName = SceneManager.GetActiveScene().name;
             cache.pointType = GameStateManager.Instance.GetPlayerPointType();
             return cache;
         }
@@ -681,13 +654,37 @@ namespace Save
             {
                 foreach (var npc in NPCManager.Instance.GetActiveNPCs())
                 {
+                    // 获取NPC的对话ID列表和状态
+                    List<string> dialogueIDs = new List<string>();
+                    Dictionary<string, DialogueState> dialogueStates = new Dictionary<string, DialogueState>();
+            
+                    if (npc.npcData != null && npc.npcData.dialogueIDs != null)
+                    {
+                        dialogueIDs = new List<string>(npc.npcData.dialogueIDs);
+                
+                        // 同时收集每个对话的当前状态
+                        foreach (string dialogueID in dialogueIDs)
+                        {
+                            if (DialogueManager.Instance != null)
+                            {
+                                var dialogueData = DialogueManager.Instance.GetDialogueData(dialogueID);
+                                if (dialogueData != null)
+                                {
+                                    dialogueStates[dialogueID] = dialogueData.state;
+                                }
+                            }
+                        }
+                    }
+            
                     cache.npcData[npc.npcData.npcID] = (
                         npc.npcData.npcID,
                         npc.transform.position,
                         npc.gameObject.activeSelf,
                         npc.isFollowing,
                         npc.npcData.sceneName,
-                        npc.canInteract
+                        npc.canInteract,
+                        dialogueIDs,
+                        dialogueStates  // 添加对话状态信息
                     );
                 }
             }
@@ -770,7 +767,7 @@ namespace Save
         {
             foreach (var npcEntry in cache.npcData)
             {
-                var (npcID, position, isActive, isFollowing, sceneName,canInteract) = npcEntry.Value;
+                var (npcID, position, isActive, isFollowing, sceneName, canInteract, dialogueIDs,dialogueStates) = npcEntry.Value;
 
                 NPCSaveData npcSaveData = new NPCSaveData();
                 npcSaveData.npcID = npcID;
@@ -781,6 +778,7 @@ namespace Save
                 npcSaveData.isActive = isActive;
                 npcSaveData.isFollowing = isFollowing;
                 npcSaveData.canInteract = canInteract;
+                npcSaveData.dialogueIDs = dialogueIDs; // 保存对话ID列表
                 saveData.npcData[npcID] = npcSaveData;
             }
         }
@@ -1048,8 +1046,8 @@ class SceneDataCache
 
 class NPCDataCache
 {
-    public Dictionary<string, (string npcID, Vector3 position, bool activeSelf, bool isFollowing, string sceneName, bool canInteract)> npcData = 
-        new Dictionary<string, (string, Vector3, bool, bool, string,bool)>();
+    public Dictionary<string, (string npcID, Vector3 position, bool activeSelf, bool isFollowing, string sceneName, bool canInteract, List<string> dialogueIDs, Dictionary<string, DialogueState> dialogueStates)> npcData = 
+        new Dictionary<string, (string npcID, Vector3 position, bool activeSelf, bool isFollowing, string sceneName, bool canInteract, List<string> dialogueIDs, Dictionary<string, DialogueState> dialogueStates)>();
 }
 
 class InventoryDataCache
