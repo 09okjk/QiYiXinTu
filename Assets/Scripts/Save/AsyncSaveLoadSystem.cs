@@ -31,7 +31,6 @@ namespace Save
         public static event Action<string> OnSaveComplete;
         public static event Action<string> OnLoadComplete;
 
-        // ... 保持原有的数据结构定义不变 ...
         #region Data
         
             [Serializable]
@@ -381,8 +380,6 @@ namespace Save
                 return false;
             }
         }
-
-        // ... 保持原有的ReadSaveFileAsync方法不变 ...
         
         /// <summary>
         /// 异步读取保存文件
@@ -438,25 +435,22 @@ namespace Save
     
             // 检查是否需要切换场景
             string currentScene = SceneManager.GetActiveScene().name;
+            AsyncOperation sceneLoad;
+ 
             if (currentScene != saveData.currentSceneName || SceneManager.GetActiveScene().name == "MainMenu")
+                sceneLoad = SceneManager.LoadSceneAsync("女生宿舍");
+            else
+                sceneLoad = SceneManager.LoadSceneAsync(saveData.currentSceneName);
+
+            while (sceneLoad is { isDone: false })
             {
-                AsyncOperation sceneLoad;
-     
-                if (SceneManager.GetActiveScene().name == "MainMenu")
-                    sceneLoad = SceneManager.LoadSceneAsync("女生宿舍");
-                else
-                    sceneLoad = SceneManager.LoadSceneAsync(saveData.currentSceneName);
-    
-                while (sceneLoad is { isDone: false })
-                {
-                    progress?.Report(0.5f + (sceneLoad.progress * 0.3f));
-                    await Task.Yield(); // 等待一帧
-                }
-    
-                // 增加等待时间，确保场景完全初始化
-                await Task.Delay(500); // 从100ms增加到500ms
+                progress?.Report(0.5f + (sceneLoad.progress * 0.3f));
+                await Task.Yield(); // 等待一帧
             }
 
+            // 增加等待时间，确保场景完全初始化
+            await Task.Delay(500); // 从100ms增加到500ms
+            
             progress?.Report(0.8f);
 
             try
