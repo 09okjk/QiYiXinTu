@@ -45,11 +45,13 @@ namespace UI
             // {
             //     animator.enabled = true; // 启用动画器
             // }  
-            if (Input.GetKeyDown(KeyCode.W) && interactImage.gameObject.activeSelf)
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && 
+                Input.GetKeyDown(KeyCode.S) && 
+                interactImage.gameObject.activeSelf)
             {
-                animator.gameObject.SetActive(true); // 启用动画器
-                animator.enabled = true; // 启用动画器
-                interactImage.gameObject.SetActive(false); // 隐藏交互按钮
+                animator.gameObject.SetActive(true);
+                animator.enabled = true;
+                interactImage.gameObject.SetActive(false);
             }
         }
         

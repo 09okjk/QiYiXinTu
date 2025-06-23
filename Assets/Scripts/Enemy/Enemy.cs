@@ -192,7 +192,7 @@ public class Enemy : Entity
                 case EnemyType.Enemy3:
                 case EnemyType.Enemy4:
                 case EnemyType.Magic:
-                    finalDropCount += UnityEngine.Random.Range(0, 2);
+                    finalDropCount += UnityEngine.Random.Range(1, 3);
                     break;
                 case EnemyType.Ranged:
                     if (UnityEngine.Random.value < 0.3f)

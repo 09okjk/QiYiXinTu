@@ -34,6 +34,8 @@ public class GameStateManager : MonoBehaviour
         gameFlags["CanEnter_"+ "outside1_1"] = true; // 假设outside1_1是一个场景
         gameFlags["CanEnter_"+ "In_LiDe_2"] = true; 
         gameFlags["CanEnter_"+ "In_LiDe_3"] = true; 
+        gameFlags["CanEnter_" + "In_LiDe_4"] = true; // 假设In_LiDe_4是一个场景
+        gameFlags["CanEnter_" + "Space_Time"] = true; // 假设In_LiDe_4是一个场景
 
         #endregion
 
@@ -45,6 +47,8 @@ public class GameStateManager : MonoBehaviour
         gameFlags["FirstEntry_" + "In_LiDe"] = true; // 假设outside1是第二个关卡
         gameFlags["FirstEntry_" + "In_LiDe_2"] = true; // 假设outside1是第二个关卡
         gameFlags["FirstEntry_" + "In_LiDe_3"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "In_LiDe_4"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "Space_Time"] = true; // 假设outside1是第二个关卡
         
         #endregion
 
@@ -56,6 +60,7 @@ public class GameStateManager : MonoBehaviour
         gameFlags["CanInteract_"+"zhang_dialogue"] = true; 
         gameFlags["CanInteract_"+"xiao_dialogue"] = true; 
         gameFlags["CanInteract_"+"rift_1955_dialogue"] = true; 
+        gameFlags["CanInteract_"+"silence_dialogue"] = true; 
 
         #endregion
 
@@ -63,6 +68,7 @@ public class GameStateManager : MonoBehaviour
         
         gameFlags["CanInteract_"+"LuSleep"] = true; // LuSleep是一个对象的交互标志
         gameFlags["CanInteract_"+"milk_tea"] = true; // milk_tea是一个对象的交互标志
+        gameFlags["CanInteract_"+"card"] = true; // milk_tea是一个对象的交互标志
         gameFlags["IsNewGame"] = true; // 标志是否为新游戏
         
         #endregion

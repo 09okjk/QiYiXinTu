@@ -367,6 +367,7 @@ public class NPC : Entity
         {
             interactionIndicator.SetActive(show);
         }
+        
     }
 
     private void HandleInteractionInput()

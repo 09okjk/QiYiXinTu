@@ -356,8 +356,9 @@ public class MenuManager : MonoBehaviour
     public void ReturnToMainMenu()
     {
         CloseAllPanels();
-        GameManager.Instance.LoadScene("MainMenu");
-        //mainMenuPanel.SetActive(true);
+        //GameManager.Instance.LoadScene("MainMenu");
+        // 直接退出游戏
+        QuitToDesktop();
     }
     // 退出到桌面
     public void QuitToDesktop()

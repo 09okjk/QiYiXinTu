@@ -28,7 +28,7 @@ MonoBehaviour:
   idleTime: 2
   battleTime: 1
   attackDistance: 1.8
-  attackCooldown: 2
+  attackCooldown: 3
   attackDamage: 1
   stunnedDuration: 1
   stunnedDirection: {x: 7, y: 5}

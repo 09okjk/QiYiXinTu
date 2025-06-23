@@ -30,6 +30,9 @@ EditorBuildSettings:
     path: Assets/Scenes/In_LiDe_3.unity
     guid: 81e24a25f65bccb43bd3f6dcb2607a81
   - enabled: 1
+    path: Assets/Scenes/In_LiDe_4.unity
+    guid: a9052818b404a554b9fe75a704be36ec
+  - enabled: 1
     path: Assets/Scenes/Space_Time.unity
     guid: fdda6cad88c47f641b1c070f4c4d7a00
   m_configObjects:

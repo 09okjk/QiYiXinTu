@@ -24,7 +24,8 @@ namespace Save
         [SerializeField] private bool useGameManagerLoadingScreen = true; // 是否使用GameManager的加载屏幕
     
         public static AsyncSaveLoadSystem Instance { get; private set; }
-    
+        public static bool IsLoadingFromSave { get; private set; }
+
         // 进度回调
         public static event Action<float> OnSaveProgress;
         public static event Action<float> OnLoadProgress;
@@ -290,6 +291,7 @@ namespace Save
         {
             try
             {
+                IsLoadingFromSave = true;
                 // 显示加载屏幕
                 if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
                 {
@@ -363,6 +365,7 @@ namespace Save
                 }
                 
                 OnLoadComplete?.Invoke("加载完成！");
+                IsLoadingFromSave = false;
                 return true;
             }
             catch (Exception e)
@@ -376,6 +379,7 @@ namespace Save
                 }
                 
                 OnLoadComplete?.Invoke("加载失败：" + e.Message);
+                IsLoadingFromSave = false;
                 return false;
             }
         }

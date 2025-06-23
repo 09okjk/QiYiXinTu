@@ -2633,7 +2633,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1036908474}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -5342,7 +5342,6 @@ MonoBehaviour:
   musicVolumeSlider: {fileID: 1539679117}
   sfxVolumeSlider: {fileID: 1640145032}
   saveSlotContainer: {fileID: 155197825}
-  autoSaveSlot: {fileID: 0}
   saveSlotPrefab: {fileID: 5353098465179127979, guid: 9af1b9aa75952a64980526fc26edec45, type: 3}
   maxSaveSlots: 6
 --- !u!1 &2096705016

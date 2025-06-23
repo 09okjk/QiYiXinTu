@@ -162,6 +162,17 @@ namespace Manager
             // 只有当数据和场景都加载完成且未初始化时才进行初始化
             if (isDataLoaded  && isSceneLoaded && !isLevelInitialized)
             {
+                // 添加从存档加载的判断
+                if (AsyncSaveLoadSystem.IsLoadingFromSave)
+                {
+                    Debug.Log("从存档加载中，跳过常规初始化流程");
+                    isLevelInitialized = true; // 标记为已初始化
+                    // 可能需要一些最小化的初始化
+                    SetupCameraOnly();
+                    // 触发初始化完成事件
+                    OnLevelInitialized();
+                    return;
+                }
                 // 添加小延迟确保所有组件都已准备就绪
                 StartCoroutine(DelayedInitLevel());
             }
