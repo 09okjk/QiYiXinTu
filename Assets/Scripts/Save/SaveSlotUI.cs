@@ -82,9 +82,15 @@ public class SaveSlotUI : MonoBehaviour
                 async () => await SaveGame(),
                 () => { /* 取消操作 */ });
         }
+        else if(GameStateManager.Instance.GetFlag("IsNewGame"))
+        {
+            Debug.LogWarning("保存并重置游戏数据");
+            await SaveWithReset();
+        }
         else
         {
-            await SaveWithReset();
+            // 如果是空槽位，直接保存
+            await SaveGame();
         }
     }
     

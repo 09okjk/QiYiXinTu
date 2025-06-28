@@ -566,6 +566,8 @@ namespace Manager
                 GameStateManager.Instance.SetFlag("FirstEntry_" + levelName, false);
             }
             
+            GameStateManager.Instance.SetFlag("IsNewGame", false);
+            
             var isSave =await AsyncSaveLoadSystem.SaveGameAsync(0);
 
             if (isSave)
