@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public static event Action<float> OnLoadingProgress;
     public static event Action<string> OnLoadingStatusChanged;
     public static event Action<string> OnBeforeLevelChange;
+    public event Action OnDialogueManagerReady;
     
     private void Awake()
     {
@@ -285,6 +286,10 @@ public class GameManager : MonoBehaviour
                     "是否重新加载最近的保存点？",
                     null,
                     () => LoadScene("MainMenu"), () => LoadLastSave());
+                break;
+            case "DialogueManagerReady":
+                // 触发对话管理器准备就绪事件
+                OnDialogueManagerReady?.Invoke();
                 break;
                 
             // 根据需要添加更多事件

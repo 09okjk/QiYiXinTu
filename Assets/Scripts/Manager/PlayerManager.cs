@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -18,8 +19,8 @@ namespace Manager
         
         // 原始玩家数据（只读）
         private PlayerData originalPlayerData;
-        // 运行时玩家数据副本
-        private PlayerData runtimePlayerData;
+        // 运行时玩家数据副本（可修改）
+        private PlayerGameData runtimePlayerData;
         
         // 玩家状态
         private bool isPlayerInitialized = false;
@@ -30,20 +31,20 @@ namespace Manager
         private void Awake()
         {
             InitializeSingleton();
-            LoadOriginalPlayerData();
+            LoadPlayerData();
             
             if (autoCreatePlayer)
             {
                 CreatePlayer();
             }
         }
-
+        
         private void Start()
         {
-            // 延迟订阅事件，确保其他Manager已初始化
-            StartCoroutine(DelayedEventSubscription());
+            SubscribeToEvents();
+            Debug.Log("PlayerManager 启动完成");
         }
-
+        
         private void OnDestroy()
         {
             UnsubscribeFromEvents();
@@ -69,25 +70,53 @@ namespace Manager
             }
         }
 
+
         /// <summary>
-        /// 加载原始玩家数据（只读）
+        /// 加载玩家数据
         /// </summary>
-        private void LoadOriginalPlayerData()
+        /// <param name="playerGameData">如果提供了玩家数据，则使用该数据，否则加载默认数据</param>
+        private void LoadPlayerData(PlayerGameData playerGameData = null)
         {
             try
             {
-                // 假设玩家数据存储在Resources文件夹中
-                originalPlayerData = Resources.Load<PlayerData>("ScriptableObjects/Player/DefaultPlayerData");
-                
-                if (originalPlayerData != null)
+                if (playerGameData == null)
                 {
-                    // 使用增强后的工具类创建运行时副本
-                    runtimePlayerData = Utils.ScriptableObjectUtils.CreatePlayerDataCopy(originalPlayerData);
-                    Debug.Log("成功加载并创建玩家数据运行时副本");
+                    // 假设玩家数据存储在Resources文件夹中
+                    originalPlayerData = Resources.Load<PlayerData>("ScriptableObjects/Player/DefaultPlayerData");
+                    if (originalPlayerData != null)
+                    {
+                        // 使用增强后的工具类创建运行时副本
+                        runtimePlayerData = new PlayerGameData
+                        {
+                            MaxHealth = originalPlayerData.MaxHealth,
+                            CurrentHealth = originalPlayerData.MaxHealth,
+                            MaxMana = originalPlayerData.MaxMana,
+                            CurrentMana = originalPlayerData.MaxMana,
+                            InvincibleTime = originalPlayerData.InvincibleTime,
+                            knockbackDirection = originalPlayerData.knockbackDirection,
+                            KnockbackDuration = originalPlayerData.KnockbackDuration,
+                            itemIDs = new List<string>(originalPlayerData.itemIDs),
+                            playerID = originalPlayerData.playerID,
+                            playerName = originalPlayerData.playerName,
+                            playerPosition = Vector3.zero, // 初始位置可以设置为零或其他默认值
+                            moveSpeed = originalPlayerData.moveSpeed,
+                            jumpForce = originalPlayerData.jumpForce,
+                            wallJumpForce = originalPlayerData.wallJumpForce,
+                            idleToMoveTransitionTime = originalPlayerData.idleToMoveTransitionTime,
+                            comboTimeWindow = originalPlayerData.comboTimeWindow,
+                            counterAttackDuration = originalPlayerData.counterAttackDuration,
+                            attackDamage = originalPlayerData.attackDamage
+                        };
+                        Debug.Log("成功加载并创建玩家数据运行时数据");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("未找到原始玩家数据，将使用默认设置");
+                    }
                 }
                 else
                 {
-                    Debug.LogWarning("未找到原始玩家数据，将使用默认设置");
+                    runtimePlayerData = playerGameData;
                 }
             }
             catch (Exception e)
@@ -103,15 +132,8 @@ namespace Manager
         {
             if (originalPlayerData != null && runtimePlayerData != null)
             {
-                Utils.ScriptableObjectUtils.ResetToOriginal(originalPlayerData, runtimePlayerData);
-                
-                // 如果玩家对象存在，重新应用数据
-                if (player != null)
-                {
-                    player.baseData = runtimePlayerData;
-                }
-                
-                Debug.Log("已重置玩家数据到原始状态");
+                LoadPlayerData();
+                player.playerData = runtimePlayerData; // 更新玩家数据
             }
         }
 
@@ -120,14 +142,10 @@ namespace Manager
         /// </summary>
         private void CleanupRuntimeData()
         {
-            if (runtimePlayerData != null)
-            {
-                Utils.ScriptableObjectUtils.SafeDestroyRuntimeCopy(runtimePlayerData);
-                runtimePlayerData = null;
-            }
+            runtimePlayerData = null;
         }
 
-        private void CreatePlayer()
+        public void CreatePlayer()
         {
             if (playerPrefab == null)
             {
@@ -138,6 +156,12 @@ namespace Manager
             if (player != null)
             {
                 Debug.LogWarning("玩家已存在，跳过创建");
+                return;
+            }
+            
+            if (runtimePlayerData == null)
+            {
+                Debug.LogError("运行时玩家数据未加载，无法创建玩家");
                 return;
             }
 
@@ -169,22 +193,27 @@ namespace Manager
                 }
 
                 playerObject.name = "Player";
+                player.playerData = runtimePlayerData; // 使用运行时数据
                 SetPlayerActive(false);
         
-                Debug.Log($"玩家创建成功，playerData: {player.playerData?.playerName ?? "未设置名称"}");
+                Debug.Log($"创建初始玩家成功，playerData: {player.playerData?.playerName ?? "未设置名称"}");
             }
             catch (Exception e)
             {
                 Debug.LogError($"创建玩家时发生错误: {e.Message}\nStackTrace: {e.StackTrace}");
             }
         }
-        
-        private IEnumerator DelayedEventSubscription()
+
+        public void RemovePlayer()
         {
-            // 等待一帧确保所有Manager都已初始化
-            yield return null;
-            
-            SubscribeToEvents();
+            // 上传玩家数据
+            if (player != null)
+            {
+                runtimePlayerData = player.playerData;
+                Debug.Log($"上传玩家数据: {runtimePlayerData.playerName}");
+                // 清理玩家对象
+                Destroy(player.gameObject);
+            }
         }
 
         #endregion
@@ -192,6 +221,12 @@ namespace Manager
         #region 事件管理
 
         private void SubscribeToEvents()
+        {
+            GameManager.Instance.OnDialogueManagerReady += OnDialogueManagerReady;
+
+        }
+
+        public void OnDialogueManagerReady()
         {
             try
             {
@@ -222,6 +257,7 @@ namespace Manager
                     DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
                     Debug.Log("成功取消订阅对话结束事件");
                 }
+                GameManager.Instance.OnDialogueManagerReady -= OnDialogueManagerReady;
             }
             catch (Exception e)
             {
@@ -263,69 +299,49 @@ namespace Manager
                 return;
             }
 
-            player.gameObject.SetActive(active);
-            Debug.Log($"玩家激活状态设置为: {active}");
+            if (active)
+            {
+                player.playerData = runtimePlayerData; // 确保使用运行时数据
+                player.gameObject.SetActive(true);
+            }
+            else
+            {
+                runtimePlayerData = player.playerData; // 保存当前数据
+                player.gameObject.SetActive(false);
+            }
         }
 
-        public void SetPlayerPosition(GameObject playerPoint)
+        public bool SetPlayerPosition(GameObject playerPoint)
         {
             if (player == null)
             {
                 Debug.LogError("玩家对象为空，无法设置位置");
-                return;
+                return false;
             }
 
             if (playerPoint == null)
             {
                 Debug.LogError("玩家出生点为空");
-                return;
+                return false;
             }
 
-            Vector3 targetPosition = playerPoint.transform.position;
-            player.transform.position = targetPosition;
+            player.playerData.playerPosition = playerPoint.transform.position;
+            player.transform.position = player.playerData.playerPosition;
             
-            Debug.Log($"玩家位置设置为: {targetPosition}");
+            Debug.Log($"玩家位置设置为: {player.playerData.playerPosition}");
             
             // 确保玩家在设置位置后是激活的
-            if (!player.gameObject.activeInHierarchy)
-            {
-                if (SceneManager.GetActiveScene().name != "女生宿舍")
-                    SetPlayerActive(true);
-                
-                if (!GameStateManager.Instance.GetFlag("FirstEntry_" + SceneManager.GetActiveScene().name))
-                    SetPlayerActive(true);
-            }
+            // if (!player.gameObject.activeInHierarchy)
+            // {
+            //     if (SceneManager.GetActiveScene().name != "女生宿舍")
+            //         SetPlayerActive(true);
+            //     
+            //     if (!GameStateManager.Instance.GetFlag("FirstEntry_" + SceneManager.GetActiveScene().name))
+            //         SetPlayerActive(true);
+            // }
             
             isPlayerInitialized = true;
-        }
-
-        public void ChangePlayerName(string newName)
-        {
-            if (string.IsNullOrWhiteSpace(newName))
-            {
-                Debug.LogError("新名称为空或无效");
-                return;
-            }
-
-            // 添加更详细的检查
-            if (player == null)
-            {
-                Debug.LogError("玩家对象为空，请先创建玩家");
-                return;
-            }
-
-            if (player.playerData == null)
-            {
-                Debug.LogError("玩家数据组件未初始化，请检查Player预制体上的PlayerData组件");
-                return;
-            }
-
-            string oldName = player.playerData.playerName;
-            player.playerData.playerName = newName;
-    
-            Debug.Log($"玩家名称从 '{oldName}' 更改为 '{newName}'");
-    
-            TriggerNameChangeDialogue();
+            return true;
         }
 
         private void TriggerNameChangeDialogue()
@@ -461,43 +477,6 @@ namespace Manager
 
         #endregion
 
-        #region 公共查询方法
-
-        public bool IsPlayerInitialized()
-        {
-            return isPlayerInitialized && player != null;
-        }
-
-        public Vector3 GetPlayerPosition()
-        {
-            return player?.transform.position ?? Vector3.zero;
-        }
-
-        public Camera GetCurrentCamera()
-        {
-            return currentCamera;
-        }
-
-        /// <summary>
-        /// 获取运行时玩家数据（用于游戏逻辑）
-        /// </summary>
-        /// <returns>运行时玩家数据副本</returns>
-        public PlayerData GetRuntimePlayerData()
-        {
-            return runtimePlayerData;
-        }
-
-        /// <summary>
-        /// 获取原始玩家数据（只读）
-        /// </summary>
-        /// <returns>原始玩家数据</returns>
-        public PlayerData GetOriginalPlayerData()
-        {
-            return originalPlayerData;
-        }
-
-        #endregion
-
         #region 调试方法
 
         [ContextMenu("重新创建玩家")]
@@ -533,6 +512,49 @@ namespace Manager
             {
                 Debug.LogWarning("运行时玩家数据为空");
             }
+        }
+
+        #endregion
+
+        #region 公共方法
+
+        public PlayerGameData GetPlayerGameData()
+        {
+            return runtimePlayerData;
+        }
+
+        public void SetPlayerGameData(PlayerGameData playerGameData)
+        {
+            LoadPlayerData(playerGameData);
+        }
+        
+        public void ChangePlayerName(string newName)
+        {
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                Debug.LogError("新名称为空或无效");
+                return;
+            }
+
+            // 添加更详细的检查
+            if (player == null)
+            {
+                Debug.LogError("玩家对象为空，请先创建玩家");
+                return;
+            }
+
+            if (player.playerData == null)
+            {
+                Debug.LogError("玩家数据组件未初始化，请检查Player预制体上的PlayerData组件");
+                return;
+            }
+
+            string oldName = player.playerData.playerName;
+            player.playerData.playerName = newName;
+    
+            Debug.Log($"玩家名称从 '{oldName}' 更改为 '{newName}'");
+    
+            TriggerNameChangeDialogue();
         }
 
         #endregion

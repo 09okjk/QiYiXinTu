@@ -12,16 +12,36 @@ public class PlayerAnimationTriggers : MonoBehaviour
         player.AnimationTrigger();
     }
 
-    private void AttackTrigger()
+    private void AttackTrigger(string param)
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(player.attackCheck.position, player.attackCheckRadius, player.whatIsEnemy);
-        foreach (Collider2D collider in colliders)
+        
+        var arr = param.Split(',');
+        if (arr.Length < 1 || arr.Length > 3)
         {
-            if (collider.TryGetComponent<Enemy>(out Enemy enemy))
-            {
-                enemy.Damage(player.playerData.attackDamage);
-            }
+            Debug.LogError("Invalid parameters for AttackTrigger. Expected 1 to 3 parameters.");
+            return;
         }
+        
+        int _attackType = int.Parse(arr[0]);
+        AttackType attackType = (AttackType)_attackType;
+        if (arr.Length == 3)
+        {
+            float direction_x = float.Parse(arr[1]);
+            float direction_y = float.Parse(arr[2]);
+            Vector2 direction = new Vector2(direction_x, direction_y);
+            player.attackCheckerManager.EnableAttackCollider(attackType,direction);
+            return;
+        }
+        player.attackCheckerManager.EnableAttackCollider(attackType);
+        
+        // Collider2D[] colliders = Physics2D.OverlapCircleAll(player.attackCheck.position, player.attackCheckRadius, player.whatIsEnemy);
+        // foreach (Collider2D collider in colliders)
+        // {
+        //     if (collider.TryGetComponent<Enemy>(out Enemy enemy))
+        //     {
+        //         enemy.Damage(player.playerData.attackDamage);
+        //     }
+        // }
     }
     
     private void DefendTrigger()

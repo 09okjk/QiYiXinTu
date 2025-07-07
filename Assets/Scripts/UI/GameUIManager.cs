@@ -19,6 +19,7 @@ public class GameUIManager : MonoBehaviour
     [Header("Player Status")]
     [SerializeField] private Image playerPortrait; // 玩家头像
     [SerializeField] private HealthBarManager healthBarManager;
+    [SerializeField] private Slider manaSlider; // 法力值滑动条
     
     [Header("Skill Bar")]
     [SerializeField] private Transform skillBarContainer;
@@ -241,8 +242,7 @@ public class GameUIManager : MonoBehaviour
     
     private void UpdateMana(float current, float max)
     {
-        // manaSlider.value = current / max;
-        // manaText.text = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
+        manaSlider.value = 1 - (current / max);
     }
     
     private void InitializeSkillBar()

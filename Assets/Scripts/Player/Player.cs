@@ -9,11 +9,40 @@ using Skills;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public class PlayerGameData
+{
+    // Basic player data
+    public int MaxHealth;
+    public int CurrentHealth;
+    public float MaxMana;
+    public float CurrentMana;
+    // Hurt info
+    public float InvincibleTime;
+    // Knockback info
+    public Vector2 knockbackDirection;
+    public float KnockbackDuration;
+    // Inventory info
+    [SerializeField] public List<string> itemIDs = new List<string>();
+    // Player info
+    public string playerID;
+    public string playerName;
+    public Vector3 playerPosition;
+    // Movement info
+    public float moveSpeed = 8f;
+    public float jumpForce = 12f;
+    public float wallJumpForce = 5f;
+    public float idleToMoveTransitionTime = 0.0001f;
+    // Attack info
+    public float comboTimeWindow = 0.2f;
+    public float counterAttackDuration = 2f;
+    public int attackDamage = 1;
+    
+}
 public class Player : Entity
 {
     public Transform swordPoint;
     
-    public PlayerData playerData => (PlayerData)baseData;
+    public PlayerGameData playerData;
     public float moveSpeed => playerData.moveSpeed;
     public float jumpForce => playerData.jumpForce;
     public float wallJumpForce => playerData.wallJumpForce;
@@ -26,11 +55,14 @@ public class Player : Entity
     public float counterAttackDuration => playerData.counterAttackDuration;
     public LayerMask whatIsEnemy;
     public Vector2[] attackMovements;
+    public PlayerAttackCheckerManager attackCheckerManager;
     
     [Header("Input Actions")]
     [SerializeField] private InputActionReference inventoryAction;
     [SerializeField] private InputActionReference menuAction;
     [SerializeField] private InputActionReference newsBookAction;
+    [SerializeField] private InputActionReference skillAttackAction;
+    [SerializeField] private InputActionReference skillHealAction;
     
     public bool isBusy {get; private set;}
     // public SkillManager skillManager { get; private set; }
@@ -58,6 +90,8 @@ public class Player : Entity
     public PlayerCatchSwordState CatchSwordState { get; private set; }
     public PlayerHurtState HurtState { get; private set; }
     public PlayerDeathState DeathState { get; private set; }
+    public PlayerAttackSkillState SkillAttackState { get; private set; }
+    public PlayerHealSkillState SkillHealState { get; private set; }
     
     #endregion
 
@@ -105,6 +139,8 @@ public class Player : Entity
         CatchSwordState = new PlayerCatchSwordState(this, stateMachine, "CatchSword");
         HurtState = new PlayerHurtState(this, stateMachine, "Hurt");
         DeathState = new PlayerDeathState(this, stateMachine, "Death");
+        SkillAttackState = new PlayerAttackSkillState(this, stateMachine, "SkillAttack");
+        SkillHealState = new PlayerHealSkillState(this, stateMachine, "SkillHeal");
     }
 
     protected override void Start()
@@ -118,18 +154,22 @@ public class Player : Entity
     {
         inventoryAction.action.Enable();
         menuAction.action.Enable();
+        skillAttackAction.action.Enable();
         
         // MenuManager.Instance.OnMenuStateChanged += HandleMenuStateChanged;
         InventoryManager.Instance.OnInventoryStateChanged += HandleInventoryStateChanged;
         inventoryAction.action.performed += OnInventoryToggle;
         menuAction.action.performed += OnMenuToggle;
         newsBookAction.action.performed += OnNewsBookToggle;
+        skillAttackAction.action.performed += OnUseSkillAttack;
+        skillHealAction.action.performed += OnUseSkillHeal;
     }
     
     private void OnDisable()
     {
         inventoryAction.action.Disable();
         menuAction.action.Disable();
+        skillAttackAction.action.Disable();
         
         // MenuManager.Instance.OnMenuStateChanged -= HandleMenuStateChanged;
         InventoryManager.Instance.OnInventoryStateChanged -= HandleInventoryStateChanged;
@@ -137,6 +177,8 @@ public class Player : Entity
         inventoryAction.action.performed -= OnInventoryToggle;
         menuAction.action.performed -= OnMenuToggle;
         newsBookAction.action.performed -= OnNewsBookToggle;
+        skillAttackAction.action.performed -= OnUseSkillAttack;
+        skillHealAction.action.performed -= OnUseSkillHeal;
     }
 
     protected override void Update()
@@ -284,6 +326,7 @@ public class Player : Entity
         base.AddHealth(amount);
         float maxHealth = playerData.MaxHealth;
         playerData.CurrentHealth = (int)Math.Min(playerData.CurrentHealth + amount, maxHealth);
+        Debug.Log("Player current health1: " + playerData.CurrentHealth);
         OnHealthChanged?.Invoke(playerData.CurrentHealth, false);
     }
 
@@ -328,6 +371,24 @@ public class Player : Entity
     {
         if (!CanToggleUI() || _isInventoryOpen || _isNewsBookOpen || _isPopWindowOpen) return;
         MenuManager.Instance.ToggleMenu();
+    }
+    
+    private void OnUseSkillAttack(InputAction.CallbackContext context)
+    {
+        if (!CanToggleUI() || _isInventoryOpen || _isNewsBookOpen || _isPopWindowOpen) return;
+        if (SkillManager.Instance.attackSkill.CanUseSkill() && playerData.CurrentMana > 0)
+        {
+            stateMachine.ChangeState(SkillAttackState);
+        }
+    }
+    
+    private void OnUseSkillHeal(InputAction.CallbackContext context)
+    {
+        if (!CanToggleUI() || _isInventoryOpen || _isNewsBookOpen || _isPopWindowOpen) return;
+        if (SkillManager.Instance.healSkill.CanUseSkill() && playerData.CurrentMana > 0)
+        {
+            stateMachine.ChangeState(SkillHealState);
+        }
     }
 
     #endregion

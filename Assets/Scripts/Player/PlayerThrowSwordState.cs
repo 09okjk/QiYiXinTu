@@ -18,8 +18,8 @@ public class PlayerThrowSwordState: PlayerState
         
         if (TriggerCalled)
         {
-            SkillManager.Instance.swordSkill.CreateSword();
-            SkillManager.Instance.swordSkill.DotsActive(false);
+            // SkillManager.Instance.swordSkill.CreateSword();
+            // SkillManager.Instance.swordSkill.DotsActive(false);
             StateMachine.ChangeState(Player.IdleState);
         }
     }

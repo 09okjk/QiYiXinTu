@@ -9,7 +9,8 @@ namespace Manager
         public static SkillManager Instance { get; private set; }
 
         public DashSkill dashSkill { get; private set; }
-        public SwordSkill swordSkill { get; private set; }
+        public AttackSkill attackSkill { get; private set; }
+        public HealSkill healSkill { get; private set; }
 
         private void Awake()
         {
@@ -27,7 +28,8 @@ namespace Manager
         private void Start()
         {
             dashSkill = GetComponent<DashSkill>();
-            swordSkill = GetComponent<SwordSkill>();
+            attackSkill = GetComponent<AttackSkill>();
+            healSkill = GetComponent<HealSkill>();
         }
     }
 

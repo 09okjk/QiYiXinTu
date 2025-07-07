@@ -10,7 +10,7 @@ public class PlayerAimSwordState: PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        SkillManager.Instance.swordSkill.DotsActive(true);
+        // SkillManager.Instance.swordSkill.DotsActive(true);
     }
 
     public override void Update()

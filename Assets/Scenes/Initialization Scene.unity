@@ -944,6 +944,8 @@ GameObject:
   - component: {fileID: 284299042}
   - component: {fileID: 284299043}
   - component: {fileID: 284299047}
+  - component: {fileID: 284299048}
+  - component: {fileID: 284299049}
   m_Layer: 0
   m_Name: SkillManager
   m_TagString: Untagged
@@ -994,6 +996,36 @@ MonoBehaviour:
   manaCost: 0
   dashSpeed: 20
   dashDuration: 0.5
+--- !u!114 &284299048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284299041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd32bf938784c35a1be0f0999d7007c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coolDown: 1
+  manaCost: 1
+  damage: 2
+--- !u!114 &284299049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284299041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8e25ef442f64e6fb20963df81a2105b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coolDown: 1
+  manaCost: 1
+  healAmount: 1
 --- !u!1 &344821941
 GameObject:
   m_ObjectHideFlags: 0

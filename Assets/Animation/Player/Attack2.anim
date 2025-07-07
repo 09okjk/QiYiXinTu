@@ -90,7 +90,7 @@ AnimationClip:
   m_Events:
   - time: 0.23529412
     functionName: AttackTrigger
-    data: 
+    data: 2
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
