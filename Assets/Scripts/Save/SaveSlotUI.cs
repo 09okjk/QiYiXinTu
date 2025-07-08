@@ -28,13 +28,13 @@ public class SaveSlotUI : MonoBehaviour
     }
 
     // 设置已存在的槽位
-    public void SetupExistingSlot(int index, SaveDataInfo info)
+    public void SetupExistingSlot(int index, SaveData info)
     {
         slotIndex = index;
         isEmpty = false;
         
         slotNameText.text = info.saveName;
-        dateText.text = info.saveDate.ToString("yyyy-MM-dd HH:mm");
+        dateText.text = info.saveTime;
         sceneNameText.text = info.sceneName;
         
         // 启用两个按钮
@@ -79,7 +79,7 @@ public class SaveSlotUI : MonoBehaviour
                 "覆盖存档",
                 "此操作将覆盖现有存档，是否继续?",
                 null,
-                async () => await SaveGame(),
+                async () => await SaveGame(false),
                 () => { /* 取消操作 */ });
         }
         else if(GameStateManager.Instance.GetFlag("IsNewGame"))
@@ -90,7 +90,7 @@ public class SaveSlotUI : MonoBehaviour
         else
         {
             // 如果是空槽位，直接保存
-            await SaveGame();
+            await SaveGame(false);
         }
     }
     
@@ -98,7 +98,7 @@ public class SaveSlotUI : MonoBehaviour
     {
         if (!isEmpty)
         {
-            _ = AsyncSaveLoadSystem.LoadGameAsync(slotIndex);
+            SaveLoadAsyncSystem.LoadGame(slotIndex);
             MenuManager.Instance.CloseAllPanels();
         }
     }
@@ -115,24 +115,26 @@ public class SaveSlotUI : MonoBehaviour
                 null,
                 () =>
                 {
-                    _ = AsyncSaveLoadSystem.DeleteSaveFileAsync(slotIndex);
+                    SaveLoadAsyncSystem.DeleteSave(slotIndex);
                     MenuManager.Instance.OpenSavePanel();
                 },
                 () => { /* 取消操作 */ });
         }
     }
 
-    private async Task SaveGame()
+    private Task SaveGame(bool isQuickSave)
     {
-        await AsyncSaveLoadSystem.SaveGameAsync(slotIndex);
+        SaveLoadAsyncSystem.SaveGame(isQuickSave,slotIndex);
+        return Task.CompletedTask;
     }
     
-    private async Task SaveWithReset()
+    private Task SaveWithReset()
     {
         // 1. 先执行重置
         GameManager.Instance.ResetAllGameData();
     
         // 2. 完成后再执行保存操作
-        await AsyncSaveLoadSystem.SaveGameAsync(slotIndex);
+        SaveLoadAsyncSystem.SaveGame(false,slotIndex);
+        return Task.CompletedTask;
     }
 }

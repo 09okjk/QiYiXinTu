@@ -163,11 +163,11 @@ public class LuXinsheng : NPC
 
     private void UpdateMovementState()
     {
-        if (!isFollowing) return;
+        if (!GetNpcGameData().isFollowing) return;
 
         try
         {
-            if (followSpeed == 0)
+            if (GetNpcGameData().followSpeed == 0)
             {
                 // 跟随速度为0时，切换到空闲状态
                 if (stateMachine.CurrentState != IdleState)

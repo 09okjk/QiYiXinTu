@@ -99,7 +99,7 @@ namespace Manager
             }
             
             // 订阅事件
-            AsyncSaveLoadSystem.OnLoadComplete += OnDataLoaded;
+            SaveLoadAsyncSystem.OnLoadComplete += OnDataLoaded;
             if (DialogueManager.Instance != null)
             {
                 DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
@@ -113,7 +113,7 @@ namespace Manager
         private void OnDestroy()
         {
             // 取消订阅事件
-            AsyncSaveLoadSystem.OnLoadComplete -= OnDataLoaded;
+            SaveLoadAsyncSystem.OnLoadComplete -= OnDataLoaded;
             if (DialogueManager.Instance != null)
             {
                 DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
@@ -163,7 +163,7 @@ namespace Manager
             if (isDataLoaded  && isSceneLoaded && !isLevelInitialized)
             {
                 // 添加从存档加载的判断
-                if (AsyncSaveLoadSystem.IsLoadingFromSave)
+                if (SaveLoadAsyncSystem.IsLoadingFromSave)
                 {
                     Debug.Log("从存档加载中，跳过常规初始化流程");
                     isLevelInitialized = true; // 标记为已初始化

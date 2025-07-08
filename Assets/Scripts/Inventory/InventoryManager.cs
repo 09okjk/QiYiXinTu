@@ -11,6 +11,16 @@ public enum ItemType
     PuzzleItem,
     Consumable
 }
+[Serializable]
+public class ItemGameData
+{
+    public string itemID;
+    public string itemName;
+    public string description;
+    public ItemType itemType;
+    public Sprite icon;
+    public ItemProperty[] properties;
+}
 
 public class InventoryManager : MonoBehaviour
 {
@@ -28,8 +38,8 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Button questTabButton;
     [SerializeField] private Button puzzleTabButton;
 
-    [SerializeField] private List<ItemData> questItems = new List<ItemData>();
-    [SerializeField] private List<ItemData> puzzleItems = new List<ItemData>();
+    [SerializeField] private List<ItemGameData> questItems = new List<ItemGameData>();
+    [SerializeField] private List<ItemGameData> puzzleItems = new List<ItemGameData>();
     [SerializeField] private ItemType currentTab = ItemType.QuestItem;
 
     public event Action<bool> OnInventoryStateChanged;
@@ -94,7 +104,7 @@ public class InventoryManager : MonoBehaviour
     }
 
     // 添加物品
-    public void AddItem(ItemData item)
+    public void AddItem(ItemGameData item)
     {
         if (item.itemType == ItemType.QuestItem)
         {
@@ -125,7 +135,7 @@ public class InventoryManager : MonoBehaviour
     public void AddItemById(string itemID)
     {
         var item = ItemManager.Instance.GetItem(itemID);
-        if (item)
+        if (item != null)
             AddItem(item);
         else
             Debug.LogWarning($"Item with ID {itemID} not found.");
@@ -142,7 +152,7 @@ public class InventoryManager : MonoBehaviour
     public void RemoveItem(string itemID)
     {
         // 在两个列表中查找物品
-        ItemData item = questItems.Find(i => i.itemID == itemID);
+        ItemGameData item = questItems.Find(i => i.itemID == itemID);
         if (item != null)
         {
             questItems.Remove(item);
@@ -164,13 +174,31 @@ public class InventoryManager : MonoBehaviour
     }
 
     // 获取所有物品
-    public List<ItemData> GetAllItems()
+    public List<string> GetAllItemIDs()
     {
-        List<ItemData> allItems = new List<ItemData>(questItems);
-        allItems.AddRange(puzzleItems);
-        return allItems; // 返回列表的副本
+        List<string> allItemIDs = new List<string>();
+        foreach (var item in questItems)
+        {
+            allItemIDs.Add(item.itemID);
+        }
+        foreach (var item in puzzleItems)
+        {
+            allItemIDs.Add(item.itemID);
+        }
+        return allItemIDs;
     }
-
+    
+    // 设置所有物品
+    public void SetAllItemsByIDs(List<string> itemIDs)
+    {
+        questItems.Clear();
+        puzzleItems.Clear();
+        
+        foreach (var itemID in itemIDs)
+        {
+            AddItemById(itemID);
+        }
+    }
     // 清空背包
     public void ClearInventory()
     {
@@ -221,7 +249,7 @@ public class InventoryManager : MonoBehaviour
     /// </summary>
     /// <param name="items">物品列表</param>
     /// <param name="container">容器</param>
-    private void PopulateItemContainer(List<ItemData> items, Transform container)
+    private void PopulateItemContainer(List<ItemGameData> items, Transform container)
     {
         int itemCount = items.Count;
         for (int i = 0; i < 25; i++)
@@ -236,9 +264,9 @@ public class InventoryManager : MonoBehaviour
     }
 
     // 控制物品详情显示
-    public void ItemDetailsTrigger(bool isSelected, ItemData item = null)
+    public void ItemDetailsTrigger(bool isSelected, ItemGameData item = null)
     {
-        if (!item)
+        if (item == null)
         {
             itemNameText.text = "";
             itemDescriptionText.text = "";

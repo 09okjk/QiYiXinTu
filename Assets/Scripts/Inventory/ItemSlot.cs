@@ -9,7 +9,7 @@ public class ItemSlot : MonoBehaviour
     public Button button;
     
     private bool isSelected = false;
-    private ItemData item;
+    private ItemGameData item;
 
     private void Start()
     {
@@ -34,7 +34,7 @@ public class ItemSlot : MonoBehaviour
         }
     }
 
-    public void SetItem(ItemData newItem)
+    public void SetItem(ItemGameData newItem)
     {
         item = newItem;
         
@@ -47,7 +47,7 @@ public class ItemSlot : MonoBehaviour
     
     private void OnItemClicked()
     {
-        if (!item) return;
+        if (item == null) return;
         isSelected = !isSelected;
         InventoryManager.Instance.ItemDetailsTrigger(isSelected, item);
     }

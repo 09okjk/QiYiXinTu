@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {   
-    public ItemData _itemData;
+    public ItemGameData _itemData;
     
     public SpriteRenderer icon; 
     
@@ -13,7 +13,7 @@ public class Item : MonoBehaviour
         icon = GetComponent<SpriteRenderer>();
     }
 
-    public void SetItemData(ItemData itemData)
+    public void SetItemData(ItemGameData itemData)
     {
         Debug.Log("设置物品数据: " + itemData.itemName);
         _itemData = itemData;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
@@ -94,14 +95,14 @@ namespace UI
         private async void OncontinueButtonClicked()
         {
             // 从存档中获取更新时间最近的游戏数据
-            SaveDataInfo[] dataList =await AsyncSaveLoadSystem.GetSaveDataInfosAsync();
-            SaveDataInfo saveDataInfo = dataList[0];
+            List<SaveData> dataList =await SaveLoadAsyncSystem.GetAllSaves();
+            SaveData saveDataInfo = dataList[0];
             // 从存档中加载SaveDataInfo.saveDate最近的存档
             foreach (var saveData in dataList)
             {
                 if (saveData == null) continue; // 跳过空的存档数据
                 // 如果当前存档的日期比已记录的日期新，则更新
-                if (saveData.saveDate > saveDataInfo.saveDate)
+                if (saveData.saveDateTime > saveDataInfo.saveDateTime)
                 {
                     saveDataInfo = saveData;
                 }
@@ -113,7 +114,7 @@ namespace UI
                 return;
             }
             // 加载存档
-            await AsyncSaveLoadSystem.LoadGameAsync(saveDataInfo.slotIndex);
+            await SaveLoadAsyncSystem.LoadGame(saveDataInfo.saveSlotIndex);
         }
 
         private void OnSettingButtonClicked()

@@ -96,7 +96,7 @@ namespace Save
         
             [Serializable]
             public class EnemySaveData
-            {
+            { 
                 public string enemyID;
                 public float[] position = new float[3];
                 public bool isActive;

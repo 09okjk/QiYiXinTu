@@ -78,14 +78,14 @@ public class MenuManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        AsyncSaveLoadSystem.OnSaveComplete += OnDataSave;
+        SaveLoadAsyncSystem.OnSaveComplete += OnDataSave;
         OnMenuStateChanged += OnMenuStateChangedHandler;
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        AsyncSaveLoadSystem.OnSaveComplete -= OnDataSave;
+        SaveLoadAsyncSystem.OnSaveComplete -= OnDataSave;
         OnMenuStateChanged -= OnMenuStateChangedHandler;
     }
 
@@ -249,21 +249,21 @@ public class MenuManager : MonoBehaviour
             Debug.Log("正在加载存档信息...");
             
             // 使用await等待异步操作完成
-            SaveDataInfo[] saveDataInfos = await AsyncSaveLoadSystem.GetSaveDataInfosAsync();
+            List<SaveData> saveDataInfos = await SaveLoadAsyncSystem.GetAllSaves();
 
             // 创建一个与maxSaveSlots大小相同的数组，默认值为null
-            SaveDataInfo[] sortedSaveData = new SaveDataInfo[maxSaveSlots];
+            List<SaveData> sortedSaveData = new List<SaveData>();
 
             // 将现有存档信息放入对应的索引位置
-            for (int i = 0; i < saveDataInfos.Length; i++)
+            for (int i = 0; i < saveDataInfos.Count; i++)
             {
-                if (saveDataInfos[i].slotIndex >= 0 && saveDataInfos[i].slotIndex < maxSaveSlots)
+                if (saveDataInfos[i].saveSlotIndex >= 0 && saveDataInfos[i].saveSlotIndex < maxSaveSlots)
                 {
-                    sortedSaveData[saveDataInfos[i].slotIndex] = saveDataInfos[i];
+                    sortedSaveData[saveDataInfos[i].saveSlotIndex] = saveDataInfos[i];
                 }
                 else
                 {
-                    Debug.LogWarning($"存档槽索引超出范围: {saveDataInfos[i].slotIndex}");
+                    Debug.LogWarning($"存档槽索引超出范围: {saveDataInfos[i].saveSlotIndex}");
                 }
             }
 
@@ -274,7 +274,7 @@ public class MenuManager : MonoBehaviour
             }
             
             // 创建空插槽到最大
-            for (int i = saveDataInfos.Length; i < maxSaveSlots; i++)
+            for (int i = saveDataInfos.Count; i < maxSaveSlots; i++)
             {
                 CreateSaveSlot(i, null);
             }
@@ -288,7 +288,7 @@ public class MenuManager : MonoBehaviour
     }
     
     // 用于创建保存插槽
-    private void CreateSaveSlot(int slotIndex, SaveDataInfo info)
+    private void CreateSaveSlot(int slotIndex, SaveData info)
     {
         GameObject slotGO = Instantiate(saveSlotPrefab, saveSlotContainer);
         SaveSlotUI slotUI = slotGO.GetComponent<SaveSlotUI>();

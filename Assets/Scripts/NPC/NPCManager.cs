@@ -10,48 +10,31 @@ using Utils;
 
 public class NPCManager : MonoBehaviour
 {
-    public const string NpcPointFormat = "NPCPoint_";
-    
     public static NPCManager Instance { get; private set; }
     
     [Header("NPC设置")]
-    [SerializeField] private GameObject npcPrefab;
+    [SerializeField] private List<GameObject> npcPrefabs = new List<GameObject>();
     [SerializeField] private int initialPoolSize = 10;
     [SerializeField] private bool useObjectPool = true;
     
-    // 原始NPC数据（只读）
-    private NPCData[] originalNpcDataList;
     // 运行时NPC数据副本
-    private Dictionary<string, NPCData> runtimeNpcDataDictionary = new Dictionary<string, NPCData>();
-    private Dictionary<string, GameObject> npcObjectDictionary = new Dictionary<string, GameObject>();
-    
-    // 对象池
-    private Queue<GameObject> npcPool = new Queue<GameObject>();
-    private List<GameObject> activeNPCs = new List<GameObject>();
-    
-    // 当前场景相关
-    private string currentSceneName;
-    private List<NPCData> currentSceneNPCs = new List<NPCData>();
+    private Dictionary<string, NpcGameData> runtimeNpcDataDictionary = new Dictionary<string, NpcGameData>();
+    private readonly Dictionary<string, NPC> npcDictionary = new Dictionary<string, NPC>();
 
     #region Unity生命周期
 
     private void Awake()
     {
         InitializeSingleton();
-        LoadOriginalNPCData();
-        CreateRuntimeDataCopies();
-        InitializeObjectPool();
+        InitializeNpcObjectList();
     }
     
     private void Start()
     {
-        currentSceneName = SceneManager.GetActiveScene().name;
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
         CleanupRuntimeData();
     }
 
@@ -74,50 +57,40 @@ public class NPCManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    
     /// <summary>
-    /// 加载原始NPC数据（只读）
+    /// 保存所有Npc运行时数据
     /// </summary>
-    private void LoadOriginalNPCData()
+    private void SaveAllNpcRuntimeData()
     {
-        try
+        foreach (var npc in npcDictionary.Values)
         {
-            originalNpcDataList = Resources.LoadAll<NPCData>("ScriptableObjects/NPCs");
-            
-            if (originalNpcDataList == null || originalNpcDataList.Length == 0)
+            if (npc != null)
             {
-                Debug.LogWarning("未找到NPC数据文件");
-                return;
+                SaveNpcRuntimeData(npc.GetNpcGameData().npcID);
             }
-            
-            Debug.Log($"成功加载 {originalNpcDataList.Length} 个原始NPC数据");
         }
-        catch (Exception e)
-        {
-            Debug.LogError($"加载原始NPC数据时发生错误: {e.Message}");
-        }
+        Debug.Log($"保存了 {runtimeNpcDataDictionary.Count} 个NPC运行时数据");
     }
-
-    /// <summary>
-    /// 创建运行时数据副本
-    /// </summary>
-    private void CreateRuntimeDataCopies()
-    {
-        runtimeNpcDataDictionary.Clear();
     
-        if (originalNpcDataList == null) return;
-
-        foreach (var originalData in originalNpcDataList)
+    /// <summary>
+    /// 保存指定NPC的运行时数据
+    /// </summary>
+    /// <param name="npcID">NPC的唯一标识符</param>
+    private void SaveNpcRuntimeData(string npcID)
+    {
+        if (npcDictionary.TryGetValue(npcID, out var npc))
         {
-            if (originalData != null && !string.IsNullOrEmpty(originalData.npcID))
+            if (npc != null)
             {
-                // 使用增强后的工具类
-                var runtimeCopy = Utils.ScriptableObjectUtils.CreateNPCDataCopy(originalData);
-                runtimeNpcDataDictionary[originalData.npcID] = runtimeCopy;
+                runtimeNpcDataDictionary[npcID] = npc.GetNpcGameData();
+                Debug.Log($"保存NPC {npcID} 的运行时数据");
             }
         }
-    
-        Debug.Log($"创建了 {runtimeNpcDataDictionary.Count} 个NPC运行时数据副本");
+        else
+        {
+            Debug.LogWarning($"未找到NPC {npcID}，无法保存运行时数据");
+        }
     }
 
     /// <summary>
@@ -125,13 +98,9 @@ public class NPCManager : MonoBehaviour
     /// </summary>
     public void ResetAllNPCData()
     {
-        foreach (var originalData in originalNpcDataList)
+        foreach (var npcComponent in npcDictionary.Values)
         {
-            if (originalData != null && runtimeNpcDataDictionary.ContainsKey(originalData.npcID))
-            {
-                var runtimeData = runtimeNpcDataDictionary[originalData.npcID];
-                ScriptableObjectUtils.ResetToOriginal(originalData, runtimeData);
-            }
+            npcComponent.ResetNPC(); // 假设NPC类有一个ResetNPC方法来重置状态
         }
         
         Debug.Log("已重置所有NPC数据到原始状态");
@@ -142,82 +111,70 @@ public class NPCManager : MonoBehaviour
     /// </summary>
     private void CleanupRuntimeData()
     {
-        ScriptableObjectUtils.SafeDestroyRuntimeCopies(runtimeNpcDataDictionary.Values);
         runtimeNpcDataDictionary.Clear();
     }
 
-    private void InitializeObjectPool()
+    private void InitializeNpcObjectList()
     {
-        if (!useObjectPool || npcPrefab == null)
+        if (npcPrefabs == null)
         {
+            Debug.LogError("NPC预制体列表未设置");
             return;
         }
 
-        for (int i = 0; i < initialPoolSize; i++)
+        foreach (var npc in npcPrefabs.Select(CreateNpcObject).Where(npc => npc != null))
         {
-            GameObject pooledNPC = CreateNPCObject();
-            if (pooledNPC != null)
+            npc.SetActive(false);
+            NPC npcComponent = npc.GetComponent<NPC>();
+            npcComponent.SetNpcGameData();
+            if (npcComponent != null)
             {
-                pooledNPC.SetActive(false);
-                npcPool.Enqueue(pooledNPC);
+                npcDictionary[npcComponent.GetNpcGameData().npcID] = npcComponent;
             }
         }
+        // 保存为初始运行时数据副本
+        SaveAllNpcRuntimeData();
         
-        Debug.Log($"NPC对象池初始化完成，初始大小: {npcPool.Count}");
+        Debug.Log($"NPC对象列表初始化完成，初始大小: {npcPrefabs.Count}");
     }
 
     #endregion
 
     #region 场景管理
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
+    /// <summary>
+    /// 加载当前场景的NPC数据
+    /// </summary>
+    /// <param name="currentSceneName">当前场景名称</param>
+    public bool LoadCurrentSceneNPCs(string currentSceneName)
     {
-        currentSceneName = scene.name;
-        Debug.Log($"场景切换到: {currentSceneName}");
-        
-        // 清理当前场景的NPC
-        CleanupCurrentSceneNPCs();
-        
-        // 加载新场景的NPC数据
-        LoadCurrentSceneNPCs();
-    }
-
-    private void LoadCurrentSceneNPCs()
-    {
-        currentSceneNPCs.Clear();
-        
-        foreach (var runtimeData in runtimeNpcDataDictionary.Values)
+        try
         {
-            if (runtimeData != null && runtimeData.sceneName == currentSceneName)
+            int npcCount = 0;
+            foreach (var runtimeData in runtimeNpcDataDictionary.Values)
             {
-                currentSceneNPCs.Add(runtimeData);
+                if (runtimeData != null && runtimeData.sceneName == currentSceneName)
+                {
+                    SetNpc(npcDictionary[runtimeData.npcID], runtimeData);
+                    npcCount++;
+                }
             }
-        }
-        
-        Debug.Log($"当前场景 {currentSceneName} 需要加载 {currentSceneNPCs.Count} 个NPC");
-    }
 
-    private void CleanupCurrentSceneNPCs()
-    {
-        // 将激活的NPC返回对象池或销毁
-        for (int i = activeNPCs.Count - 1; i >= 0; i--)
-        {
-            var npcObject = activeNPCs[i];
-            if (npcObject != null)
-            {
-                ReturnNPCToPool(npcObject);
-            }
+            Debug.Log($"加载场景 {currentSceneName} 的NPC数据，共加载 {npcCount} 个NPC");
+            return true;
         }
-        
-        activeNPCs.Clear();
-        Debug.Log("清理了当前场景的所有NPC");
+        catch (Exception e)
+        {
+            Debug.LogError($"加载场景 {currentSceneName} 的NPC数据时发生错误: {e.Message}");
+            return false;
+        }
     }
 
     #endregion
 
     #region NPC对象管理
 
-    private GameObject CreateNPCObject()
+    private GameObject CreateNpcObject(GameObject npcPrefab)
     {
         if (npcPrefab == null)
         {
@@ -237,39 +194,11 @@ public class NPCManager : MonoBehaviour
         }
     }
 
-    private GameObject GetNPCFromPool()
+    private void SetNpc(NPC npcComponent, NpcGameData npcGameData = null)
     {
-        if (npcPool.Count > 0)
-        {
-            return npcPool.Dequeue();
-        }
-        
-        // 对象池为空时创建新对象
-        return CreateNPCObject();
+        npcComponent.SetNpcGameData(npcGameData);
     }
-
-    private void ReturnNPCToPool(GameObject npcObject)
-    {
-        if (npcObject == null) return;
-
-        // 重置NPC状态
-        var npc = npcObject.GetComponent<NPC>();
-        if (npc != null)
-        {
-            npc.ResetNPC(); // 需要在NPC类中实现这个方法
-        }
-
-        npcObject.SetActive(false);
-        
-        if (useObjectPool)
-        {
-            npcPool.Enqueue(npcObject);
-        }
-        else
-        {
-            Destroy(npcObject);
-        }
-    }
+    
 
     #endregion
 
@@ -282,36 +211,32 @@ public class NPCManager : MonoBehaviour
             Debug.LogError("NPC ID 为空");
             return false;
         }
-
-        // 使用运行时数据副本
-        if (!runtimeNpcDataDictionary.ContainsKey(npcID))
+        
+        if (!npcDictionary.ContainsKey(npcID))
         {
-            Debug.LogError($"未找到ID为 {npcID} 的NPC运行时数据");
+            Debug.LogError($"未找到ID为 {npcID} 的NPC");
             return false;
         }
 
-        NPCData npcData = runtimeNpcDataDictionary[npcID];
+        NPC npc = npcDictionary[npcID];
         
         // 检查是否应该在当前场景显示此NPC
-        if (!ShouldShowNPCInCurrentScene(npcData))
+        if (!ShouldShowNPCInCurrentScene(npc.GetNpcGameData()))
         {
-            Debug.Log($"NPC {npcID} 不应该在当前场景 {currentSceneName} 中显示");
+            Debug.Log($"NPC {npcID} 不应该在当前场景{SceneManager.GetActiveScene().name}中显示");
             return false;
         }
 
         try
         {
-            GameObject npcObject = GetOrCreateNPCObject(npcID, npcData);
+            GameObject npcObject = npcDictionary[npcID].gameObject;
             if (npcObject == null) return false;
 
             // 设置NPC位置
-            SetNPCPosition(npcObject, npcPoint, npcData);
-            
-            // 配置NPC组件
-            ConfigureNPCComponent(npcObject, npcData);
+            SetNPCPosition(npcPoint, npcDictionary[npcID]);
             
             // 激活NPC
-            ActivateNPC(npcObject, npcData);
+            ActivateNPC(npcDictionary[npcID]);
             
             return true;
         }
@@ -322,56 +247,27 @@ public class NPCManager : MonoBehaviour
         }
     }
 
-    private GameObject GetOrCreateNPCObject(string npcID, NPCData npcData)
+    private void SetNPCPosition( GameObject npcPoint, NPC npc)
     {
-        // 检查是否已存在
-        if (npcObjectDictionary.ContainsKey(npcID))
-        {
-            var existingObject = npcObjectDictionary[npcID];
-            if (existingObject != null)
-            {
-                return existingObject;
-            }
-            else
-            {
-                npcObjectDictionary.Remove(npcID); // 清理无效引用
-            }
-        }
-
-        // 从对象池获取或创建新对象
-        GameObject npcObject = GetNPCFromPool();
-        if (npcObject == null) return null;
-
-        npcObject.name = npcID;
-        npcObjectDictionary[npcID] = npcObject;
-        activeNPCs.Add(npcObject);
-
-        return npcObject;
-    }
-
-    private void SetNPCPosition(GameObject npcObject, GameObject npcPoint, NPCData npcData)
-    {
-        var npc = npcObject.GetComponent<NPC>();
         if (npc == null)
         {
-            Debug.LogError($"NPC对象 {npcData.npcID} 上未找到NPC组件");
+            Debug.LogError($"NPC对象 {npc.GetNpcGameData().npcID} 上未找到NPC组件");
             return;
         }
-        npc.isFollowing = GameStateManager.Instance.GetFlag("Following_" + npcData.npcID);
-        if (npc != null && npc.isFollowing)
+        if (npc != null && npc.GetNpcGameData().isFollowing)
         {
-            // 跟随玩家的NPC
-            SetNPCFollowPosition(npcObject);
+            // 设置跟随玩家的NPC的位置
+            SetNPCFollowPosition(npc.gameObject);
         }
         else if (npcPoint != null)
         {
             // 设置到指定的NPC点位置
-            npcObject.transform.position = npcPoint.transform.position;
-            Debug.Log($"NPC {npcData.npcID} 设置到位置: {npcPoint.transform.position}");
+            npc.SetPosition(npcPoint.transform.position);
+            Debug.Log($"NPC {npc.GetNpcGameData().npcID} 设置到位置: {npcPoint.transform.position}");
         }
         else
         {
-            Debug.LogWarning($"NPC {npcData.npcID} 没有有效的位置设置");
+            Debug.LogWarning($"NPC {npc.GetNpcGameData().npcID} 没有有效的位置设置");
         }
     }
 
@@ -385,89 +281,21 @@ public class NPCManager : MonoBehaviour
         }
     }
 
-    private void ConfigureNPCComponent(GameObject npcObject, NPCData npcData)
+    private void ActivateNPC(NPC npc)
     {
-        var npc = npcObject.GetComponent<NPC>();
-        if (npc == null)
-        {
-            Debug.LogError($"NPC对象 {npcData.npcID} 上未找到NPC组件");
-            return;
-        }
-
-        // 设置NPC数据
-        npc.npcData = npcData;
-        npc.dialogueIDs = npcData.dialogueIDs;
-    }
-
-    private void ActivateNPC(GameObject npcObject, NPCData npcData)
-    {
-        var npc = npcObject.GetComponent<NPC>();
         if (npc == null) return;
-
-        // 检查特殊条件
-        if (ShouldNPCBeActive(npcData))
-        {
-            npc.ActivateNpc();
-            npcObject.SetActive(true);
-            Debug.Log($"激活NPC: {npcData.npcID}");
-        }
-        else
-        {
-            npc.DeactivateNpc();
-            Debug.Log($"NPC {npcData.npcID} 因特殊条件未激活");
-        }
+        npc.ActivateNpc();
     }
 
-    private bool ShouldShowNPCInCurrentScene(NPCData npcData)
+    private bool ShouldShowNPCInCurrentScene(NpcGameData npcData)
     {
-        return npcData.sceneName == currentSceneName || npcData.sceneName == "AllScenes";
+        return npcData.sceneName == SceneManager.GetActiveScene().name || npcData.sceneName == "AllScenes";
     }
 
-    private bool ShouldNPCBeActive(NPCData npcData)
+    public void HideNPC(NPC npc)
     {
-        // 检查游戏状态标志
-        if (GameStateManager.Instance != null)
-        {
-            string firstEntryFlag = "FirstEntry_" + currentSceneName;
-            bool isFirstEntry = GameStateManager.Instance.GetFlag(firstEntryFlag);
-			Debug.Log($"NPC {npcData.npcID} 在场景 {currentSceneName} 的第一次进入状态: {isFirstEntry}");
-            
-            // 根据NPC的特殊配置决定是否激活
-            return IsNPCSpeciallyDeactivated(npcData, isFirstEntry);
-        }
-        
-        return true; // 默认激活
-    }
-
-    private bool IsNPCSpeciallyDeactivated(NPCData npcData, bool isFirstEntry)
-    {
-        // 可以在NPCData中添加特殊规则字段，而不是硬编码
-        // 这里暂时保留原逻辑但使其可配置
-        if (isFirstEntry && npcData.npcID == "LuXinsheng" && SceneManager.GetActiveScene().name != "女生宿舍")
-        {
-            return true;
-        }
-        if (!isFirstEntry)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public void HideNPC(string npcID)
-    {
-        if (npcObjectDictionary.ContainsKey(npcID))
-        {
-            var npcObject = npcObjectDictionary[npcID];
-            if (npcObject != null)
-            {
-                ReturnNPCToPool(npcObject);
-                activeNPCs.Remove(npcObject);
-                npcObjectDictionary.Remove(npcID);
-                Debug.Log($"隐藏NPC: {npcID}");
-            }
-        }
+        if (npc == null) return;
+        npc.DeactivateNpc();
     }
 
     #endregion
@@ -482,47 +310,19 @@ public class NPCManager : MonoBehaviour
             return null;
         }
 
-        if (npcObjectDictionary.ContainsKey(npcID))
+        if (npcDictionary.ContainsKey(npcID))
         {
-            var npcObject = npcObjectDictionary[npcID];
-            if (npcObject != null)
+            var npc = npcDictionary[npcID];
+            if (npc != null)
             {
-                return npcObject.GetComponent<NPC>();
+                return npc;
             }
         }
 
         Debug.LogWarning($"未找到ID为 {npcID} 的NPC对象");
         return null;
     }
-
-    public List<NPC> GetActiveNPCs()
-    {
-        List<NPC> activeNPCComponents = new List<NPC>();
-        
-        foreach (var npcObject in activeNPCs)
-        {
-            if (npcObject != null && npcObject.activeInHierarchy)
-            {
-                var npc = npcObject.GetComponent<NPC>();
-                if (npc != null)
-                {
-                    activeNPCComponents.Add(npc);
-                }
-            }
-        }
-        Debug.Log("获取到当前激活的NPC数量: " + activeNPCComponents.Count);
-        if(activeNPCComponents.Count == 0)
-        {
-            Debug.LogWarning("当前没有激活的NPC,尝试添加默认NPC-路薪声");
-            var luXinsheng = GetNPC("LuXinsheng");
-            if (luXinsheng != null)
-            {
-                activeNPCComponents.Add(luXinsheng);
-            }
-        }
-        return activeNPCComponents;
-    }
-
+    
     public bool IsNPCActive(string npcID)
     {
         var npc = GetNPC(npcID);
@@ -532,81 +332,22 @@ public class NPCManager : MonoBehaviour
     #endregion
 
     #region 数据保存和加载
-
-    public void InitializeNPCManager(List<AsyncSaveLoadSystem.NPCSaveData> npcSaveDataList = null)
+    
+    public Dictionary<string,NpcGameData> GetAllNPCData()
     {
-        if (npcSaveDataList == null || npcSaveDataList.Count == 0)
+        SaveAllNpcRuntimeData();
+        return new Dictionary<string, NpcGameData>(runtimeNpcDataDictionary);
+    }
+
+    public void SetNpcDatas(Dictionary<string, NpcGameData> npcDataDictionary)
+    {
+        if (npcDataDictionary == null || npcDataDictionary.Count == 0)
         {
-            Debug.Log("没有NPC保存数据，使用默认设置");
+            Debug.LogWarning("传入的NPC数据字典为空或无效");
             return;
         }
-
-        try
-        {
-            foreach (var saveData in npcSaveDataList)
-            {
-                LoadNPCFromSaveData(saveData);
-            }
-            
-            Debug.Log($"从保存数据中加载了 {npcSaveDataList.Count} 个NPC");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"初始化NPC管理器时发生错误: {e.Message}");
-        }
-    }
-
-    private void LoadNPCFromSaveData(AsyncSaveLoadSystem.NPCSaveData saveData)
-    {
-        if (string.IsNullOrEmpty(saveData.npcID)) return;
-
-        // 使用运行时数据副本
-        if (!runtimeNpcDataDictionary.ContainsKey(saveData.npcID)) return;
-
-        var npcObject = GetOrCreateNPCObject(saveData.npcID, runtimeNpcDataDictionary[saveData.npcID]);
-        if (npcObject == null) return;
-
-        // 设置位置
-        Vector3 position = new Vector3(saveData.position[0], saveData.position[1], saveData.position[2]);
-        npcObject.transform.position = position;
-
-        // 设置NPC状态（修改运行时副本，不影响原始资源）
-        var npc = npcObject.GetComponent<NPC>();
-        if (npc != null)
-        {
-            npc.isFollowing = saveData.isFollowing;
-            npc.dialogueIDs = saveData.dialogueIDs;
-            npc.isActive = saveData.isActive;
-            npc.canInteract = saveData.canInteract;
-            
-            // 修改运行时数据副本
-            var runtimeData = runtimeNpcDataDictionary[saveData.npcID];
-            runtimeData.sceneName = saveData.sceneName;
-            npc.npcData = runtimeData;
-        }
-    }
-
-    #endregion
-
-    #region 调试方法
-
-    [ContextMenu("显示所有激活的NPC")]
-    public void DebugShowActiveNPCs()
-    {
-        Debug.Log($"当前激活的NPC数量: {activeNPCs.Count}");
-        foreach (var npcObject in activeNPCs)
-        {
-            if (npcObject != null)
-            {
-                Debug.Log($"- {npcObject.name} (激活: {npcObject.activeInHierarchy})");
-            }
-        }
-    }
-
-    [ContextMenu("显示对象池状态")]
-    public void DebugShowPoolStatus()
-    {
-        Debug.Log($"对象池大小: {npcPool.Count}");
+        
+        runtimeNpcDataDictionary = new Dictionary<string, NpcGameData>(npcDataDictionary);
     }
 
     #endregion
