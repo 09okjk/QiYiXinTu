@@ -32,7 +32,7 @@ public class Enemy : Entity
     public float attackDistance => enemyData.attackDistance;
     public float attackCoolDown => enemyData.attackCooldown;
     [HideInInspector] public float lastAttackTime;
-    [SerializeField] private List<ItemData> items = new List<ItemData>();
+    [SerializeField] private List<ItemGameData> items = new List<ItemGameData>();
     
     public EnemyStateMachine stateMachine { get; private set; }
     
@@ -54,7 +54,15 @@ public class Enemy : Entity
             ItemData itemData = Resources.Load<ItemData>("ScriptableObjects/Items/" + itemID);
             if (itemData != null)
             {
-                items.Add(itemData);
+                var item = new ItemGameData()
+                {
+                    itemID = itemData.itemID,
+                    itemName = itemData.itemName,
+                    icon = itemData.icon,
+                    itemType = itemData.itemType,
+                    description = itemData.description,
+                };
+                items.Add(item);
             }
             else
             {
@@ -142,9 +150,9 @@ public class Enemy : Entity
             return Task.CompletedTask;
             
         // 分类物品
-        List<ItemData> questItems = new List<ItemData>();
-        List<ItemData> puzzleItems = new List<ItemData>();
-        List<ItemData> consumables = new List<ItemData>();
+        List<ItemGameData> questItems = new List<ItemGameData>();
+        List<ItemGameData> puzzleItems = new List<ItemGameData>();
+        List<ItemGameData> consumables = new List<ItemGameData>();
         
         foreach (var item in items)
         {
@@ -166,14 +174,14 @@ public class Enemy : Entity
         if (questItems.Count > 0)
         {
             // 随机选择一个任务物品
-            ItemData selectedQuest = questItems[UnityEngine.Random.Range(0, questItems.Count)];
+            ItemGameData selectedQuest = questItems[UnityEngine.Random.Range(0, questItems.Count)];
             SpawnItem(selectedQuest);
         }
         
         if (puzzleItems.Count > 0)
         {
             // 随机选择一个谜题物品
-            ItemData selectedPuzzle = puzzleItems[UnityEngine.Random.Range(0, puzzleItems.Count)];
+            ItemGameData selectedPuzzle = puzzleItems[UnityEngine.Random.Range(0, puzzleItems.Count)];
             SpawnItem(selectedPuzzle);
         }
         
@@ -211,7 +219,7 @@ public class Enemy : Entity
                 if (UnityEngine.Random.value <= 0.7f)
                 {
                     Debug.Log("成功掉落消耗品");
-                    ItemData selectedConsumable = consumables[UnityEngine.Random.Range(0, consumables.Count)];// 随机选择一个消耗品
+                    ItemGameData selectedConsumable = consumables[UnityEngine.Random.Range(0, consumables.Count)];// 随机选择一个消耗品
                     SpawnItem(selectedConsumable);
                 }
                 else
@@ -227,7 +235,7 @@ public class Enemy : Entity
     }
 
     // 生成物品实例的辅助方法
-    private void SpawnItem(ItemData itemData)
+    private void SpawnItem(ItemGameData itemData)
     {
         Debug.Log("掉落物品: " + itemData.itemName);
         // 获取物品预制体(需要实现物品预制体获取逻辑)

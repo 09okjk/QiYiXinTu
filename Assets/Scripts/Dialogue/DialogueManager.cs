@@ -11,6 +11,15 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using Utils;
 
+[Serializable]
+public class DialogueGameData
+{
+    public string dialogueID;
+    public DialogueState state = DialogueState.WithOutStart; // 新增：对话状态
+    public string currentNodeID;
+    public List<DialogueNode> nodes = new List<DialogueNode>();
+}
+
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance { get; private set; }
@@ -41,10 +50,10 @@ public class DialogueManager : MonoBehaviour
     // 原始对话数据字典（只读）
     private DialogueData[] originalDialogueDataArray;
     // 运行时对话数据字典
-    private Dictionary<string, DialogueData> dialogueDataDictionary = new Dictionary<string, DialogueData>();
+    private Dictionary<string, DialogueGameData> runtimeDataDictionary = new Dictionary<string, DialogueGameData>();
     
     // 当前对话数据和节点索引
-    private DialogueData currentDialogue;
+    private DialogueGameData currentDialogue;
     // 当前对话节点
     private DialogueNode currentDialogueNode;
     // 当前对话节点索引
@@ -57,8 +66,6 @@ public class DialogueManager : MonoBehaviour
     private Action<bool> onDialogueCompleteCallback;
     // 当前对话文本
     private TextMeshProUGUI currentDialogueText;
-    // Npc对象
-    private NPC currentNpc;
     
     // 游戏暂停相关
     private float previousTimeScale;
@@ -133,75 +140,48 @@ public class DialogueManager : MonoBehaviour
             Debug.Log($"找到 {originalDialogueDataArray.Length} 个原始对话数据文件");
             
             // 2. 清空现有字典（但保留引用）
-            dialogueDataDictionary.Clear();
+            runtimeDataDictionary.Clear();
             
             // 3. 为每个原始对话数据创建运行时副本
-            int successCount = 0;
-            foreach (var originalDialogue in originalDialogueDataArray)
-            {
-                if (originalDialogue == null)
-                {
-                    Debug.LogWarning("发现空的对话数据引用，跳过");
-                    continue;
-                }
-                
-                if (string.IsNullOrEmpty(originalDialogue.dialogueID))
-                {
-                    Debug.LogWarning($"对话数据 {originalDialogue.name} 的dialogueID为空，跳过");
-                    continue;
-                }
-                
-                // 检查是否有重复的ID
-                if (dialogueDataDictionary.ContainsKey(originalDialogue.dialogueID))
-                {
-                    Debug.LogWarning($"发现重复的对话ID: {originalDialogue.dialogueID}，跳过重复项");
-                    continue;
-                }
-                
-                try
-                {
-                    // 创建运行时副本
-                    var runtimeCopy = Utils.ScriptableObjectUtils.CreateDialogueDataCopy(originalDialogue);
-                    
-                    if (runtimeCopy != null)
-                    {
-                        // 确保副本的ID与原始数据一致
-                        runtimeCopy.dialogueID = originalDialogue.dialogueID;
-                        
-                        // 验证副本数据的完整性
-                        if (ValidateDialogueData(runtimeCopy))
-                        {
-                            // 添加到字典
-                            dialogueDataDictionary.Add(originalDialogue.dialogueID, runtimeCopy);
-                            successCount++;
-                            
-                            Debug.Log($"✓ 成功创建对话运行时副本: {originalDialogue.dialogueID}");
-                        }
-                        else
-                        {
-                            Debug.LogError($"✗ 对话数据验证失败: {originalDialogue.dialogueID}");
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogError($"✗ 创建对话运行时副本失败（返回null）: {originalDialogue.dialogueID}");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"✗ 创建对话 {originalDialogue.dialogueID} 的运行时副本时发生错误: {e.Message}\n{e.StackTrace}");
-                }
-            }
+            SaveAllDialogueData();
             
             isInitialized = true;
-            Debug.Log($"对话数据初始化完成！原始文件: {originalDialogueDataArray.Length}, 成功创建副本: {successCount}, 字典大小: {dialogueDataDictionary.Count}");
-            
-            // 输出所有可用的对话ID用于调试
-            DebugPrintAvailableDialogues();
         }
         catch (Exception e)
         {
             Debug.LogError($"初始化对话数据时发生严重错误: {e.Message}\n{e.StackTrace}");
+        }
+    }
+
+    private void SaveAllDialogueData(Dictionary<string, DialogueGameData> dialogueDataDictionary = null)
+    {
+        if (dialogueDataDictionary == null)
+        {
+            int successCount = 0;
+            foreach (var originalDialogueData in originalDialogueDataArray)
+            {
+                var dialogueData = new DialogueGameData
+                {
+                    dialogueID = originalDialogueData.dialogueID,
+                    state = originalDialogueData.state,
+                    currentNodeID = originalDialogueData.currentNodeID,
+                    nodes = new List<DialogueNode>(originalDialogueData.nodes)
+                };
+                // 验证对话数据的完整性
+                if (ValidateDialogueData(dialogueData))
+                {
+                    runtimeDataDictionary[dialogueData.dialogueID] = dialogueData;
+                    successCount++;
+                }
+                else
+                {
+                    Debug.LogError($"对话数据 {dialogueData.dialogueID} 验证失败，未添加到字典");
+                }
+            }
+        }
+        else
+        {
+            runtimeDataDictionary = new Dictionary<string, DialogueGameData>(dialogueDataDictionary);
         }
     }
     
@@ -210,7 +190,7 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     /// <param name="dialogueData">要验证的对话数据</param>
     /// <returns>是否有效</returns>
-    private bool ValidateDialogueData(DialogueData dialogueData)
+    private bool ValidateDialogueData(DialogueGameData dialogueData)
     {
         if (dialogueData == null)
         {
@@ -250,41 +230,13 @@ public class DialogueManager : MonoBehaviour
     }
     
     /// <summary>
-    /// 输出所有可用对话ID用于调试
-    /// </summary>
-    private void DebugPrintAvailableDialogues()
-    {
-        if (dialogueDataDictionary.Count == 0)
-        {
-            Debug.LogWarning("没有可用的对话数据");
-            return;
-        }
-
-        Debug.Log("=== 可用对话列表 ===");
-        foreach (var kvp in dialogueDataDictionary)
-        {
-            Debug.Log($"对话ID: {kvp.Key}, 节点数: {kvp.Value.nodes?.Count ?? 0}");
-        }
-        Debug.Log("=== 对话列表结束 ===");
-    }
-    
-    /// <summary>
     /// 清理对话字典（保留安全性）
     /// </summary>
     private void ClearDialogueDictionary()
     {
-        if (dialogueDataDictionary != null)
+        if (runtimeDataDictionary != null)
         {
-            // 清理运行时副本
-            foreach (var runtimeDialogue in dialogueDataDictionary.Values)
-            {
-                if (runtimeDialogue != null)
-                {
-                    Utils.ScriptableObjectUtils.SafeDestroyRuntimeCopy(runtimeDialogue);
-                }
-            }
-            
-            dialogueDataDictionary.Clear();
+            runtimeDataDictionary.Clear();
         }
     }
     
@@ -369,7 +321,7 @@ public class DialogueManager : MonoBehaviour
     #endregion
     
     // 开始对话，可选择性地添加完成回调
-    public async Task StartDialogue(DialogueData dialogue, Action<bool> onComplete = null)
+    public async Task StartDialogue(DialogueGameData dialogue, Action<bool> onComplete = null)
     {
         if (dialogue == null || dialogue.nodes == null || dialogue.nodes.Count == 0)
         {
@@ -411,12 +363,12 @@ public class DialogueManager : MonoBehaviour
         Debug.Log($"尝试启动对话: {dialogueID}");
         
         // 确保对话系统已初始化
-        if (!isInitialized || dialogueDataDictionary == null || dialogueDataDictionary.Count == 0)
+        if (!isInitialized || runtimeDataDictionary == null || runtimeDataDictionary.Count == 0)
         {
             Debug.LogError("对话系统未正确初始化！尝试重新初始化...");
             InitDialogueDictionary();
             
-            if (!isInitialized || dialogueDataDictionary.Count == 0)
+            if (!isInitialized || runtimeDataDictionary.Count == 0)
             {
                 Debug.LogError("对话系统初始化失败，无法启动对话");
                 return;
@@ -424,16 +376,16 @@ public class DialogueManager : MonoBehaviour
         }
 
         // 检查对话ID是否存在
-        if (!dialogueDataDictionary.ContainsKey(dialogueID))
+        if (!runtimeDataDictionary.ContainsKey(dialogueID))
         {
             Debug.LogError($"无法找到对话数据: {dialogueID}");
-            Debug.Log($"当前可用对话数量: {dialogueDataDictionary.Count}");
+            Debug.Log($"当前可用对话数量: {runtimeDataDictionary.Count}");
             
             // 输出可用的对话ID帮助调试
-            if (dialogueDataDictionary.Count > 0)
+            if (runtimeDataDictionary.Count > 0)
             {
                 Debug.Log("可用的对话ID:");
-                foreach (var id in dialogueDataDictionary.Keys)
+                foreach (var id in runtimeDataDictionary.Keys)
                 {
                     Debug.Log($"  - {id}");
                 }
@@ -441,7 +393,7 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        DialogueData dialogue = dialogueDataDictionary[dialogueID];
+        DialogueGameData dialogue = runtimeDataDictionary[dialogueID];
         if (dialogue != null)
         {
             Debug.Log($"✓ 找到对话数据: {dialogueID}, 开始启动对话");
@@ -508,7 +460,6 @@ public class DialogueManager : MonoBehaviour
                 break;
             case SpeakerType.NpcNotice:
             case SpeakerType.Npc:
-                currentNpc = NPCManager.Instance.GetNPC(currentDialogueNode.speaker.speakerID);
                 nPCNameText.text = string.IsNullOrEmpty(currentDialogueNode.speaker.speakerName) ? currentDialogueNode.speaker.speakerID : currentDialogueNode.speaker.speakerName;
                 currentDialogueText = nPCDialogueText;
                 nPCImage.sprite = Resources.Load<Sprite>($"Art/NPCs/{currentDialogueNode.speaker.speakerName}_{currentDialogueNode.speaker.emotion.ToString()}");
@@ -735,8 +686,8 @@ public class DialogueManager : MonoBehaviour
                     string missingItemNames = "";
                     foreach (var value in conditionValues)
                     {
-                        ItemData itemData = ItemManager.Instance.GetItem(currentDialogueNode.conditionValue);
-                        if (!itemData) continue;
+                        ItemGameData itemData = ItemManager.Instance.GetItem(currentDialogueNode.conditionValue);
+                        if (itemData != null) continue;
                         missingItemNames += itemData.itemName;
                     }
 
@@ -830,7 +781,7 @@ public class DialogueManager : MonoBehaviour
     /// <summary>
     /// 获取对话数据（带详细日志）
     /// </summary>
-    public DialogueData GetDialogueData(string dialogueID)
+    public DialogueGameData GetDialogueData(string dialogueID)
     {
         if (string.IsNullOrEmpty(dialogueID))
         {
@@ -845,57 +796,44 @@ public class DialogueManager : MonoBehaviour
             InitDialogueDictionary();
         }
 
-        if (dialogueDataDictionary.ContainsKey(dialogueID))
+        if (runtimeDataDictionary.ContainsKey(dialogueID))
         {
-            var dialogue = dialogueDataDictionary[dialogueID];
+            var dialogue = runtimeDataDictionary[dialogueID];
             Debug.Log($"✓ 成功获取对话数据: {dialogueID}");
             return dialogue;
         }
         else
         {
             Debug.LogWarning($"✗ 无法找到对话数据: {dialogueID}");
-            Debug.Log($"当前字典包含 {dialogueDataDictionary.Count} 个对话");
+            Debug.Log($"当前字典包含 {runtimeDataDictionary.Count} 个对话");
             return null;
         }
     }
 
-
-    public Dictionary<string, DialogueData> GetDialogueDataDictionary()
+    public DialogueGameData GetCurrentDialogueData()
     {
-        return dialogueDataDictionary;
+        if (currentDialogue == null)
+        {
+            Debug.LogWarning("当前对话数据为空");
+            return null;
+        }
+        
+        return currentDialogue;
     }
 
-    public void LoadDialogueData(List<AsyncSaveLoadSystem.DialogueSaveData> dialogueSaveDatas)
+    public Dictionary<string, DialogueGameData> GetAllDialogues()
     {
-        if (dialogueSaveDatas == null || dialogueSaveDatas.Count == 0)
-        {
-            Debug.LogWarning("没有对话保存数据可加载");
-            return;
-        }
+        return runtimeDataDictionary;
+    }
 
-        foreach (var dialogueSaveData in dialogueSaveDatas)
-        {
-            if (dialogueDataDictionary.ContainsKey(dialogueSaveData.dialogueID))
-            {
-                var dialogue = dialogueDataDictionary[dialogueSaveData.dialogueID];
-                if (dialogue != null)
-                {
-                    // 更新对话状态
-                    dialogue.state = dialogueSaveData.dialogueState;
-                    // 更新当前节点ID
-                    dialogue.currentNodeID = dialogueSaveData.currentNodeID;
-                    Debug.Log($"✓ 加载对话数据: {dialogueSaveData.dialogueID}");
-                }
-                else
-                {
-                    Debug.LogWarning($"对话数据为null: {dialogueSaveData.dialogueID}");
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"无法找到对话数据: {dialogueSaveData.dialogueID}");
-            }
-        }
+    public void SetCurrentDialogueData(DialogueGameData dialogueData)
+    {
+        currentDialogue = dialogueData;
+    }
+    
+    public void SetAllDialogues(Dictionary<string,DialogueGameData> dialogueGameDataDictionary)
+    {
+        runtimeDataDictionary = new Dictionary<string, DialogueGameData>(dialogueGameDataDictionary);
     }
     
     public bool IsDialogueFinished(string dialogueID)
@@ -937,38 +875,6 @@ public class DialogueManager : MonoBehaviour
     public void DebugResetAllDialogueData()
     {
         ResetAllDialogueData();
-    }
-
-    #endregion
-    
-    #region 调试方法
-
-    [ContextMenu("重新初始化对话数据")]
-    public void DebugReinitializeDialogues()
-    {
-        ResetAllDialogueData();
-    }
-
-    [ContextMenu("显示所有对话ID")]
-    public void DebugShowAllDialogueIDs()
-    {
-        DebugPrintAvailableDialogues();
-    }
-
-    [ContextMenu("测试对话查找")]
-    public void DebugTestDialogueLookup()
-    {
-        string testID = "dialogue_001"; // 替换为您要测试的对话ID
-        Debug.Log($"测试查找对话: {testID}");
-        var dialogue = GetDialogueData(testID);
-        if (dialogue != null)
-        {
-            Debug.Log($"✓ 找到对话: {testID}");
-        }
-        else
-        {
-            Debug.Log($"✗ 未找到对话: {testID}");
-        }
     }
 
     #endregion

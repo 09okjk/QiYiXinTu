@@ -26,6 +26,8 @@ namespace Save
         public List<string> itemIDs = new(); // 存储物品ID列表
         public QuestGameData currentQuest; // 当前任务数据
         public Dictionary<string, QuestGameData> allQuests = new(); // 所有任务数据
+        public DialogueGameData currentDialogue;
+        public Dictionary<string, DialogueGameData> allDialogues = new(); // 所有对话数据
     }
     public class SaveLoadAsyncSystem:MonoBehaviour
     {
@@ -80,7 +82,9 @@ namespace Save
                 NpcGameDatas = NPCManager.Instance.GetAllNPCData(), // 获取所有NPC数据
                 itemIDs = InventoryManager.Instance.GetAllItemIDs(), // 获取所有物品ID列表
                 currentQuest = QuestManager.Instance.currentQuest, // 获取当前任务数据
-                allQuests = QuestManager.Instance.GetAllQuests() // 获取所有任务数据
+                allQuests = QuestManager.Instance.GetAllQuests(), // 获取所有任务数据
+                currentDialogue = DialogueManager.Instance.GetCurrentDialogueData(), // 获取当前对话数据
+                allDialogues = DialogueManager.Instance.GetAllDialogues() // 获取所有对话数据
             };
             
             // 写入文件
@@ -138,6 +142,10 @@ namespace Save
                 QuestManager.Instance.SetCurrentQuest(saveData.currentQuest);
                 // 设置所有任务
                 QuestManager.Instance.SetAllQuests(saveData.allQuests);
+                // 设置当前对话
+                DialogueManager.Instance.SetCurrentDialogueData(saveData.currentDialogue);
+                // 设置所有对话
+                DialogueManager.Instance.SetAllDialogues(saveData.allDialogues);
                 
                 Debug.Log("游戏加载完成: " + saveData.saveName);
                 
