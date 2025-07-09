@@ -10,17 +10,17 @@ public class PlayerAimSwordState: PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        SkillManager.Instance.swordSkill.DotsActive(true);
+        // SkillManager.Instance.swordSkill.DotsActive(true);
     }
 
     public override void Update()
     {
         base.Update();
         
-        if (Input.GetKeyUp(KeyCode.Mouse1))
-        {
-            StateMachine.ChangeState(Player.ThrowSwordState);
-        }
+        // if (Input.GetKeyUp(KeyCode.Mouse1))
+        // {
+        //     StateMachine.ChangeState(Player.ThrowSwordState);
+        // }
     }
 
     public override void Exit()

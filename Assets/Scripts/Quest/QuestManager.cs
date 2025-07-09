@@ -5,19 +5,35 @@ using System.Linq;
 using Save;
 using UnityEngine;
 using TMPro;
+using Utils;
 
+[Serializable]
+public class QuestGameData
+{
+    public string questID;
+    public string questName;
+    public QuestCondition questConditionType = QuestCondition.None; // 任务条件
+    public string conditionValue; // 任务条件值
+    [TextArea] public string questText;
+    public string nextQuestID;
+    public bool isCompleted;
+}
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager Instance { get; private set; }
     
     [SerializeField] private TextMeshProUGUI questText; // 任务文本(指引文本)
-    [SerializeField] private List<QuestData> allQuests = new List<QuestData>();
-    private readonly Dictionary<string, QuestData> questDictionary = new Dictionary<string, QuestData>();
+    
+    // 运行时任务数据副本
+    private Dictionary<string, QuestGameData> runtimeQuestDictionary = new();
+    // 原始任务数据（只读）
+    private QuestData[] originalQuestDataList;
+    private List<QuestGameData> runtimeAllQuests = new();
     
     // 当前任务
-    public QuestData currentQuest { get; private set; }
+    public QuestGameData currentQuest { get; private set; }
     // 当前任务ID
-    public string currentQuestID { get; set; }
+    public string currentQuestID => currentQuest?.questID;
     // 任务完成回调
     private Action<bool> onQuestCompleteCallback;
     
@@ -28,7 +44,7 @@ public class QuestManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             
-            InitializeQuest();
+            LoadQuestData();
         }
         else
         {
@@ -39,7 +55,6 @@ public class QuestManager : MonoBehaviour
     private void Start()
     {
         // 订阅各种可能导致任务完成的事件
-        // 例如：对话完成、物品使用、任务完成等
         DialogueManager.Instance.OnDialogueEnd += OnConditionFinished;
         InventoryManager.Instance.OnAddItem += OnConditionFinished;
     }
@@ -47,21 +62,78 @@ public class QuestManager : MonoBehaviour
     private void OnDestroy()
     {
         // 取消订阅事件
-        DialogueManager.Instance.OnDialogueEnd -= OnConditionFinished;
-        InventoryManager.Instance.OnAddItem -= OnConditionFinished;
+        if (DialogueManager.Instance != null)
+            DialogueManager.Instance.OnDialogueEnd -= OnConditionFinished;
+        if (InventoryManager.Instance != null)
+            InventoryManager.Instance.OnAddItem -= OnConditionFinished;
+        runtimeQuestDictionary.Clear();
     }
     
-    private void InitializeQuest()
+    /// <summary>
+    /// 加载原始任务数据（只读）
+    /// </summary>
+    private void LoadQuestData()
     {
-        allQuests.Clear();
-        var questArray = Resources.LoadAll<QuestData>("ScriptableObjects/Quests");
-        foreach (var questData in questArray)
+        try
         {
-            if (questDictionary.TryAdd(questData.questID, questData))
-            {
-                allQuests.Add(questData);
-            }
+            SetAllQuest();
         }
+        catch (Exception e)
+        {
+            Debug.LogError($"加载原始任务数据时发生错误: {e.Message}");
+        }
+    }
+
+    private bool SetAllQuest(Dictionary<string,QuestGameData> questGameDatas = null)
+    {
+        try
+        {
+            if (questGameDatas == null)
+            {
+                runtimeQuestDictionary.Clear();
+                originalQuestDataList = Resources.LoadAll<QuestData>("ScriptableObjects/Quests");
+                foreach (var questData in originalQuestDataList)
+                {
+                    var questGameData = new QuestGameData
+                    {
+                        questID = questData.questID,
+                        questName = questData.questName,
+                        questConditionType = questData.questConditionType,
+                        conditionValue = questData.conditionValue,
+                        questText = questData.questText,
+                        nextQuestID = questData.nextQuestID,
+                        isCompleted = questData.isCompleted
+                    };
+                    runtimeQuestDictionary[questGameData.questID] = questGameData;
+                }
+
+                Debug.Log($"成功加载 {originalQuestDataList?.Length ?? 0} 个原始任务数据");
+            }
+            else
+            {
+                runtimeQuestDictionary = new Dictionary<string, QuestGameData>(questGameDatas);
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"设置所有任务数据时发生错误: {e.Message}");
+            return false;
+        }
+
+    }
+
+    /// <summary>
+    /// 重置所有任务数据到原始状态
+    /// </summary>
+    public void ResetAllQuestData()
+    {
+        SetAllQuest();
+        // 重置当前任务状态
+        currentQuest = null;
+        onQuestCompleteCallback = null;
+        
+        Debug.Log("已重置所有任务数据到原始状态");
     }
     
     private void OnConditionFinished(string dialogueID)
@@ -75,21 +147,21 @@ public class QuestManager : MonoBehaviour
     // 开始任务
     public void StartQuest(string questID, Action<bool> onComplete = null)
     {
-        if (currentQuest)
-        {
-            currentQuest = null;
-        }
-        
         if (string.IsNullOrEmpty(questID))
         {
             Debug.LogError("任务ID为空");
             return;
         }
             
-        if (questDictionary.TryGetValue(questID, out var quest))
+        // 使用运行时数据副本
+        if (runtimeQuestDictionary.TryGetValue(questID, out var quest))
         {
+            if (quest.isCompleted)
+            {
+                Debug.LogWarning($"任务已完成: {quest.questName}");
+                return; // 任务已完成，不能重复开始
+            }
             currentQuest = quest;
-            currentQuestID = questID;
             ToggleQuestText(currentQuest.questText);
             onQuestCompleteCallback = onComplete;
             Debug.Log($"任务开始: {quest.questName}");
@@ -103,14 +175,15 @@ public class QuestManager : MonoBehaviour
     // 完成任务
     public void FinishQuest(string questID)
     {
-        if (questDictionary.TryGetValue(questID, out var quest))
+        // 使用运行时数据副本
+        if (runtimeQuestDictionary.TryGetValue(questID, out var quest))
         {
-            quest.isCompleted = true;
+            quest.isCompleted = true; // 修改运行时副本，不影响原始资源
             string nextQuestID = quest.nextQuestID;
             currentQuest = null;
-            currentQuestID = null;
             onQuestCompleteCallback?.Invoke(true);
             ToggleQuestText();
+            
             // 自动接取下一个任务
             if (!string.IsNullOrEmpty(nextQuestID))
             {
@@ -131,28 +204,18 @@ public class QuestManager : MonoBehaviour
     // 判断任务完成条件
     private bool CheckQuestCondition(string completedValue)
     {
-        if (currentQuest == null)
-        {
-            return false;
-        }
-        string value = currentQuest.conditionValue;
+        if (currentQuest == null) return false;
+        
         switch (currentQuest.questConditionType)
         {
             case QuestCondition.None:
-                return true; // 没有条件
+                return true;
             case QuestCondition.CompleteDialogue:
-                // 检查对话是否完成
-                string[] dialogueIDs = value.Split(';');
-                value = dialogueIDs.Where(dialogueID => dialogueID == completedValue).Aggregate(value, (current, dialogueID) => current.Replace(dialogueID, ""));
-                return string.IsNullOrEmpty(value);
+                return completedValue == currentQuest.conditionValue;
             case QuestCondition.HaveItem:
-                // 检查是否拥有物品
-                string[] itemIDs = value.Split(';');
-                value = itemIDs.Where(item => item == completedValue).Aggregate(value, (current, item) => current.Replace(item, ""));
-                return string.IsNullOrEmpty(value);
+                return InventoryManager.Instance.HasItem(currentQuest.conditionValue);
             case QuestCondition.CompleteQuest:
-                // 检查任务是否完成
-                return IsQuestCompleted(value);
+                return IsQuestCompleted(currentQuest.conditionValue);
             default:
                 return false;
         }
@@ -161,61 +224,39 @@ public class QuestManager : MonoBehaviour
     // 显示任务文本
     public void ToggleQuestText(string text = "")
     {
-        questText.gameObject.SetActive(text != "");
-        questText.text = text;
+        if (questText != null)
+        {
+            questText.gameObject.SetActive(text != "");
+            questText.text = text;
+        }
     }
-    
-    // 加载所有任务数据
-    public void LoadAllQuests(List<AsyncSaveLoadSystem.QuestSaveData> quests)
+
+    // 设置所有任务
+    public bool SetAllQuests(Dictionary<string, QuestGameData> questGameDatas)
     {
-        if (quests == null || quests.Count == 0)
-        {
-            Debug.LogWarning("没有任务数据可加载");
-            return;
-        }
-        
-        foreach (var questSaveData in quests)
-        {
-            var quest = allQuests.Find(n => n.questID == questSaveData.questID);
-            if (quest != null)
-            {
-                quest.questID = questSaveData.questID;
-                quest.questName = questSaveData.questName;
-                quest.questText = questSaveData.questText;
-                quest.isCompleted = questSaveData.isCompleted;
-                quest.conditionValue = questSaveData.conditionValue;
-                quest.questConditionType = questSaveData.questConditionType;
-                quest.nextQuestID = questSaveData.nextQuestID;
-            }
-            // 将questSaveData中的任务ID添加到字典中
-            if (!questDictionary.ContainsKey(questSaveData.questID))
-            {
-                questDictionary.Add(questSaveData.questID, quest);
-            }
-        }
-        
-        allQuests.Clear();
-        foreach (var quest in questDictionary.Values)
-        {
-            allQuests.Add(quest);
-        }
+        return SetAllQuest(questGameDatas);
     }
     
     // 获取所有任务
-    public List<QuestData> GetAllQuests()
+    public Dictionary<string,QuestGameData> GetAllQuests()
     {
-        return new List<QuestData>(allQuests);
+        return new Dictionary<string,QuestGameData>(runtimeQuestDictionary);
     }
     
-    public QuestData GetQuest(string questID)
+    public QuestGameData GetQuest(string questID)
     {
-        questDictionary.TryGetValue(questID, out var quest);
+        runtimeQuestDictionary.TryGetValue(questID, out var quest);
         return quest;
+    }
+
+    public void SetCurrentQuest(QuestGameData questGameData)
+    {
+        currentQuest = questGameData;
     }
     
     public bool IsQuestCompleted(string questID)
     {
-        if (questDictionary.TryGetValue(questID, out var quest))
+        if (runtimeQuestDictionary.TryGetValue(questID, out var quest))
         {
             return quest.isCompleted;
         }

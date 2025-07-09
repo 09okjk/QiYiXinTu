@@ -3,38 +3,48 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Linq;
 
+[Serializable]
+public class NpcGameData
+{
+    // basic NPC data
+    public string npcID;
+    public string npcName;
+    public string spriteID;
+    public string sceneName; // NPC所在场景名称
+    public bool canInteract = false; // 是否可以交互
+    public bool isActive = true; // 是否激活NPC
+    public Vector3 position; // NPC位置
+    // follow settings
+    public float followSpeed = 2f; // 跟随速度
+    public float followDistance = 1.5f; // 跟随距离
+    public float interactionDistance = 2f; // 交互距离
+    public bool isFollowing = false; // 是否跟随玩家
+    // dialogue settings
+    public List<string> dialogueIDs = new List<string>(); // 对话ID，用于动态加载对话数据
+    public string currentDialogueID; // 当前对话ID
+    // activation rules
+    // public List<NPCActivationRule> activationRules = new List<NPCActivationRule>(); // 激活规则
+    // additional properties
+    public List<NPCProperty> properties = new List<NPCProperty>(); // 扩展属性
+}
 public class NPC : Entity
 {
     [Header("NPC Data")] 
-    internal NPCData npcData;
-    
-    [Header("跟随设置")]
-    [SerializeField] protected float followDistance = 1.5f;
-    [SerializeField] protected internal float followSpeed = 2f;
+    private NpcGameData npcGameData;
     
     [Header("渲染设置")]
     public SpriteRenderer spriteRenderer;
     
-    [Header("状态设置")]
-    public bool isFollowing = false;
-    public bool isActive = true;
-    
     [Header("交互设置")]
     [SerializeField] private float interactionDistance = 2f;
     [SerializeField] private GameObject interactionIndicator;
-    public bool canInteract = true;
-    
-    [Header("对话数据")]
-    public List<string> dialogueIDs;
     
     // 私有字段
-    private List<DialogueData> dialogueDataList = new List<DialogueData>();
-    private DialogueData cachedDialogue;
     private Transform playerTransform; // 缓存玩家Transform
     private GameObject playerGameObject; // 缓存玩家GameObject
     private float defaultSpeed;
-    private bool isPlayerInRange = false;
     private bool hasSubscribedToEvents = false;
     
     // 性能优化相关
@@ -52,49 +62,36 @@ public class NPC : Entity
         base.Awake();
         
         stateMachine = new NPCStateMachine();
-        
-        if (npcData == null)
-            npcData = baseData as NPCData;
-            
-        // 从数据初始化状态
-        if (npcData != null)
-        {
-            InitializeFromData();
-        }
     }
     
     protected override void Start()
     {
         base.Start();
         
-        // 初始设置
-        InitializeInteractionUI();
+        // 初始化交互UI
+        interactionIndicator.SetActive(false);
         
         // 设置NPC
-        SetupNPC();
+        // SetupNPC();
         
-        defaultSpeed = followSpeed;
+        // defaultSpeed = followSpeed;
         
         // 缓存玩家引用
         CachePlayerReferences();
         
         // 延迟订阅事件
-        StartCoroutine(DelayedEventSubscription());
+        // StartCoroutine(DelayedEventSubscription());
     }
 
     protected override void Update()
     {
         base.Update();
         
-        // 优化的玩家检查
-        if (Time.time - lastPlayerCheckTime >= playerCheckInterval)
+        if (CheckPlayerInRange())
         {
-            CheckPlayerInteraction();
-            lastPlayerCheckTime = Time.time;
+            // 处理交互输入
+            HandleInteractionInput();
         }
-        
-        // 处理交互输入
-        HandleInteractionInput();
     }
     
     protected virtual void FixedUpdate()
@@ -115,24 +112,13 @@ public class NPC : Entity
 
     #region 初始化
 
-    private void InitializeFromData()
+    public void SetCurrentDialogueID(string dialogueID)
     {
-        if (npcData != null)
+        if (npcGameData != null)
         {
-            // isFollowing = npcData.isFollowing;
-            // canInteract = npcData.canInteract;
-            dialogueIDs = new List<string>(npcData.dialogueIDs);
+            npcGameData.currentDialogueID = dialogueID;
         }
     }
-
-    private void InitializeInteractionUI()
-    {
-        if (interactionIndicator != null)
-        {
-            interactionIndicator.SetActive(false);
-        }
-    }
-
     private void CachePlayerReferences()
     {
         try
@@ -145,11 +131,11 @@ public class NPC : Entity
             if (playerGameObject != null)
             {
                 playerTransform = playerGameObject.transform;
-                Debug.Log($"NPC {npcData?.npcID} 成功缓存玩家引用");
+                Debug.Log($"NPC {npcGameData?.npcID} 成功缓存玩家引用");
             }
             else
             {
-                Debug.LogWarning($"NPC {npcData?.npcID} 未找到玩家对象");
+                Debug.LogWarning($"NPC {npcGameData?.npcID} 未找到玩家对象");
             
                 // 只有在Start方法中才启动重试协程，避免重复启动
                 if (Time.time > 0.1f) // 确保不是在Awake阶段
@@ -177,7 +163,7 @@ public class NPC : Entity
             if (playerGameObject != null)
             {
                 playerTransform = playerGameObject.transform;
-                Debug.Log($"NPC {npcData?.npcID} 延迟缓存玩家引用成功");
+                Debug.Log($"NPC {npcGameData?.npcID} 延迟缓存玩家引用成功");
                 yield break;
             }
             
@@ -186,14 +172,8 @@ public class NPC : Entity
         
         if (playerGameObject == null)
         {
-            Debug.LogError($"NPC {npcData?.npcID} 无法找到玩家对象");
+            Debug.LogError($"NPC {npcGameData?.npcID} 无法找到玩家对象");
         }
-    }
-
-    private IEnumerator DelayedEventSubscription()
-    {
-        yield return new WaitForSeconds(0.1f);
-        SubscribeToEvents();
     }
 
     #endregion
@@ -206,21 +186,26 @@ public class NPC : Entity
 
         try
         {
-            if (DialogueManager.Instance != null)
-            {
-                DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
-                hasSubscribedToEvents = true;
-                Debug.Log($"NPC {npcData?.npcID} 成功订阅对话事件");
-            }
-            else
-            {
-                Debug.LogWarning($"NPC {npcData?.npcID} DialogueManager.Instance为空，延迟重试");
-                StartCoroutine(RetryEventSubscription());
-            }
+            GameManager.Instance.OnDialogueManagerReady += OnDialogueManagerReady;
         }
         catch (Exception e)
         {
             Debug.LogError($"订阅事件时发生错误: {e.Message}");
+        }
+    }
+
+    private void OnDialogueManagerReady()
+    {
+        if (DialogueManager.Instance != null)
+        {
+            DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+            hasSubscribedToEvents = true;
+            Debug.Log($"NPC {npcGameData?.npcID} 成功订阅对话事件");
+        }
+        else
+        {
+            Debug.LogWarning($"NPC {npcGameData?.npcID} DialogueManager.Instance为空，延迟重试");
+            StartCoroutine(RetryEventSubscription());
         }
     }
 
@@ -237,7 +222,7 @@ public class NPC : Entity
             {
                 DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
                 hasSubscribedToEvents = true;
-                Debug.Log($"NPC {npcData?.npcID} 延迟订阅对话事件成功");
+                Debug.Log($"NPC {npcGameData?.npcID} 延迟订阅对话事件成功");
                 yield break;
             }
             
@@ -247,6 +232,7 @@ public class NPC : Entity
 
     private void UnsubscribeFromEvents()
     {
+        GameManager.Instance.OnDialogueManagerReady -= OnDialogueManagerReady;
         try
         {
             if (hasSubscribedToEvents && DialogueManager.Instance != null)
@@ -265,23 +251,50 @@ public class NPC : Entity
 
     #region NPC设置
 
-    private void SetupNPC()
+    private void SetupNpc(NpcGameData npcGameData = null)
     {
-        if (npcData == null) return;
+        if (npcGameData != null)
+        {
+            this.npcGameData = npcGameData;
+        }
+        else
+        {
+            NPCData npcData = baseData as NPCData;
+            this.npcGameData = new NpcGameData
+            {
+                npcID = npcData.npcID,
+                npcName = npcData.npcName,
+                spriteID = npcData.spriteID,
+                sceneName = npcData.sceneName,
+                canInteract = true, // 默认可以交互
+                isActive = false,
+                position = Vector3.zero, // 默认位置
+                followSpeed = npcData.followSpeed,
+                followDistance = npcData.followDistance,
+                interactionDistance = npcData.interactionDistance,
+                isFollowing = false,
+                dialogueIDs = new List<string>(npcData.dialogueIDs),
+                currentDialogueID = null,
+            };
+        }
 
         try
         {
             // 设置精灵
             SetupSprite();
-            
-            // 加载对话数据
-            LoadDialogueData();
+
+            defaultSpeed = this.npcGameData.followSpeed;
             
             // 初始化跟随状态
-            if (!isFollowing)
+            if (this.npcGameData.isFollowing)
+            {
+                FollowTargetPlayer();
+            }else
             {
                 StopFollowing();
             }
+            
+            SubscribeToEvents();
         }
         catch (Exception e)
         {
@@ -291,12 +304,12 @@ public class NPC : Entity
 
     private void SetupSprite()
     {
-        if (spriteRenderer == null || string.IsNullOrEmpty(npcData.spriteID)) return;
+        if (spriteRenderer == null || string.IsNullOrEmpty(npcGameData.spriteID)) return;
 
-        Sprite avatar = Resources.Load<Sprite>($"Art/NPCs/{npcData.spriteID}");
+        Sprite avatar = Resources.Load<Sprite>($"Art/NPCs/{npcGameData.spriteID}");
         if (avatar == null)
         {
-            Debug.LogWarning($"NPC {npcData.npcName} 的头像未找到，使用默认头像");
+            Debug.LogWarning($"NPC {npcGameData.npcName} 的头像未找到，使用默认头像");
             avatar = Resources.Load<Sprite>("Art/NPCs/default_avatar");
         }
         
@@ -306,48 +319,13 @@ public class NPC : Entity
         }
     }
 
-    private void LoadDialogueData()
-    {
-        dialogueDataList.Clear();
-        
-        if (dialogueIDs == null || dialogueIDs.Count == 0) return;
-
-        foreach (string dialogueID in dialogueIDs)
-        {
-            if (string.IsNullOrEmpty(dialogueID)) continue;
-
-            DialogueData dialogue = DialogueManager.Instance.GetDialogueData(dialogueID);
-            if (dialogue != null)
-            {
-                dialogueDataList.Add(dialogue);
-            }
-            else
-            {
-                Debug.LogWarning($"无法找到对话数据: {dialogueID}");
-            }
-        }
-    }
-
     #endregion
 
     #region 交互系统
 
-    private void CheckPlayerInteraction()
+    private bool CheckPlayerInRange()
     {
-        if (playerTransform == null || !canInteract) 
-        {
-            UpdateInteractionUI(false);
-            return;
-        }
-
-        float distance = Vector2.Distance(transform.position, playerTransform.position);
-        bool inRange = distance <= interactionDistance;
-        
-        if (inRange != isPlayerInRange)
-        {
-            isPlayerInRange = inRange;
-            UpdateInteractionUI(inRange);
-        }
+        return Vector2.Distance(transform.position, playerTransform.position) <= interactionDistance;
     }
 
     private void UpdateInteractionUI(bool show)
@@ -356,13 +334,24 @@ public class NPC : Entity
         {
             interactionIndicator.SetActive(show);
         }
+        
     }
 
     private void HandleInteractionInput()
     {
-        if (isPlayerInRange && canInteract && Input.GetKeyDown(KeyCode.E))
+        if (npcGameData.canInteract)
         {
-            Debug.Log($"与{npcData?.npcName}交互");
+            UpdateInteractionUI(true);
+        }
+        else
+        {
+            UpdateInteractionUI(false);
+            return;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log($"与{npcGameData?.npcName}交互");
             TriggerDialogue();
         }
     }
@@ -371,26 +360,26 @@ public class NPC : Entity
 
     #region 对话系统
 
-    private void TriggerDialogue(string dialogueID = null)
+    private void TriggerDialogue()
     {
         try
         {
-            if (cachedDialogue != null)
+            if (string.IsNullOrEmpty(npcGameData.currentDialogueID))
             {
-                StartCachedDialogue();
+                Debug.LogWarning($"NPC {npcGameData?.npcID} 当前对话ID为空，无法触发对话");
                 return;
             }
             
-            if (dialogueDataList == null || dialogueDataList.Count == 0)
+            if (npcGameData.dialogueIDs == null || npcGameData.dialogueIDs.Count == 0)
             {
-                Debug.LogWarning($"NPC {npcData?.npcID} 对话数据列表为空");
+                Debug.LogWarning($"NPC {npcGameData?.npcID} 对话数据列表为空");
                 return;
             }
             
-            DialogueData targetDialogue = FindTargetDialogue(dialogueID);
-            if (targetDialogue != null)
+            string dialogueID = npcGameData.dialogueIDs.FirstOrDefault(id => id == npcGameData.currentDialogueID);
+            if (dialogueID != null)
             {
-                StartDialogue(targetDialogue);
+                DialogueManager.Instance.StartDialogueByID(dialogueID);
             }
         }
         catch (Exception e)
@@ -399,39 +388,12 @@ public class NPC : Entity
         }
     }
 
-    private void StartCachedDialogue()
-    {
-        if (DialogueManager.Instance != null)
-        {
-            _ = DialogueManager.Instance.StartDialogue(cachedDialogue);
-        }
-    }
-
-    private DialogueData FindTargetDialogue(string dialogueID)
-    {
-        if (!string.IsNullOrEmpty(dialogueID))
-        {
-            return dialogueDataList.Find(d => d.dialogueID == dialogueID);
-        }
-        
-        // 找到第一个未完成的对话
-        return dialogueDataList.Find(d => d.state != DialogueState.Finished);
-    }
-
-    private void StartDialogue(DialogueData dialogue)
-    {
-        if (DialogueManager.Instance != null)
-        {
-            cachedDialogue = dialogue;
-            _ = DialogueManager.Instance.StartDialogue(dialogue, OnCurrentDialogueEnd);
-        }
-    }
-
     protected virtual void OnDialogueEnd(string dialogueID)
     {
         try
         {
-            CheckAllDialoguesCompleted();
+            npcGameData.dialogueIDs.Remove(dialogueID);
+            SetCanInteract(false);
         }
         catch (Exception e)
         {
@@ -439,64 +401,13 @@ public class NPC : Entity
         }
     }
 
-    private void CheckAllDialoguesCompleted()
-    {
-        int finishedCount = 0;
-        
-        foreach (DialogueData dialogueData in dialogueDataList)
-        {
-            if (dialogueData.state == DialogueState.Finished)
-            {
-                finishedCount++;
-            }
-        }
-
-        if (finishedCount == dialogueDataList.Count)
-        {
-            OnAllDialoguesCompleted();
-        }
-        else
-        {
-            SetCanInteract(true);
-        }
-    }
-
-    private void OnAllDialoguesCompleted()
-    {
-        if (GameStateManager.Instance != null)
-        {
-            GameStateManager.Instance.SetFlag("FinishAllDialogue_" + npcData?.npcID, true);
-        }
-        SetCanInteract(false);
-    }
-    
-    private void OnCurrentDialogueEnd(bool isFinished)
-    {
-        if (isFinished)
-        {
-            cachedDialogue = null;
-        }
-        else
-        {
-            Debug.Log("对话条件不满足");
-        }
-    }
-
     #endregion
 
     #region 跟随系统
-
+    
     private bool ShouldFollowPlayer()
     {
-        if (!isFollowing || playerTransform == null) return false;
-        
-        // 检查GameStateManager中的跟随状态
-        if (GameStateManager.Instance != null)
-        {
-            return GameStateManager.Instance.GetFlag("Following_" + npcData?.npcID);
-        }
-        
-        return false;
+        return npcGameData.isFollowing && playerTransform;
     }
 
     public void FollowTargetPlayer()
@@ -516,39 +427,33 @@ public class NPC : Entity
             }
         }
 
-        isFollowing = true;
-    
-        // 设置游戏状态标志
-        if (GameStateManager.Instance != null)
-        {
-            GameStateManager.Instance.SetFlag("Following_" + npcData?.npcID, true);
-        }
+        npcGameData.isFollowing = true;
     
         UpdateFacingDirection();
     
-        Debug.Log($"NPC {npcData?.npcID} 开始跟随玩家");
+        Debug.Log($"NPC {npcGameData?.npcID} 开始跟随玩家");
     }
 
     public void FollowPlayer()
     {
         if (playerTransform == null) return;
 
-        followSpeed = defaultSpeed;
+        npcGameData.followSpeed = defaultSpeed;
         
         UpdateFacingDirection();
         
         float distance = Vector2.Distance(transform.position, playerTransform.position);
         
-        if (distance < followDistance)
+        if (distance < npcGameData.followDistance)
         {
-            followSpeed = 0;
+            npcGameData.followSpeed = 0;
             return;
         }
         
         Vector2 direction = (playerTransform.position - transform.position).normalized;
         if (Rb != null)
         {
-            Rb.MovePosition(Rb.position + direction * followSpeed * Time.fixedDeltaTime);
+            Rb.MovePosition(Rb.position + direction * npcGameData.followSpeed * Time.fixedDeltaTime);
         }
     }
     
@@ -566,15 +471,9 @@ public class NPC : Entity
         
             if (playerGameObject != null)
             {
-                Debug.Log($"NPC {npcData?.npcID} 延迟跟随玩家成功");
+                Debug.Log($"NPC {npcGameData?.npcID} 延迟跟随玩家成功");
             
-                isFollowing = true;
-            
-                // 设置游戏状态标志
-                if (GameStateManager.Instance != null)
-                {
-                    GameStateManager.Instance.SetFlag("Following_" + npcData?.npcID, true);
-                }
+                npcGameData.isFollowing = true;
             
                 UpdateFacingDirection();
                 yield break;
@@ -585,7 +484,7 @@ public class NPC : Entity
     
         if (playerGameObject == null)
         {
-            Debug.LogError($"NPC {npcData?.npcID} 重试后仍无法找到玩家对象");
+            Debug.LogError($"NPC {npcGameData?.npcID} 重试后仍无法找到玩家对象");
         }
     }
     
@@ -599,13 +498,7 @@ public class NPC : Entity
     
     public virtual void StopFollowing()
     {
-        isFollowing = false;
-        
-        // 清除游戏状态标志
-        if (GameStateManager.Instance != null)
-        {
-            GameStateManager.Instance.SetFlag("Following_" + npcData?.npcID, false);
-        }
+        npcGameData.isFollowing = false;
         
         // 重置朝向
         if (spriteRenderer != null)
@@ -613,7 +506,7 @@ public class NPC : Entity
             spriteRenderer.flipX = false;
         }
         
-        Debug.Log($"NPC {npcData?.npcID} 停止跟随玩家");
+        Debug.Log($"NPC {npcGameData?.npcID} 停止跟随玩家");
     }
 
     #endregion
@@ -629,8 +522,10 @@ public class NPC : Entity
             {
                 CachePlayerReferences();
             }
+            
+            gameObject.SetActive(true);
         
-            if (isFollowing)
+            if (npcGameData.isFollowing)
             {
                 FollowTargetPlayer();
             }
@@ -638,9 +533,7 @@ public class NPC : Entity
             // 设置交互UI的相机引用
             SetupInteractionUICamera();
         
-            gameObject.SetActive(true);
-        
-            Debug.Log($"NPC {npcData?.npcID} 已激活");
+            Debug.Log($"NPC {npcGameData?.npcID} 已激活");
         }
         catch (Exception e)
         {
@@ -663,7 +556,7 @@ public class NPC : Entity
     public virtual void DeactivateNpc()
     {
         gameObject.SetActive(false);
-        Debug.Log($"NPC {npcData?.npcID} 已禁用");
+        Debug.Log($"NPC {npcGameData?.npcID} 已禁用");
     }
 
     #endregion
@@ -672,12 +565,7 @@ public class NPC : Entity
 
     public void SetCanInteract(bool canInteract)
     {
-        this.canInteract = canInteract;
-        
-        if (!canInteract)
-        {
-            UpdateInteractionUI(false);
-        }
+        npcGameData.canInteract = canInteract;
     }
 
     public void AnimationTrigger() => stateMachine.CurrentState.AnimationFinishTrigger();
@@ -687,26 +575,23 @@ public class NPC : Entity
     /// </summary>
     public virtual void ResetNPC()
     {
-        StopFollowing();
-        SetCanInteract(true);
-        cachedDialogue = null;
-        isPlayerInRange = false;
-        UpdateInteractionUI(false);
+        SetupNpc();
     }
-
-    /// <summary>
-    /// 获取NPC当前状态信息
-    /// </summary>
-    public NPCStatusInfo GetStatusInfo()
+    
+    public void SetNpcGameData(NpcGameData _npcGameData = null)
     {
-        return new NPCStatusInfo
-        {
-            npcID = npcData?.npcID,
-            isFollowing = this.isFollowing,
-            canInteract = this.canInteract,
-            isActive = this.isActive,
-            position = transform.position
-        };
+        SetupNpc(_npcGameData);
+    }
+    
+    public NpcGameData GetNpcGameData()
+    {
+        return npcGameData;
+    }
+    
+    public void SetPosition(Vector3 position)
+    {
+        transform.position = position;
+        npcGameData.position = position;
     }
 
     #endregion
@@ -720,25 +605,12 @@ public class NPC : Entity
         Gizmos.DrawWireSphere(transform.position, interactionDistance);
         
         // 跟随范围
-        if (isFollowing)
+        if (npcGameData.isFollowing)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, followDistance);
+            Gizmos.DrawWireSphere(transform.position, npcGameData.followDistance);
         }
     }
 
     #endregion
-}
-
-/// <summary>
-/// NPC状态信息结构体
-/// </summary>
-[System.Serializable]
-public struct NPCStatusInfo
-{
-    public string npcID;
-    public bool isFollowing;
-    public bool canInteract;
-    public bool isActive;
-    public Vector3 position;
 }

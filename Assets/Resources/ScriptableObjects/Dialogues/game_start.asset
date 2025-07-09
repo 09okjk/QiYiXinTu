@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: game_start
   state: 2
-  currentNodeID: node001
+  currentNodeID: node004
   nodes:
   - nodeID: node001
     text: "\u8FD9\u91CC\u662F\uFF1F"

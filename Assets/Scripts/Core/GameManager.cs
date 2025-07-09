@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
+using Manager;
+using News;
+using Save;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private GameObject pressAnyKeyPrompt;
     [SerializeField] private UnityEngine.UI.Slider loadingBar;
+    [SerializeField] private TMPro.TextMeshProUGUI loadingText; // 新增：加载文本显示
     
     [Header("Settings")]
     [SerializeField] private float minimumLoadingTime = 0.5f;
@@ -19,6 +24,13 @@ public class GameManager : MonoBehaviour
     public bool canSwitchScenes; // 是否允许切换场景
     
     private bool gameStarted = false;
+    private bool isLoadingScreenActive = false;
+    
+    // 加载进度事件
+    public static event Action<float> OnLoadingProgress;
+    public static event Action<string> OnLoadingStatusChanged;
+    public static event Action<string> OnBeforeLevelChange;
+    public event Action OnDialogueManagerReady;
     
     private void Awake()
     {
@@ -35,10 +47,6 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
-        /*if (loadingScreen)
-        {
-            loadingScreen.SetActive(false);
-        }*/
         // 添加订阅场景加载事件
         SceneManager.sceneLoaded += OnSceneLoaded;
         
@@ -46,6 +54,12 @@ public class GameManager : MonoBehaviour
         pressAnyKeyPrompt.SetActive(true);
         loadingBar.gameObject.SetActive(false);
         gameStarted = false;
+        
+        // 初始时隐藏加载屏幕
+        // if (loadingScreen != null)
+        // {
+        //     loadingScreen.SetActive(false);
+        // }
     }
     
     private void Update()
@@ -67,6 +81,128 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     
+    #region 加载屏幕控制接口
+    
+    /// <summary>
+    /// 显示加载屏幕
+    /// </summary>
+    /// <param name="title">加载标题</param>
+    /// <param name="showProgressBar">是否显示进度条</param>
+    public void ShowLoadingScreen(string title = "加载中...", bool showProgressBar = true)
+    {
+        if (loadingScreen != null)
+        {
+            loadingScreen.SetActive(true);
+            isLoadingScreenActive = true;
+            
+            if (loadingText != null)
+            {
+                loadingText.text = title;
+            }
+            
+            if (loadingBar != null)
+            {
+                loadingBar.gameObject.SetActive(showProgressBar);
+                loadingBar.value = 0f;
+            }
+            
+            Debug.Log($"显示加载屏幕: {title}");
+        }
+    }
+    
+    /// <summary>
+    /// 更新加载进度
+    /// </summary>
+    /// <param name="progress">进度值 (0-1)</param>
+    /// <param name="statusText">状态文本 (可选)</param>
+    public void UpdateLoadingProgress(float progress, string statusText = null)
+    {
+        if (!isLoadingScreenActive) return;
+        
+        progress = Mathf.Clamp01(progress);
+        
+        if (loadingBar != null)
+        {
+            loadingBar.value = progress;
+        }
+        
+        if (!string.IsNullOrEmpty(statusText) && loadingText != null)
+        {
+            loadingText.text = statusText;
+        }
+        
+        // 触发全局进度事件
+        OnLoadingProgress?.Invoke(progress);
+        OnLoadingStatusChanged?.Invoke(statusText);
+        
+        Debug.Log($"更新加载进度: {progress:P1} - {statusText}");
+    }
+    
+    /// <summary>
+    /// 隐藏加载屏幕
+    /// </summary>
+    public void HideLoadingScreen()
+    {
+        if (loadingScreen != null)
+        {
+            loadingScreen.SetActive(false);
+            isLoadingScreenActive = false;
+            
+            Debug.Log("隐藏加载屏幕");
+        }
+    }
+    
+    /// <summary>
+    /// 检查加载屏幕是否激活
+    /// </summary>
+    public bool IsLoadingScreenActive()
+    {
+        return isLoadingScreenActive;
+    }
+    
+    #endregion
+
+    /// <summary>
+    /// 重置所有游戏数据到原始状态
+    /// 在开始新游戏时调用
+    /// </summary>
+    public void ResetAllGameData()
+    {
+        Debug.Log("开始重置所有游戏数据到原始状态...");
+
+        // 重置对话系统数据
+        if (DialogueManager.Instance != null)
+        {
+            DialogueManager.Instance.ResetAllDialogueData();
+        }
+
+        // 重置NPC系统数据
+        if (NPCManager.Instance != null)
+        {
+            NPCManager.Instance.ResetAllNPCData();
+        }
+
+        // 重置任务系统数据
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.ResetAllQuestData();
+        }
+
+        // 重置新闻系统数据
+        if (NewsManager.Instance != null)
+        {
+            NewsManager.Instance.ResetAllNewsData();
+        }
+
+        // 重置玩家数据
+        if (PlayerManager.Instance != null)
+        {
+            PlayerManager.Instance.ResetPlayerData();
+        }
+
+        Debug.Log("所有游戏数据已重置到原始状态");
+    }
+    
     public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadSceneAsync(sceneName));
@@ -75,14 +211,12 @@ public class GameManager : MonoBehaviour
     private IEnumerator LoadSceneAsync(string sceneName)
     {
         // 显示加载界面
-        if (loadingScreen != null)
-        {
-            loadingScreen.SetActive(true);
-        }
-        
+        ShowLoadingScreen($"正在加载场景: {sceneName}");
+        // 先保存数据
+        yield return SaveLoadAsyncSystem.SaveGame(true, 0);
         // 异步加载场景
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = false;
+        asyncLoad.allowSceneActivation = false; // 禁止自动激活场景，直到加载完成
         
         float startTime = Time.time;
         
@@ -91,62 +225,36 @@ public class GameManager : MonoBehaviour
         {
             float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
             
-            if (loadingBar != null)
-            {
-                loadingBar.value = progress;
-            }
+            UpdateLoadingProgress(progress, $"正在加载场景: {sceneName} ({progress:P0})");
             
             // 等待直到接近完成并且最小时间已过
             if (asyncLoad.progress >= 0.9f && Time.time - startTime >= minimumLoadingTime)
             {
+                UpdateLoadingProgress(1f, "加载完成");
                 asyncLoad.allowSceneActivation = true;
             }
             yield return null;
         }
+        Debug.Log($"场景 {sceneName} 加载完成");
     }
     
     // 处理场景加载完成事件
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 隐藏加载界面
-        if (loadingScreen != null)
-        {
-            loadingScreen.SetActive(false);
-        }
         InitializeScene(scene.name);
     }
     
     // 初始化场景
     private void InitializeScene(string sceneName)
     {
-        // 建立场景初始化逻辑
-        switch (sceneName)
+        if (!LevelManager.Instance)
         {
-            case "MainMenu":
-                Time.timeScale = 1f; // 确保游戏没有暂停
-                break;
-            case "女生宿舍":
-                break;
-            case "outside1":
-                // 触发开场对话
-                DialogueManager.Instance.StartDialogueByID("lide_dialogue");
-                break;
-            case "outside1_1":
-                break;
-            case "In_LiDe":
-                DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
-                break;
-            case "Scene 4":
-                // 找到玩家初始位置并放置玩家
-                // GameObject playerStart = GameObject.FindGameObjectWithTag("PlayerStart");
-                // GameObject player = GameObject.FindGameObjectWithTag("Player");
-                //
-                // if (playerStart != null && player != null)
-                // {
-                //     player.transform.position = playerStart.transform.position;
-                // }
-                break;
-            // 根据需要添加更多场景
+            HideLoadingScreen();
+        }
+        else
+        {
+            Debug.Log($"开始初始化关卡: {sceneName}");
+            LevelManager.Instance.InitializeLevel();
         }
     }
     
@@ -159,8 +267,6 @@ public class GameManager : MonoBehaviour
             case "GameStarted":
                 // 初始化游戏状态
                 GameStateManager.Instance.ClearAllFlags();
-                // 开始初始任务
-                // QuestManager.Instance.StartQuest("quest_001");
                 break;
                 
             case "PlayerDied":
@@ -171,29 +277,27 @@ public class GameManager : MonoBehaviour
                     null,
                     () => LoadScene("MainMenu"), () => LoadLastSave());
                 break;
+            case "DialogueManagerReady":
+                // 触发对话管理器准备就绪事件
+                OnDialogueManagerReady?.Invoke();
+                break;
                 
             // 根据需要添加更多事件
         }
     }
     
+    public void TriggerSceneChangeEvent(string sceneName)
+    {
+        // 在切换场景前触发事件
+        OnBeforeLevelChange?.Invoke(sceneName);
+        
+        // 这里可以添加其他需要在场景切换前执行的逻辑
+        Debug.Log($"触发场景切换事件: {sceneName}");
+    }
+    
     // 加载最近的保存
     private void LoadLastSave()
     {
-        // 找到最近的存档
-        // SaveDataInfo[] saves = SaveLoadSystem.GetSaveDataInfos();
-        //
-        // if (saves.Length > 0)
-        // {
-        //     // 按日期排序（最新的在前）
-        //     System.Array.Sort(saves, (a, b) => b.saveDate.CompareTo(a.saveDate));
-        //     
-        //     // 加载最新的存档
-        //     SaveLoadSystem.LoadGame(saves[0].slotIndex);
-        // }
-        // else
-        // {
-        //     // 没有找到存档，返回主菜单
-        //     LoadScene("MainMenu");
-        // }
+        // 实现最近存档加载逻辑
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,9 +21,11 @@ namespace Save
         [Header("Save Settings")]
         [SerializeField] private bool useJsonFormat = true; // JSON vs Binary
         [SerializeField] private bool showSaveProgress = true;
+        [SerializeField] private bool useGameManagerLoadingScreen = true; // 是否使用GameManager的加载屏幕
     
         public static AsyncSaveLoadSystem Instance { get; private set; }
-    
+        public static bool IsLoadingFromSave { get; private set; }
+
         // 进度回调
         public static event Action<float> OnSaveProgress;
         public static event Action<float> OnLoadProgress;
@@ -89,11 +91,12 @@ namespace Save
                 public bool isFollowing;
                 public bool canInteract;
                 public List<string> dialogueIDs = new List<string>();
+                public Dictionary<string, DialogueState> dialogueStates = new Dictionary<string, DialogueState>(); // 新增：对话状态
             }
         
             [Serializable]
             public class EnemySaveData
-            {
+            { 
                 public string enemyID;
                 public float[] position = new float[3];
                 public bool isActive;
@@ -139,9 +142,9 @@ namespace Save
                 public float totalPlayTime;
                 public DateTime gameStartTime;
             }
-            #endregion
+        #endregion
                 
-            private void Awake()
+        private void Awake()
         {
             if (Instance == null)
             {
@@ -163,7 +166,7 @@ namespace Save
         {
             try
             {
-                progress?.Report(0f);
+                OnSaveProgress?.Invoke(0f);
             
                 // 确保目录存在
                 if (!Directory.Exists(SaveDirectory))
@@ -171,18 +174,23 @@ namespace Save
                     Directory.CreateDirectory(SaveDirectory);
                 }
 
-                progress?.Report(0.1f);
+                OnSaveProgress?.Invoke(0.1f);
 
                 // 创建保存数据（可能耗时）
-                SaveData saveData = await CreateSaveDataAsync(progress,slotIdx);
+                SaveData saveData = await CreateSaveDataAsync(progress, slotIdx);
             
-                progress?.Report(0.8f);
+                OnSaveProgress?.Invoke(0.8f);
 
                 // 写入文件
                 string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
                 bool success = await WriteSaveFileAsync(saveData, savePath);
             
-                progress?.Report(1f);
+                OnSaveProgress?.Invoke(1f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    await Task.Delay(500); // 显示结果一段时间
+                }
             
                 OnSaveComplete?.Invoke(success ? "保存成功！" : "保存失败！");
                 return success;
@@ -190,6 +198,12 @@ namespace Save
             catch (Exception e)
             {
                 Debug.LogError($"异步保存失败: {e.Message}");
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    await Task.Delay(1000);
+                }
+                
                 OnSaveComplete?.Invoke("保存失败：" + e.Message);
                 return false;
             }
@@ -277,44 +291,99 @@ namespace Save
         {
             try
             {
+                IsLoadingFromSave = true;
+                // 显示加载屏幕
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.ShowLoadingScreen("正在加载游戏...");
+                }
+                
                 progress?.Report(0f);
+                OnLoadProgress?.Invoke(0f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0f, "正在加载游戏...");
+                }
             
                 string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
             
                 if (!File.Exists(savePath))
                 {
                     Debug.LogWarning($"存档文件不存在: {savePath}");
+                    
+                    if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                    {
+                        GameManager.Instance.UpdateLoadingProgress(1f, "存档文件不存在！");
+                        await Task.Delay(1000);
+                    }
+                    
                     OnLoadComplete?.Invoke("存档文件不存在！");
                     return false;
                 }
 
                 progress?.Report(0.1f);
+                OnLoadProgress?.Invoke(0.1f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.1f, "读取存档文件...");
+                }
 
                 // 读取文件
                 SaveData saveData = await ReadSaveFileAsync(savePath);
                 if (saveData == null)
                 {
+                    if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                    {
+                        GameManager.Instance.UpdateLoadingProgress(1f, "存档文件损坏！");
+                        await Task.Delay(1000);
+                    }
+                    
                     OnLoadComplete?.Invoke("存档文件损坏！");
                     return false;
                 }
 
                 progress?.Report(0.5f);
-
+                OnLoadProgress?.Invoke(0.5f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.5f, "应用游戏数据...");
+                }
+                Debug.Log($"saveData.GameStateSaveData.flags[FirstEntry_女生宿舍]: {saveData.GameStateSaveData.flags["FirstEntry_女生宿舍"]}");
                 // 应用数据
                 await ApplySaveDataAsync(saveData, progress);
             
                 progress?.Report(1f);
+                OnLoadProgress?.Invoke(1f);
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(1f, "加载完成！");
+                    await Task.Delay(500);
+                }
+                
                 OnLoadComplete?.Invoke("加载完成！");
+                IsLoadingFromSave = false;
                 return true;
             }
             catch (Exception e)
             {
                 Debug.LogError($"异步加载失败: {e.Message}");
+                
+                if (Instance.useGameManagerLoadingScreen && GameManager.Instance != null)
+                {
+                    GameManager.Instance.UpdateLoadingProgress(1f, "加载失败！");
+                    await Task.Delay(1000);
+                }
+                
                 OnLoadComplete?.Invoke("加载失败：" + e.Message);
+                IsLoadingFromSave = false;
                 return false;
             }
         }
-
+        
         /// <summary>
         /// 异步读取保存文件
         /// </summary>
@@ -369,14 +438,21 @@ namespace Save
             
             // 检查是否需要切换场景
             string currentScene = SceneManager.GetActiveScene().name;
-            if (currentScene != saveData.currentSceneName || SceneManager.GetActiveScene().name == "MainMenu")
+            
+            // 修复：始终加载存档中保存的场景，而不是硬编码的"女生宿舍"
+            if (currentScene != saveData.currentSceneName)
             {
                 AsyncOperation sceneLoad;
-             
-                if (SceneManager.GetActiveScene().name == "MainMenu")
-                    sceneLoad = SceneManager.LoadSceneAsync("女生宿舍");
-                else
-                    sceneLoad = SceneManager.LoadSceneAsync(saveData.currentSceneName);
+                
+                // 验证场景名称是否有效
+                if (string.IsNullOrEmpty(saveData.currentSceneName))
+                {
+                    Debug.LogError("存档中的场景名称为空，无法加载");
+                    return;
+                }
+                
+                Debug.Log($"从场景 '{currentScene}' 切换到 '{saveData.currentSceneName}'");
+                sceneLoad = SceneManager.LoadSceneAsync(saveData.currentSceneName);
             
                 while (sceneLoad is { isDone: false })
                 {
@@ -384,38 +460,60 @@ namespace Save
                     await Task.Yield(); // 等待一帧
                 }
             
-                // 等待场景初始化
-                await Task.Delay(100);
+                // 增加等待时间，确保场景完全初始化
+                await Task.Delay(500); // 从100ms增加到500ms
+                
+                Debug.Log($"场景切换完成：{SceneManager.GetActiveScene().name}");
+            }
+            else
+            {
+                Debug.Log($"当前场景已是目标场景：{currentScene}");
             }
 
             progress?.Report(0.8f);
 
             try
             {
-                // 直接在主线程调用所有加载方法，不使用Task.Run
+                // 添加场景数据加载（这个调用在原代码中缺失）
+                LoadSceneData(saveData);
+                await Task.Yield();
+                progress?.Report(0.82f);
+
+                // 加载玩家数据
                 LoadPlayerData(saveData);
-                await Task.Yield(); // 确保UI可以更新
-                progress?.Report(0.85f);
+                await Task.Yield();
+                progress?.Report(0.84f);
 
                 LoadNPCData(saveData);
                 await Task.Yield();
-                progress?.Report(0.9f);
+                progress?.Report(0.86f);
 
                 LoadInventoryData(saveData);
                 await Task.Yield();
-                progress?.Report(0.95f);
+                progress?.Report(0.88f);
 
                 LoadQuestData(saveData);
+                await Task.Yield();
+                progress?.Report(0.9f);
+                
                 LoadDialogueData(saveData);
+                await Task.Yield();
+                progress?.Report(0.92f);
+                
                 LoadGameStateData(saveData);
+                await Task.Yield();
+                progress?.Report(0.94f);
 
                 LoadNewsData(saveData);
-                // 其他加载方法...
-                // await Task.Run(() => LoadEnemyData(saveData));
-                // await Task.Run(() => LoadNewsData(saveData));
-                // await Task.Run(() => LoadPuzzleData(saveData));
+                await Task.Yield();
+                progress?.Report(0.96f);
 
+                // 最后加载敌人数据
+                LoadEnemyData(saveData);
+                
                 progress?.Report(1f);
+                
+                Debug.Log($"存档加载完成，当前场景：{SceneManager.GetActiveScene().name}");
             }
             catch (Exception e)
             {
@@ -423,9 +521,8 @@ namespace Save
                 throw;
             }
         }
-
         #endregion
-
+        
         #region 辅助方法
 
         /// <summary>
@@ -560,7 +657,7 @@ namespace Save
         private static SceneDataCache CollectSceneData()
         {
             SceneDataCache cache = new SceneDataCache();
-            cache.sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            cache.sceneName = SceneManager.GetActiveScene().name == "MainMenu" ? "女生宿舍" : SceneManager.GetActiveScene().name;
             cache.pointType = GameStateManager.Instance.GetPlayerPointType();
             return cache;
         }
@@ -570,15 +667,40 @@ namespace Save
             NPCDataCache cache = new NPCDataCache();
             if (NPCManager.Instance != null)
             {
+                Debug.Log("开始收集 NPC data...");
                 foreach (var npc in NPCManager.Instance.GetActiveNPCs())
                 {
+                    // 获取NPC的对话ID列表和状态
+                    List<string> dialogueIDs = new List<string>();
+                    Dictionary<string, DialogueState> dialogueStates = new Dictionary<string, DialogueState>();
+            
+                    if (npc.npcData != null && npc.npcData.dialogueIDs != null)
+                    {
+                        dialogueIDs = new List<string>(npc.npcData.dialogueIDs);
+                
+                        // 同时收集每个对话的当前状态
+                        foreach (string dialogueID in dialogueIDs)
+                        {
+                            if (DialogueManager.Instance != null)
+                            {
+                                var dialogueData = DialogueManager.Instance.GetDialogueData(dialogueID);
+                                if (dialogueData != null)
+                                {
+                                    dialogueStates[dialogueID] = dialogueData.state;
+                                }
+                            }
+                        }
+                    }
+            
                     cache.npcData[npc.npcData.npcID] = (
                         npc.npcData.npcID,
                         npc.transform.position,
                         npc.gameObject.activeSelf,
                         npc.isFollowing,
                         npc.npcData.sceneName,
-                        npc.canInteract
+                        npc.canInteract,
+                        dialogueIDs,
+                        dialogueStates  // 添加对话状态信息
                     );
                 }
             }
@@ -661,7 +783,7 @@ namespace Save
         {
             foreach (var npcEntry in cache.npcData)
             {
-                var (npcID, position, isActive, isFollowing, sceneName,canInteract) = npcEntry.Value;
+                var (npcID, position, isActive, isFollowing, sceneName, canInteract, dialogueIDs,dialogueStates) = npcEntry.Value;
 
                 NPCSaveData npcSaveData = new NPCSaveData();
                 npcSaveData.npcID = npcID;
@@ -672,6 +794,8 @@ namespace Save
                 npcSaveData.isActive = isActive;
                 npcSaveData.isFollowing = isFollowing;
                 npcSaveData.canInteract = canInteract;
+                npcSaveData.dialogueIDs = dialogueIDs; // 保存对话ID列表
+                npcSaveData.dialogueStates = dialogueStates; // 保存对话状态
                 saveData.npcData[npcID] = npcSaveData;
             }
         }
@@ -939,8 +1063,8 @@ class SceneDataCache
 
 class NPCDataCache
 {
-    public Dictionary<string, (string npcID, Vector3 position, bool activeSelf, bool isFollowing, string sceneName, bool canInteract)> npcData = 
-        new Dictionary<string, (string, Vector3, bool, bool, string,bool)>();
+    public Dictionary<string, (string npcID, Vector3 position, bool activeSelf, bool isFollowing, string sceneName, bool canInteract, List<string> dialogueIDs, Dictionary<string, DialogueState> dialogueStates)> npcData = 
+        new Dictionary<string, (string npcID, Vector3 position, bool activeSelf, bool isFollowing, string sceneName, bool canInteract, List<string> dialogueIDs, Dictionary<string, DialogueState> dialogueStates)>();
 }
 
 class InventoryDataCache
@@ -968,4 +1092,4 @@ class GameStateDataCache
     public Dictionary<string, bool> flags = new Dictionary<string, bool>();
     public float totalPlayTime;
     public DateTime gameStartTime;
-}
+}*/

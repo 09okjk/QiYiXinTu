@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: lide_dialogue
   state: 2
-  currentNodeID: node001
+  currentNodeID: node007
   nodes:
   - nodeID: node001
     text: "\u600E\u4E48\u5566\uFF1F"

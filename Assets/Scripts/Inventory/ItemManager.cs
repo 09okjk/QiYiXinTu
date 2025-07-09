@@ -5,8 +5,8 @@ public class ItemManager : MonoBehaviour
 {
     public static ItemManager Instance { get; private set; }
     
-    [SerializeField] private List<ItemData> allItems = new List<ItemData>();
-    private readonly Dictionary<string, ItemData> itemLookup = new Dictionary<string, ItemData>();
+    [SerializeField] private List<ItemGameData> allItems = new List<ItemGameData>();
+    private readonly Dictionary<string, ItemGameData> itemLookup = new Dictionary<string, ItemGameData>();
     
     private void Awake()
     {
@@ -19,9 +19,18 @@ public class ItemManager : MonoBehaviour
             var itemDatas = Resources.LoadAll<ItemData>("ScriptableObjects/Items");
             foreach (var itemData in itemDatas)
             {
-                if (itemLookup.TryAdd(itemData.itemID, itemData))
+                var itemGameData = new ItemGameData
                 {
-                    allItems.Add(itemData);
+                    itemID = itemData.itemID,
+                    itemName = itemData.itemName,
+                    description = itemData.description,
+                    itemType = itemData.itemType,
+                    icon = itemData.icon,
+                    properties = itemData.properties
+                };
+                if (itemLookup.TryAdd(itemGameData.itemID, itemGameData))
+                {
+                    allItems.Add(itemGameData);
                 }
             }
         }
@@ -31,7 +40,7 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public ItemData GetItem(string itemID)
+    public ItemGameData GetItem(string itemID)
     {
         itemLookup.TryGetValue(itemID, out var item);
         return item;

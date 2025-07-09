@@ -16,7 +16,7 @@ public class PlayerPrimaryAttackState : PlayerState
     {
         base.Enter();
 
-        if (comboCount > 2 || Time.time - lastTimeAttacked > Player.comboTimeWindow)
+        if (comboCount > 3 || Time.time - lastTimeAttacked > Player.comboTimeWindow)
         {
             comboCount = 0;
         }
@@ -65,5 +65,6 @@ public class PlayerPrimaryAttackState : PlayerState
         
         comboCount++;
         lastTimeAttacked = Time.time;
+        Player.attackCheckerManager.DisableAllAttackColliders();
     }
 }

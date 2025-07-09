@@ -28,9 +28,50 @@ public class GameStateManager : MonoBehaviour
     private void InitializeGameFlags()
     {
         // 初始化游戏状态标志
+
+        #region 场景切换触发器-Flag
+        
+        gameFlags["CanEnter_"+ "outside1_1"] = true; // 假设outside1_1是一个场景
+        gameFlags["CanEnter_"+ "In_LiDe_2"] = true; 
+        gameFlags["CanEnter_"+ "In_LiDe_3"] = true; 
+        gameFlags["CanEnter_" + "In_LiDe_4"] = true; // 假设In_LiDe_4是一个场景
+        gameFlags["CanEnter_" + "Space_Time"] = true; // 假设In_LiDe_4是一个场景
+
+        #endregion
+
+        #region 第一次进入关卡-Flag
+
         gameFlags["FirstEntry_"+ "女生宿舍"] = true; // 假设女生宿舍是第一个关卡
-        gameFlags["CanInteract_"+"LuSleep"] = true; // LuSleep是一个对象的交互标志
         gameFlags["FirstEntry_" + "outside1"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "outside1_1"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "In_LiDe"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "In_LiDe_2"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "In_LiDe_3"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "In_LiDe_4"] = true; // 假设outside1是第二个关卡
+        gameFlags["FirstEntry_" + "Space_Time"] = true; // 假设outside1是第二个关卡
+        
+        #endregion
+
+        #region 对话触发器—Flag
+
+        gameFlags["CanInteract_"+"fang_dialogue"] = true; 
+        gameFlags["CanInteract_"+"shi_dialogue"] = true; 
+        gameFlags["CanInteract_"+"li_dialogue"] = true; 
+        gameFlags["CanInteract_"+"zhang_dialogue"] = true; 
+        gameFlags["CanInteract_"+"xiao_dialogue"] = true; 
+        gameFlags["CanInteract_"+"rift_1955_dialogue"] = true; 
+        gameFlags["CanInteract_"+"silence_dialogue"] = true; 
+
+        #endregion
+
+        #region 特殊触发器-Flag
+        
+        gameFlags["CanInteract_"+"LuSleep"] = true; // LuSleep是一个对象的交互标志
+        gameFlags["CanInteract_"+"milk_tea"] = true; // milk_tea是一个对象的交互标志
+        gameFlags["CanInteract_"+"card"] = true; // milk_tea是一个对象的交互标志
+        gameFlags["IsNewGame"] = true; // 标志是否为新游戏
+        
+        #endregion
     }
 
     public void SetPlayerPointType(PlayerPointType pointType)
@@ -68,19 +109,6 @@ public class GameStateManager : MonoBehaviour
         gameFlags[flagName] = value;
     }
     
-    // 切换标志值
-    public void ToggleFlag(string flagName)
-    {
-        if (gameFlags.TryGetValue(flagName, out bool value))
-        {
-            gameFlags[flagName] = !value;
-        }
-        else
-        {
-            gameFlags[flagName] = true;
-        }
-    }
-    
     // 检查标志是否存在
     public bool HasFlag(string flagName)
     {
@@ -103,14 +131,15 @@ public class GameStateManager : MonoBehaviour
     }
     
     // 设置所有标志（用于加载）
-    public void SetAllFlags(Dictionary<string, bool> flags)
+    public bool SetAllFlags(Dictionary<string, bool> flags)
     {
         if (flags == null)
         {
             Debug.LogWarning("Attempted to set game flags with a null dictionary.");
-            return;
+            return false;
         }
         gameFlags = new Dictionary<string, bool>(flags);
+        return true;
     }
     
     // 清除所有标志

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using News;
 using Save;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -35,6 +36,7 @@ namespace Manager
         
         [Header("初始化设置")]
         [SerializeField] private float initializationDelay = 0.1f; // 初始化延迟时间
+        [SerializeField] private bool showLoadingScreen = true; // 是否显示加载屏幕
         
         private string levelName;
         private bool isLevelInitialized = false;
@@ -95,30 +97,19 @@ namespace Manager
             {
                 sceneAnimator.gameObject.SetActive(false);
             }
-            
-            // 订阅事件
-            AsyncSaveLoadSystem.OnLoadComplete += OnDataLoaded;
-            if (DialogueManager.Instance != null)
-            {
-                DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
-            }
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            
-            // 如果当前场景已经加载，手动调用一次
-            OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
         }
 
         private void OnDestroy()
         {
             // 取消订阅事件
-            AsyncSaveLoadSystem.OnLoadComplete -= OnDataLoaded;
+            SaveLoadAsyncSystem.OnLoadComplete -= OnDataLoaded;
             if (DialogueManager.Instance != null)
             {
                 DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
             }
-            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
-
+        #region 初始化逻辑
+        
         /// <summary>
         /// 查找场景中的NPC出生点
         /// </summary>
@@ -128,41 +119,24 @@ namespace Manager
             Debug.Log($"找到 {npcsPoints.Count} 个NPC出生点");
         }
 
-        /// <summary>
-        /// 场景加载完成回调
-        /// </summary>
-        private void OnSceneLoaded(Scene scene, LoadSceneMode arg1)
+        public void InitializeLevel()
         {
-            Debug.Log($"场景加载完成: {scene.name}");
-            isSceneLoaded = true;
-            
-            // 检查是否可以开始初始化
-            TryInitializeLevel();
-        }
-
-        /// <summary>
-        /// 数据加载完成回调
-        /// </summary>
-        private void OnDataLoaded(string obj)
-        {
-            Debug.Log($"数据加载完成: {obj}");
-            isDataLoaded = true;
-            
-            // 检查是否可以开始初始化
-            TryInitializeLevel();
-        }
-
-        /// <summary>
-        /// 尝试初始化关卡（确保数据和场景都已加载）
-        /// </summary>
-        private void TryInitializeLevel()
-        {
-            // 只有当数据和场景都加载完成且未初始化时才进行初始化
-            if (isDataLoaded && isSceneLoaded && !isLevelInitialized)
+            // 如果已经初始化过，直接返回
+            if (isLevelInitialized)
             {
-                // 添加小延迟确保所有组件都已准备就绪
-                StartCoroutine(DelayedInitLevel());
+                Debug.LogWarning($"关卡 {levelName} 已经初始化过了");
+                return;
             }
+
+            // 检查是否需要显示加载屏幕
+            if (showLoadingScreen && GameManager.Instance != null)
+            {
+                GameManager.Instance.ShowLoadingScreen($"正在初始化关卡: {levelName}");
+            }
+            
+            SaveLoadAsyncSystem.OnLoadComplete += OnDataLoaded;
+            // 加载数据
+            _ = SaveLoadAsyncSystem.LoadGame();
         }
 
         /// <summary>
@@ -172,62 +146,52 @@ namespace Manager
         {
             yield return new WaitForSeconds(initializationDelay);
             
-            if (ShouldInitializeLevel())
-            {
-                InitLevel();
-            }
-            else
-            {
-                Debug.Log($"跳过关卡初始化: {levelName}");
-                // 对于特殊场景（如女生宿舍），仍需要设置基本的相机
-                SetupCameraOnly();
-            }
-        }
-
-        /// <summary>
-        /// 判断是否应该初始化关卡
-        /// </summary>
-        private bool ShouldInitializeLevel()
-        {
-            return true; // 其他场景默认都需要初始化
-        }
-
-        /// <summary>
-        /// 初始化关卡的主方法
-        /// </summary>
-        private void InitLevel()
-        {
-            if (isLevelInitialized)
-            {
-                Debug.LogWarning($"关卡 {levelName} 已经初始化过了");
-                return;
-            }
-
-            Debug.Log($"开始初始化关卡: {levelName}");
-            
             // 按照正确的顺序进行初始化
             StartCoroutine(InitLevelSequence());
         }
 
         /// <summary>
-        /// 关卡初始化序列
+        /// 关卡初始化序列（带加载屏幕）
         /// </summary>
         private IEnumerator InitLevelSequence()
         {
             // 步骤1: 设置玩家位置
-            yield return StartCoroutine(SetPlayerPosition());
+            if (showLoadingScreen && GameManager.Instance != null)
+            {
+                GameManager.Instance.UpdateLoadingProgress(0.75f, "初始化玩家...");
+            }
+            yield return StartCoroutine(InitPlayer());
             
             // 步骤2: 设置相机
+            if (showLoadingScreen && GameManager.Instance != null)
+            {
+                GameManager.Instance.UpdateLoadingProgress(0.8f, "设置相机...");
+            }
             yield return StartCoroutine(SetupCamera());
             
             // 步骤3: 生成NPC
+            if (showLoadingScreen && GameManager.Instance != null)
+            {
+                GameManager.Instance.UpdateLoadingProgress(0.85f, "生成NPC...");
+            }
             yield return StartCoroutine(SpawnNPCs());
             
             // 步骤4: 生成敌人（如果需要）
+            if (showLoadingScreen && GameManager.Instance != null)
+            {
+                GameManager.Instance.UpdateLoadingProgress(0.9f, "生成敌人...");
+            }
             yield return StartCoroutine(SpawnEnemies());
             
             // 步骤5: 生成新闻物体
+            if (showLoadingScreen && GameManager.Instance != null)
+            {
+                GameManager.Instance.UpdateLoadingProgress(0.95f, "生成新闻物体...");
+            }
             yield return StartCoroutine(SpawnNewsObjects());
+            
+            // 最后: 根据不同场景进行特殊处理
+            yield return StartCoroutine(HandleSceneSpecificSetup());
             
             // 标记初始化完成
             isLevelInitialized = true;
@@ -236,12 +200,46 @@ namespace Manager
             // 触发初始化完成事件
             OnLevelInitialized();
         }
+        
+        /// <summary>
+        /// 处理特定场景的初始化逻辑
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator HandleSceneSpecificSetup()
+        {
+            // 根据不同场景进行特殊处理
+            try
+            {
+                switch (levelName)
+                {
+                    case "女生宿舍":
+                        // 设置开场动画
+                        PlayerManager.Instance.SetPlayerActive(false);
+                        NPCManager.Instance.HideNPC(NPCManager.Instance.GetNPC("LuXinsheng"));
+                        break;
+                    case "outside1":
+                        break;
+                    case "In_LiDe":
+                        break;
+                    case "Space_Time":
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"处理场景 {levelName} 特定初始化逻辑时发生错误: {e.Message}");
+            }
+            yield return null;
+        }
 
         /// <summary>
-        /// 根据PlayerPointType设置玩家位置
+        /// 初始化玩家
         /// </summary>
-        private IEnumerator SetPlayerPosition()
+        private IEnumerator InitPlayer()
         {
+            PlayerManager.Instance.SetPlayerActive(true);
             // 获取应该使用的玩家出生点
             GameObject targetPlayerPoint = GetPlayerSpawnPoint();
             
@@ -256,20 +254,21 @@ namespace Manager
                 Debug.LogError("PlayerManager.Instance 为空!");
                 yield break;
             }
-
-            Debug.Log($"设置玩家位置: {targetPlayerPoint.transform.position} (类型: {GameStateManager.Instance.GetPlayerPointType()})");
-            PlayerManager.Instance.SetPlayerPosition(targetPlayerPoint);
+            
+            if(PlayerManager.Instance.SetPlayerPosition(targetPlayerPoint))
+            {
+                Debug.Log($"设置玩家位置: {targetPlayerPoint.transform.position} (类型: {GameStateManager.Instance.GetPlayerPointType()})");
+            }
+            else
+            {
+                Debug.LogError("玩家位置设置失败，请检查 PlayerManager 实例是否正确");
+                yield break;
+            };
             
             // 等待一帧确保位置设置生效
             yield return null;
-            
-            // 验证玩家位置是否设置成功
-            if (PlayerManager.Instance.player != null)
-            {
-                Debug.Log($"玩家位置设置成功: {PlayerManager.Instance.player.transform.position}");
-            }
         }
-
+        
         /// <summary>
         /// 根据PlayerPointType获取对应的玩家出生点
         /// </summary>
@@ -335,19 +334,6 @@ namespace Manager
         }
 
         /// <summary>
-        /// 仅设置相机（用于特殊场景）
-        /// </summary>
-        private void SetupCameraOnly()
-        {
-            if (PlayerCamera != null && PlayerManager.Instance != null && CameraManager.Instance != null)
-            {
-                Debug.Log("设置相机（特殊场景模式）");
-                PlayerManager.Instance.UpdatePlayerCamera(PlayerCamera);
-                CameraManager.Instance.SetCameraActive(true);
-            }
-        }
-
-        /// <summary>
         /// 生成NPC
         /// </summary>
         private IEnumerator SpawnNPCs()
@@ -364,26 +350,41 @@ namespace Manager
                 yield break;
             }
 
-            Debug.Log($"开始生成 {npcsPoints.Count} 个NPC");
-            
-            foreach (var npcPoint in npcsPoints)
+            // 加载当前场景的NPC数据
+            if (!NPCManager.Instance.LoadCurrentSceneNpCs(levelName))
             {
+                Debug.LogError($"加载当前场景NPC失败: {levelName}");
+                yield break;
+            }
+            
+            // 设置npc的出生点
+            for (int i = 0; i < npcsPoints.Count; i++)
+            {
+                var npcPoint = npcsPoints[i];
                 if (npcPoint != null)
                 {
                     string npcId = npcPoint.name;
                     Debug.Log($"生成NPC: {npcId} 在位置: {npcPoint.transform.position}");
                     
-                    NPCManager.Instance.ShowNpc(npcId, npcPoint);
+                    float npcProgress = (float)(i + 1) / npcsPoints.Count;
+                    GameManager.Instance.UpdateLoadingProgress(
+                        2f/5f + (npcProgress * 0.2f), // 在第3步骤内部更新进度
+                        $"生成NPC... ({i + 1}/{npcsPoints.Count})"
+                    );
                     
+                    if(!NPCManager.Instance.ShowNPC(npcId, npcPoint))
+                    {
+                        Debug.LogError($"生成NPC失败: {npcId} 在位置: {npcPoint.transform.position}");
+                        continue;
+                    }
                     // 在每个NPC生成之间添加小延迟，避免同时生成造成的问题
-                    yield return new WaitForSeconds(0.05f);
+                    yield return new WaitForSeconds(0.01f);
                 }
                 else
                 {
                     Debug.LogWarning("发现空的NPC出生点引用");
                 }
             }
-            
             Debug.Log("NPC生成完成");
         }
 
@@ -400,13 +401,25 @@ namespace Manager
 
             Debug.Log($"开始生成 {enemyPoints.Count} 个敌人");
             
-            // TODO: 实现敌人生成逻辑
-            foreach (var enemyPoint in enemyPoints)
+            for (int i = 0; i < enemyPoints.Count; i++)
             {
+                var enemyPoint = enemyPoints[i];
                 if (enemyPoint != null)
                 {
                     Debug.Log($"生成敌人在位置: {enemyPoint.transform.position}");
+                    // TODO: 实现敌人生成逻辑
                     // EnemyManager.Instance.SpawnEnemy(enemyPoint);
+                    
+                    // 更新进度
+                    if (showLoadingScreen && GameManager.Instance != null && GameManager.Instance.IsLoadingScreenActive())
+                    {
+                        float enemyProgress = (float)(i + 1) / enemyPoints.Count;
+                        GameManager.Instance.UpdateLoadingProgress(
+                            3f/5f + (enemyProgress * 0.2f), // 在第4步骤内部更新进度
+                            $"生成敌人... ({i + 1}/{enemyPoints.Count})"
+                        );
+                    }
+                    
                     yield return new WaitForSeconds(0.1f);
                 }
             }
@@ -427,8 +440,9 @@ namespace Manager
             
             Debug.Log($"开始生成 {newsObjects.Count} 个新闻物体");
 
-            foreach (var newsObject in newsObjects)
+            for (int i = 0; i < newsObjects.Count; i++)
             {
+                var newsObject = newsObjects[i];
                 var news = NewsManager.Instance.GetNewsByID(newsObject.newsID);
                 if (news == null)
                 {
@@ -436,22 +450,65 @@ namespace Manager
                     continue;
                 }
                 newsObject.SetNewsData(news);
+                
+                // 更新进度
+                if (showLoadingScreen && GameManager.Instance != null && GameManager.Instance.IsLoadingScreenActive())
+                {
+                    float newsProgress = (float)(i + 1) / newsObjects.Count;
+                    GameManager.Instance.UpdateLoadingProgress(
+                        4f/5f + (newsProgress * 0.2f), // 在第5步骤内部更新进度
+                        $"设置新闻物体... ({i + 1}/{newsObjects.Count})"
+                    );
+                }
+                
+                yield return null; // 每帧处理一个新闻物体
             }
+            
+            Debug.Log("新闻物体生成完成");
         }
+        
+        #endregion
 
+        #region 事件回调
+        
+        /// <summary>
+        /// 数据加载完成回调
+        /// </summary>
+        private void OnDataLoaded(string obj)
+        {
+            Debug.Log($"数据加载完成: {obj}");
+            isDataLoaded = true;
+            
+            // 添加小延迟确保所有组件都已准备就绪
+            StartCoroutine(DelayedInitLevel());
+        }
+        
         /// <summary>
         /// 关卡初始化完成回调
         /// </summary>
-        private void OnLevelInitialized()
+        private async void OnLevelInitialized()
         {
-            // 可以在这里添加初始化完成后的逻辑
-            Debug.Log($"关卡 {levelName} 完全初始化完成");
+            GameManager.Instance.UpdateLoadingProgress(1f, "初始化完成！");
+            GameManager.Instance.HideLoadingScreen();
             
-            // 如果是第一次进入，设置对应的标志
-            if (GameStateManager.Instance != null)
+
+            if (levelName == "女生宿舍")
             {
-                startAinimation.gameObject.SetActive(GameStateManager.Instance.GetFlag("FirstEntry_" + levelName));
-                GameStateManager.Instance.SetFlag("FirstEntry_" + levelName, false);
+                StartAnimationCotroller.Instance.PlayVideo(0);
+            }
+            if (levelName == "outside1")
+            {
+                DialogueManager.Instance.StartDialogueByID("lide_dialogue");
+            }
+
+            if (levelName == "In_LiDe")
+            {
+                DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
+            }
+
+            if (levelName == "Space_Time")
+            {
+                DialogueManager.Instance.StartDialogueByID("rift_1955_dialogue");
             }
         }
 
@@ -469,7 +526,14 @@ namespace Manager
                     Debug.Log("女生宿舍对话完成，设置outside1可进入标志");
                 }
             }
+
+            if (dialogueID == "fang_dialogue")
+            {
+                GameStateManager.Instance.SetFlag("CanEnter_"+"In_LiDe", true);
+            }
         }
+        
+        #endregion
 
         /// <summary>
         /// 手动重新初始化关卡（调试用）
@@ -478,7 +542,7 @@ namespace Manager
         public void ReInitializeLevel()
         {
             isLevelInitialized = false;
-            InitLevel();
+            InitializeLevel();
         }
 
         /// <summary>
@@ -514,6 +578,31 @@ namespace Manager
             {
                 Debug.Log($"当前玩家出生点类型: {GameStateManager.Instance.GetPlayerPointType()}");
             }
+        }
+
+        /// <summary>
+        /// 强制显示加载屏幕（调试用）
+        /// </summary>
+        [ContextMenu("测试加载屏幕")]
+        public void TestLoadingScreen()
+        {
+            if (GameManager.Instance != null)
+            {
+                StartCoroutine(TestLoadingScreenCoroutine());
+            }
+        }
+
+        private IEnumerator TestLoadingScreenCoroutine()
+        {
+            GameManager.Instance.ShowLoadingScreen("测试加载屏幕");
+            
+            for (float i = 0; i <= 1f; i += 0.1f)
+            {
+                GameManager.Instance.UpdateLoadingProgress(i, $"测试进度: {i:P0}");
+                yield return new WaitForSeconds(0.2f);
+            }
+            
+            GameManager.Instance.HideLoadingScreen();
         }
 
         #endregion

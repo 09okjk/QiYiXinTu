@@ -30,28 +30,28 @@
             {
                 base.Update();
                 
-                if (Input.GetKeyDown(KeyCode.Mouse1))
-                {
-                    DotsActive(true);
-                }
-                
-                if (Input.GetKey(KeyCode.Mouse1))
-                {
-                    // 存储当前瞄准方向，避免多次计算
-                    currentAimDirection = AimDirection();
-                    
-                    for (int i = 0; i < dots.Length; i++)
-                    {
-                        dots[i].transform.position = DotsPosition(i * spaceBetweenDots);
-                    }
-                }
-                
-                if (Input.GetKeyUp(KeyCode.Mouse1))
-                {
-                    // 在释放鼠标时确定最终方向
-                    finalDirection = new Vector2(currentAimDirection.x * launchForce.x, currentAimDirection.y * launchForce.y);
-                    DotsActive(false);
-                }
+                // if (Input.GetKeyDown(KeyCode.Mouse1))
+                // {
+                //     DotsActive(true);
+                // }
+                //
+                // if (Input.GetKey(KeyCode.Mouse1))
+                // {
+                //     // 存储当前瞄准方向，避免多次计算
+                //     currentAimDirection = AimDirection();
+                //     
+                //     for (int i = 0; i < dots.Length; i++)
+                //     {
+                //         dots[i].transform.position = DotsPosition(i * spaceBetweenDots);
+                //     }
+                // }
+                //
+                // if (Input.GetKeyUp(KeyCode.Mouse1))
+                // {
+                //     // 在释放鼠标时确定最终方向
+                //     finalDirection = new Vector2(currentAimDirection.x * launchForce.x, currentAimDirection.y * launchForce.y);
+                //     DotsActive(false);
+                // }
             }
             
             public void CreateSword()

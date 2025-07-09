@@ -20,7 +20,6 @@ public class EnemyManager:MonoBehaviour
         else
         {
             Destroy(gameObject); // 如果实例已存在，则销毁当前对象
-            return;
         }
     }
 
@@ -42,10 +41,10 @@ public class EnemyManager:MonoBehaviour
 
     private void InitializeEnemies()
     {
-        enemies = GetComponentsInChildren<Enemy>(); // 获取场景中的所有
+        enemies = GetComponentsInChildren<Enemy>(); // 获取场景中的所有敌人组件
         foreach (Enemy enemy in enemies)
         {
-            enemy.DeactivateEnemy(); // 禁用所有
+            enemy.DeactivateEnemy(); // 禁用所有敌人
         }
     }
     
@@ -85,20 +84,11 @@ public class EnemyManager:MonoBehaviour
         }
         
         enemies = Array.FindAll(enemies, e => e.enemyData.enemyID != enemy.enemyData.enemyID); // 从列表中移除死亡的敌人
-        if (enemies.Length == 0)
+        
+        if (CheckActiveEnemyType(enemy.enemyData.enemyType))
         {
-            Debug.Log("All enemies have been defeated.");
+            Debug.Log($"All Enemies of type {enemy.enemyData.enemyType} were died.");
             OnEnemyTypeCleared?.Invoke(enemy.enemyData.enemyType); // 触发敌人类型清除事件
-            // TODO: 追加触发所有敌人死亡的事件
-        }
-        else
-        {
-            var enemiesByType = Array.FindAll(enemies, e => e.enemyData.enemyType == enemy.enemyData.enemyType); // 更新敌人类型列表
-            if (enemiesByType.Length == 0)
-            {
-                Debug.Log($"All enemies of type {enemy.enemyData.enemyType} have been defeated.");
-                OnEnemyTypeCleared?.Invoke(enemy.enemyData.enemyType); // 触发敌人类型清除事件
-            }
         }
     }
     
@@ -116,6 +106,19 @@ public class EnemyManager:MonoBehaviour
 
     private void OnEnemyTypeClearedHandler(EnemyType obj)
     {
+        if (obj == EnemyType.Enemy1)
+        {
+            var LuXinsheng = NPCManager.Instance.GetNPC("LuXinsheng");
+            if (LuXinsheng != null)
+            {
+                LuXinsheng.SetCurrentDialogueID("fight_over_dialogue");
+                LuXinsheng.SetCanInteract(true);
+            }
+            else
+            {
+                Debug.LogWarning("NPC 'LuXinsheng' not found.");
+            }
+        }
         if (obj == EnemyType.Enemy2)
         {
             DialogueManager.Instance.StartDialogueByID("lide_fight_over_dialogue");

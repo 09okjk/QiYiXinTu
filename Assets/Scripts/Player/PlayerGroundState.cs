@@ -16,10 +16,10 @@ public class PlayerGroundState : PlayerState
     public override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            StateMachine.ChangeState(Player.AimSwordState);
-        }
+        // if (Input.GetKeyDown(KeyCode.Mouse1))
+        // {
+        //     StateMachine.ChangeState(Player.AimSwordState);
+        // }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {

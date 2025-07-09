@@ -61,7 +61,7 @@ public class Entity:MonoBehaviour
     {
         //EntityFX.StartCoroutine("FlashFX");
         StartCoroutine(nameof(HitKnockback));
-        Debug.Log(gameObject.name + " was damage");
+        Debug.Log(gameObject.name + " was damage: " + damage);
         baseData.CurrentHealth -= damage;
     }
 

@@ -58,6 +58,20 @@ MonoBehaviour:
     isFollow: 0
     conditionType: 0
     conditionValue: 
+  - nodeID: node004
+    text: "\u7B2C7\u9898\uFF1A'\u60A8\u5BF9\u4E8Exxx\u7684\u54C1\u724C\u5370\u8C61\u662F\uFF1F\uFF08\u591A\u9009\uFF09'1\u3001\u5145\u6EE1\u7AE5\u5E74\u56DE\u5FC6\u30022\u3001\u8BBE\u8BA1\u8FC7\u65F6\u30023\u3001\u4EF7\u683C\u4EB2\u6C11\u30024\u3001\u8D28\u91CF\u53EF\u9760"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node005
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
   - nodeID: node005
     text: "\u7FFB\u770B\u5230\u8FD9\u91CC\u65F6\uFF0C\u4F60\u53D1\u73B0\u8FD9\u4EFD\u95EE\u5377\u7684\u95EE\u9898\u8BBE\u8BA1\u7A0D\u5FAE\u6709\u4E00\u70B9\u95EE\u9898\uFF0C\u800C\u8FD9\u6216\u8BB8\u6070\u597D\u662F\u89E3\u51B3\u95EE\u9898\u7684\u5173\u952E\u3002"
     speaker:

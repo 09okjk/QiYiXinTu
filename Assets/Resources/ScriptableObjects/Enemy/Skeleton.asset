@@ -19,7 +19,8 @@ MonoBehaviour:
   InvincibleTime: 0
   knockbackDirection: {x: 2, y: 5}
   KnockbackDuration: 1
-  itemIDs: []
+  itemIDs:
+  - 
   enemyID: skeleton_001
   enemyName: "\u9AB7\u9AC5001"
   description: "\u654C\u4EBA"

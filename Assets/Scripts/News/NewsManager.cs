@@ -3,179 +3,199 @@ using System.Collections.Generic;
 using Manager;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Utils;
 
 namespace News
 {
-    public class NewsManager:MonoBehaviour
+    [Serializable]
+    public class NewsGameData
+    { 
+        public string newsID; // 新闻ID
+        public string newsTitle; // 新闻标题
+        [TextArea] public string newsContent; // 新闻内容
+        public Sprite newsImage; // 新闻图片ID
+        public bool isRead; // 是否已读
+    }
+    public class NewsManager : MonoBehaviour
     {
         public static NewsManager Instance; // 单例实例
         
-        public GameObject newsBasePanel; // 新闻基础面板
-        
-        [Header("单个新闻信息UI")]
-        public GameObject newsInfoUI; // 单个新闻信息UI
-        public TextMeshProUGUI newsTitleText; // 新闻标题文本
-        public TextMeshProUGUI newsContentText; // 新闻内容文本
-        public Image newsImage; // 新闻图片
-        public Button closeButton; // 关闭按钮
+        [Header("UI组件")]
+        public GameObject newsBasePanel;
+        public GameObject newsInfoUI;
+        public TextMeshProUGUI newsTitleText;
+        public TextMeshProUGUI newsContentText;
+        public Image newsImage;
+        public Button closeButton;
         
         [Header("新闻列表UI")]
-        public GameObject newsInfoBookPanel; //Ruc一日新闻素材库面板
-        public ScrollRect newsInfoScrollRect; // 新闻列表滚动视图
-        public GameObject newsInfoSlotPrefab; // 新闻列表预制体
-        public GameObject newsInfoPanel; // 新闻信息面板
-        public TextMeshProUGUI newsInfoTitleText; // 新闻信息标题文本
-        public TextMeshProUGUI newsInfoContentText; // 新闻信息内容文本
-        public Image newsInfoImage; // 新闻信息图片
-        public Button newsInfoCloseButton; // 新闻信息关闭按钮
+        public GameObject newsInfoBookPanel;
+        public ScrollRect newsInfoScrollRect;
+        public GameObject newsInfoSlotPrefab;
+        public GameObject newsInfoPanel;
+        public TextMeshProUGUI newsInfoTitleText;
+        public TextMeshProUGUI newsInfoContentText;
+        public Image newsInfoImage;
+        public Button newsInfoCloseButton;
         
-        private NewsData[] newsDataArray; // 存储所有新闻数据的数组
-        public List<NewsData> checkedNewsDataArray; // 存储已读新闻数据的数组
-        private NewsData currentNewsData; // 当前新闻数据
-        private List<GameObject> newsInfoSlotPool = new List<GameObject>(); // 新闻列表预制体池
-        private Dictionary<string, NewsData> newsDataDict; // 添加字典用于快速查找
+        // 原始新闻数据（只读）
+        private NewsData[] originalNewsDataArray;
+        // 运行时新闻数据副本
+        private Dictionary<string, NewsGameData> runtimeNewsDataDict = new();
+        
+        public List<NewsGameData> checkedNewsDataArray = new();
+        private NewsGameData currentNewsData;
+        private List<GameObject> newsInfoSlotPool = new();
 
-        public event Action<bool> OnNewsBookStateChanged; // 新闻信息状态改变事件
-        
+        public event Action<bool> OnNewsBookStateChanged;
+
         private void Awake()
         {
             if (Instance == null)
             {
-                Instance = this; // 设置单例实例
-                InitializeNewsData(); // 提取初始化逻辑
+                Instance = this;
+                LoadOriginalNewsData();
+                SaveAllNewsData();
             }
             else
             {
-                Destroy(gameObject); // 如果实例已存在，则销毁当前对象
-                return;
+                Destroy(gameObject);
             }
         }
-        
-        private void InitializeNewsData()
-        {
-            // 可以考虑异步加载或延迟加载
-            newsDataArray = Resources.LoadAll<NewsData>("ScriptableObjects/News");
-    
-            // 创建字典用于快速查找
-            newsDataDict = new Dictionary<string, NewsData>();
-            foreach (var newsData in newsDataArray)
-            {
-                newsDataDict[newsData.newsID] = newsData;
-            }
-    
-            checkedNewsDataArray = new List<NewsData>();
-        }
-        
-        // private async void InitializeNewsDataAsync()
-        // {
-        //     await Task.Run(() =>
-        //     {
-        //         // 在后台线程加载数据
-        //         var loadedData = Resources.LoadAll<NewsData>("ScriptableObjects/News");
-        //
-        //         // 切换回主线程更新UI
-        //         UnityMainThreadDispatcher.Instance().Enqueue(() =>
-        //         {
-        //             newsDataArray = loadedData;
-        //             CreateNewsDataDict();
-        //         });
-        //     });
-        // }
-        //
-        // private void CreateNewsDataDict()
-        // {
-        //     newsDataDict = new Dictionary<string, NewsData>();
-        //     foreach (var newsData in newsDataArray)
-        //     {
-        //         newsDataDict[newsData.newsID] = newsData;
-        //     }
-        // }
-        
+                
         private void Start()
         {
-            newsInfoUI.SetActive(false); // 隐藏新闻信息UI
-            newsInfoBookPanel.SetActive(false); // 隐藏新闻列表UI
-            newsInfoPanel.SetActive(false); // 隐藏新闻信息面板UI
+            newsInfoUI.SetActive(false);
+            newsInfoBookPanel.SetActive(false);
+            newsInfoPanel.SetActive(false);
 
-            foreach (NewsData data in newsDataArray)
+
+            
+            closeButton.onClick.AddListener(CloseNewsInfo);
+            newsInfoCloseButton.onClick.AddListener(ToggleNewsInfoBook);
+        }
+        
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (data.isRead)
+                if (newsInfoBookPanel.activeSelf)
                 {
-                    checkedNewsDataArray.Add(data); // 将已读新闻添加到列表
+                    ToggleNewsInfoBook();
                 }
             }
-            closeButton.onClick.AddListener(CloseNewsInfo); // 绑定关闭按钮事件
-            newsInfoCloseButton.onClick.AddListener(ToggleNewsInfoBook); // 绑定新闻信息面板关闭按钮事件
         }
 
         private void OnEnable()
         {
-            OnNewsBookStateChanged += OnNewsBookStateChangedHandler; // 订阅新闻信息状态改变事件
+            OnNewsBookStateChanged += OnNewsBookStateChangedHandler;
         }
 
         private void OnDisable()
         {
-            OnNewsBookStateChanged -= OnNewsBookStateChangedHandler; // 取消订阅新闻信息状态改变事件
+            OnNewsBookStateChanged -= OnNewsBookStateChangedHandler;
         }
-
+        
         private void OnNewsBookStateChangedHandler(bool isOpen)
         {
             PlayerManager.Instance.player.HandleNewsBookStateChanged(isOpen);
         }
-
-        private void Update()
+        /// <summary>
+        /// 加载原始新闻数据（只读）
+        /// </summary>
+        private void LoadOriginalNewsData()
         {
-            if (Input.GetKeyDown(KeyCode.Escape) )
+            try
             {
-                if (newsInfoBookPanel.activeSelf)
-                {
-                    ToggleNewsInfoBook(); // 切换新闻列表UI
-                }
+                originalNewsDataArray = Resources.LoadAll<NewsData>("ScriptableObjects/News");
+                Debug.Log($"成功加载 {originalNewsDataArray?.Length ?? 0} 个原始新闻数据");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"加载原始新闻数据时发生错误: {e.Message}");
             }
         }
 
-        public void ApplyNewsDatas(Dictionary<string,bool> newsDatas)
+        /// <summary>
+        /// 创建运行时数据副本
+        /// </summary>
+        private bool SaveAllNewsData(Dictionary<string,NewsGameData> newsGameDataDict = null)
         {
-            // 保存新闻数据到持久化存储
-            foreach (var newsData in newsDatas)
+            try
             {
-                NewsData data = System.Array.Find(newsDataArray, n => n.newsID == newsData.Key);
-                if (data != null)
+                runtimeNewsDataDict.Clear();
+
+                if (newsGameDataDict == null)
                 {
-                    data.isRead = newsData.Value; // 更新新闻的已读状态
+                    foreach (var originalNewsData in originalNewsDataArray)
+                    {
+                        var newsGameData = new NewsGameData
+                        {
+                            newsID = originalNewsData.newsID,
+                            newsTitle = originalNewsData.newsTitle,
+                            newsContent = originalNewsData.newsContent,
+                            newsImage = originalNewsData.newsImage,
+                            isRead = originalNewsData.isRead
+                        };
+                        runtimeNewsDataDict[newsGameData.newsID] = newsGameData;
+                    }
                 }
+                else
+                {
+                    runtimeNewsDataDict = new Dictionary<string, NewsGameData>(newsGameDataDict);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"设置新闻数据时发生错误: {e.Message}");
+                return false;
             }
         }
-        
-        public Dictionary<string, bool> GetNewsDatas()
+
+        public bool SetAllNewsData(Dictionary<string, NewsGameData> newsGameDataDict)
         {
-            // 获取新闻数据的字典形式
-            Dictionary<string, bool> newsDataDict = new Dictionary<string, bool>();
-            foreach (var newsData in newsDataArray)
-            {
-                newsDataDict[newsData.newsID] = newsData.isRead; // 将新闻ID和已读状态添加到字典
-            }
-            return newsDataDict;
+            return SaveAllNewsData(newsGameDataDict);
         }
-        
-        public NewsData GetNewsByID(string newsID)
+
+        /// <summary>
+        /// 重置所有新闻数据到原始状态
+        /// </summary>
+        public void ResetAllNewsData()
         {
-            // 根据新闻ID获取新闻数据
-            if (newsDataDict.TryGetValue(newsID, out NewsData newsData))
+            SaveAllNewsData();
+            
+            // 重置已读新闻列表
+            checkedNewsDataArray.Clear();
+            currentNewsData = null;
+            
+            Debug.Log("已重置所有新闻数据到原始状态");
+        }
+
+
+        
+        public NewsGameData GetNewsByID(string newsID)
+        {
+            // 返回运行时数据副本
+            if (runtimeNewsDataDict.TryGetValue(newsID, out NewsGameData newsData))
             {
-                return newsData; // 返回找到的新闻数据
+                return newsData;
             }
             else
             {
                 Debug.LogError($"找不到ID为 {newsID} 的新闻数据");
-                return null; // 如果没有找到，返回null
+                return null;
             }
         }
         
-        # region 显示单个新闻
-        public void OpenNewsInfo(NewsData newsData)
+        public Dictionary<string, NewsGameData> GetAllNewsData()
+        {
+            // 返回运行时数据副本
+            return new Dictionary<string, NewsGameData>(runtimeNewsDataDict);
+        }
+        
+        public void OpenNewsInfo(NewsGameData newsData)
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             newsBasePanel.SetActive(true);
@@ -191,7 +211,7 @@ namespace News
             OnNewsBookStateChanged?.Invoke(true);
             
             stopwatch.Stop();
-            if (stopwatch.ElapsedMilliseconds > 100) // 如果超过100ms就警告
+            if (stopwatch.ElapsedMilliseconds > 100)
             {
                 Debug.LogWarning($"OpenNewsInfo took {stopwatch.ElapsedMilliseconds}ms");
             }
@@ -199,33 +219,41 @@ namespace News
         
         private void CloseNewsInfo()
         {
-            newsInfoUI.SetActive(false); // 隐藏新闻信息UI
-            newsBasePanel.SetActive(false); // 隐藏新闻基础面板
-            currentNewsData.isRead = true; // 设置当前新闻为已读
-            checkedNewsDataArray.Add(currentNewsData); // 将当前新闻添加到已读列表
-            newsDataDict[currentNewsData.newsID] = currentNewsData; // 更新字典中的新闻数据
-            OnNewsBookStateChanged?.Invoke(false); // 触发新闻信息状态改变事件
+            newsInfoUI.SetActive(false);
+            newsBasePanel.SetActive(false);
+            
+            // 修改运行时副本，不会污染原始资源
+            if (currentNewsData != null)
+            {
+                currentNewsData.isRead = true;
+                checkedNewsDataArray.Add(currentNewsData);
+                OnNewsBookStateChanged?.Invoke(false);
+            }
         }
-        # endregion
-        
-        # region 显示新闻列表
 
         public void ToggleNewsInfoBook()
         {
             Debug.Log("ToggleNewsInfoBook");
-            newsBasePanel.SetActive(!newsBasePanel.activeSelf); // 切换新闻基础面板的显示状态
-            newsInfoBookPanel.SetActive(!newsInfoBookPanel.activeSelf); // 切换新闻列表UI的显示状态
-            OnNewsBookStateChanged?.Invoke(newsInfoBookPanel.activeSelf); // 触发新闻信息状态改变事件
+            newsBasePanel.SetActive(!newsBasePanel.activeSelf);
+            newsInfoBookPanel.SetActive(!newsInfoBookPanel.activeSelf);
+            OnNewsBookStateChanged?.Invoke(newsInfoBookPanel.activeSelf);
             if (newsInfoBookPanel.activeSelf)
             {
-                newsInfoPanel.SetActive(false); // 隐藏新闻信息面板UI
-                ShowNewsInfoSlotList(); // 显示新闻列表
+                newsInfoPanel.SetActive(false);
+                ShowNewsInfoSlotList();
             }
         }
 
-        // 显示新闻列表
         private void ShowNewsInfoSlotList()
         {
+            checkedNewsDataArray.Clear();
+            foreach (NewsGameData data in runtimeNewsDataDict.Values)
+            {
+                if (data.isRead)
+                {
+                    checkedNewsDataArray.Add(data);
+                }
+            }
             // 首先隐藏所有池中的对象
             foreach (var obj in newsInfoSlotPool)
             {
@@ -237,19 +265,16 @@ namespace News
             {
                 GameObject newsInfoSlot;
         
-                // 如果池中有可用对象，复用它
                 if (slotIndex < newsInfoSlotPool.Count)
                 {
                     newsInfoSlot = newsInfoSlotPool[slotIndex];
                 }
                 else
                 {
-                    // 池中没有足够对象时才创建新的
                     newsInfoSlot = Instantiate(newsInfoSlotPrefab, newsInfoScrollRect.content);
                     newsInfoSlotPool.Add(newsInfoSlot);
                 }
         
-                // 激活并设置新闻信息
                 newsInfoSlot.SetActive(true);
                 NewsInfoSlot newsSlot = newsInfoSlot.GetComponent<NewsInfoSlot>();
                 newsSlot.ShowNewsInfo(newsData);
@@ -258,21 +283,12 @@ namespace News
             }
         }
 
-        // 显示选中新闻的信息
-        public void ShowNewsInfoPanel(NewsData newsData)
+        public void ShowNewsInfoPanel(NewsGameData newsData)
         {
-            // 更新新闻信息UI
             newsInfoTitleText.text = newsData.newsTitle;
             newsInfoContentText.text = newsData.newsContent;
-                    
-            // 加载新闻图片
             newsInfoImage.sprite = newsData.newsImage;
-            
-            // 显示新闻信息面板
             newsInfoPanel.SetActive(true);
         }
-
-        # endregion
-        
     }
 }

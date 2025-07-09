@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Save;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,14 +33,11 @@ namespace UI
 
         private void Start()
         {
-            // TODO: 合并startButton和continueButton为startButton
-            // 当没有存档时，startButton的文本应为“开始游戏”，有存档时应为“继续游戏”
-
             InitButtonAnimatior();
             
             // 设置按钮的点击事件
             startButton.onClick.AddListener(OnLoadButtonClicked);
-            continueButton.onClick.AddListener(OnLoadButtonClicked);
+            continueButton.onClick.AddListener(OncontinueButtonClicked);
             loadButton.onClick.AddListener(OnLoadButtonClicked);
             settingButton.onClick.AddListener(OnSettingButtonClicked);
             exitButton.onClick.AddListener(OnExitButtonClicked);
@@ -93,6 +92,31 @@ namespace UI
             //MenuManager.Instance.OpenSavePanel();
         }
 
+        private async void OncontinueButtonClicked()
+        {
+            // 从存档中获取更新时间最近的游戏数据
+            List<SaveData> dataList =await SaveLoadAsyncSystem.GetAllSaves();
+            SaveData saveDataInfo = dataList[0];
+            // 从存档中加载SaveDataInfo.saveDate最近的存档
+            foreach (var saveData in dataList)
+            {
+                if (saveData == null) continue; // 跳过空的存档数据
+                // 如果当前存档的日期比已记录的日期新，则更新
+                if (saveData.saveDateTime > saveDataInfo.saveDateTime)
+                {
+                    saveDataInfo = saveData;
+                }
+            }
+            // 如果没有找到存档，则提示用户
+            if (saveDataInfo == null)
+            {
+                Debug.LogWarning("没有找到可用的存档。");
+                return;
+            }
+            // 加载存档
+            await SaveLoadAsyncSystem.LoadGame(saveDataInfo.saveSlotIndex);
+        }
+
         private void OnSettingButtonClicked()
         {
             MenuManager.Instance.OpenSettings();
@@ -140,12 +164,6 @@ namespace UI
         {
             InitButtonAnimatior();
             gameObject.SetActive(true);
-        }
-        public void EnterGame()
-        {
-            // 如果有存档，则继续游戏
-            // if ()
-            MenuManager.Instance.StartNewGame();
         }
     }
 }

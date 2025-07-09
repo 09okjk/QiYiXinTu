@@ -163,11 +163,11 @@ public class LuXinsheng : NPC
 
     private void UpdateMovementState()
     {
-        if (!isFollowing) return;
+        if (!GetNpcGameData().isFollowing) return;
 
         try
         {
-            if (followSpeed == 0)
+            if (GetNpcGameData().followSpeed == 0)
             {
                 // 跟随速度为0时，切换到空闲状态
                 if (stateMachine.CurrentState != IdleState)
@@ -238,7 +238,11 @@ public class LuXinsheng : NPC
     {
         base.OnDialogueEnd(dialogueID);
         
-        if (dialogueConfig == null) return;
+        if (dialogueConfig == null)
+        {
+            Debug.LogWarning("对话配置未加载，无法处理对话结束");
+            return;
+        }
 
         try
         {
@@ -321,17 +325,3 @@ public class LuXinsheng : NPC
     #endregion
 }
 
-/// <summary>
-/// LuXinsheng对话配置
-/// </summary>
-[CreateAssetMenu(fileName = "LuXinshengDialogueConfig", menuName = "Characters/LuXinsheng Dialogue Config")]
-public class LuXinshengDialogueConfig : ScriptableObject
-{
-    [Header("对话ID配置")]
-    public string firstDialogueID = "lu_first_dialogue";
-    public string fightDialogueID = "fight_dialogue";
-    public string lideDialogueID = "lide_dialogue";
-    
-    [Header("特殊场景配置")]
-    public string[] specialScenes = { "outside1" };
-}
