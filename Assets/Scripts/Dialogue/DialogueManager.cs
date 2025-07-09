@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Audio;
 using Core;
 using Manager;
 using Save;
@@ -40,9 +41,6 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject systemDialoguePanel; // 新增：系统对话面板
     [SerializeField] private TextMeshProUGUI systemDialogueText; // 新增：系统对话文本
     [SerializeField] private float typewriterSpeed = 0.05f;
-    
-    [Header("Audio")]
-    [SerializeField] private AudioSource dialogueAudioSource; // 可选：对话音效
     
     [Header("Game Pause Settings")]
     [SerializeField] private bool pauseGameDuringDialogue = true; // 是否在对话期间暂停游戏
@@ -489,7 +487,7 @@ public class DialogueManager : MonoBehaviour
         }
         typingCoroutine = StartCoroutine(TypeText(currentDialogueText,currentDialogueNode.text, () => {
             // 文本打字完成后，等待玩家点击继续
-            
+            AudioManager.Instance.StopEffectAudio();
             // 发布任务
             if (!string.IsNullOrEmpty(currentDialogueNode.questID))
             {
@@ -520,18 +518,11 @@ public class DialogueManager : MonoBehaviour
     {
         isTyping = true;
         dialogueText.text = "";
-        
+        AudioManager.Instance.PlayEffectAudio("Dialogue_audio");
         // 逐字符显示文本
         foreach (char c in text)
         {
             dialogueText.text += c;
-            
-            // 可选：在每个字符播放声音
-            if (dialogueAudioSource != null && c != ' ' && c != '\n')
-            {
-                dialogueAudioSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f); // 轻微变化音高
-                dialogueAudioSource.Play();
-            }
             
             // 使用 WaitForSecondsRealtime 而不是 WaitForSeconds
             // 这样即使 Time.timeScale = 0，打字效果仍然可以正常工作

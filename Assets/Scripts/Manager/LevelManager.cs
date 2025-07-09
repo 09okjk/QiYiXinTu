@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using News;
 using Save;
 using UI;
@@ -486,29 +487,32 @@ namespace Manager
         /// <summary>
         /// 关卡初始化完成回调
         /// </summary>
-        private async void OnLevelInitialized()
+        private void OnLevelInitialized()
         {
             GameManager.Instance.UpdateLoadingProgress(1f, "初始化完成！");
             GameManager.Instance.HideLoadingScreen();
-            
 
             if (levelName == "女生宿舍")
             {
                 StartAnimationCotroller.Instance.PlayVideo(0);
             }
-            if (levelName == "outside1")
+            else
             {
-                DialogueManager.Instance.StartDialogueByID("lide_dialogue");
-            }
+                AudioManager.Instance.PlayBackgroundAudio(levelName);
+                if (levelName == "outside1")
+                {
+                    DialogueManager.Instance.StartDialogueByID("lide_dialogue");
+                }
 
-            if (levelName == "In_LiDe")
-            {
-                DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
-            }
+                if (levelName == "In_LiDe")
+                {
+                    DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
+                }
 
-            if (levelName == "Space_Time")
-            {
-                DialogueManager.Instance.StartDialogueByID("rift_1955_dialogue");
+                if (levelName == "Space_Time")
+                {
+                    DialogueManager.Instance.StartDialogueByID("rift_1955_dialogue");
+                }
             }
         }
 

@@ -4,6 +4,7 @@ using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using Audio;
 using Manager;
 using News;
 using Save;
@@ -210,6 +211,7 @@ public class GameManager : MonoBehaviour
     
     private IEnumerator LoadSceneAsync(string sceneName)
     {
+        AudioManager.Instance.StopAllAudio();// 停止当前关卡音频
         // 显示加载界面
         ShowLoadingScreen($"正在加载场景: {sceneName}");
         // 先保存数据
