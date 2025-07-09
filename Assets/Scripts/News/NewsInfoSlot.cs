@@ -11,14 +11,14 @@ namespace News
         public Image newsImage; // 新闻图片
         public Button slotButton; // 关闭按钮
         
-        private NewsData currentNewsData;
+        private NewsGameData currentNewsData;
 
         private void Awake()
         {
             slotButton.onClick.AddListener(OnSlotButtonClicked);
         }
         
-        public void ShowNewsInfo(NewsData newsData)
+        public void ShowNewsInfo(NewsGameData newsData)
         {
             newsID = newsData.newsID; // 设置新闻ID
             newsTitleText.text = newsData.newsTitle; // 设置新闻标题

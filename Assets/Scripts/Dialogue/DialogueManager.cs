@@ -723,14 +723,6 @@ public class DialogueManager : MonoBehaviour
                     return false;
                 }
                 break;
-            case DialogueConditionType.EnemyCleared:
-                if (Enum.TryParse(currentDialogueNode.conditionValue, out EnemyType enemyType) && EnemyManager.Instance.CheckActiveEnemyType(enemyType))
-                {
-                    Debug.LogWarning($"未清除敌人: {currentDialogueNode.conditionValue}");
-                    EndDialogue();
-                    return false;
-                }
-                break;
         }
         return true;
     }
@@ -831,9 +823,10 @@ public class DialogueManager : MonoBehaviour
         currentDialogue = dialogueData;
     }
     
-    public void SetAllDialogues(Dictionary<string,DialogueGameData> dialogueGameDataDictionary)
+    public bool SetAllDialogues(Dictionary<string,DialogueGameData> dialogueGameDataDictionary)
     {
         runtimeDataDictionary = new Dictionary<string, DialogueGameData>(dialogueGameDataDictionary);
+        return runtimeDataDictionary != null && runtimeDataDictionary.Count > 0;
     }
     
     public bool IsDialogueFinished(string dialogueID)

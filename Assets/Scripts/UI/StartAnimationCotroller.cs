@@ -148,6 +148,12 @@ namespace UI
         
         public void PlayVideo(int i)
         {
+            if (GameStateManager.Instance.GetFlag("StartAnimationFinished"))
+            {
+                Debug.Log("StartAnimation已完成，跳过视频播放");
+                return;
+            }
+            
             skipUI.SetActive(false);
             currentVideoIndex = i;
             

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Manager;
+using News;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,6 +29,8 @@ namespace Save
         public Dictionary<string, QuestGameData> allQuests = new(); // 所有任务数据
         public DialogueGameData currentDialogue;
         public Dictionary<string, DialogueGameData> allDialogues = new(); // 所有对话数据
+        public Dictionary<string, NewsGameData> allNewsData = new(); // 所有新闻数据
+        public Dictionary<string, bool> allGameFlags = new(); // 游戏状态标志
     }
     public class SaveLoadAsyncSystem:MonoBehaviour
     {
@@ -84,7 +87,9 @@ namespace Save
                 currentQuest = QuestManager.Instance.currentQuest, // 获取当前任务数据
                 allQuests = QuestManager.Instance.GetAllQuests(), // 获取所有任务数据
                 currentDialogue = DialogueManager.Instance.GetCurrentDialogueData(), // 获取当前对话数据
-                allDialogues = DialogueManager.Instance.GetAllDialogues() // 获取所有对话数据
+                allDialogues = DialogueManager.Instance.GetAllDialogues(), // 获取所有对话数据
+                allNewsData = NewsManager.Instance.GetAllNewsData(), // 获取所有新闻数据
+                allGameFlags = GameStateManager.Instance.GetAllFlags() // 获取所有游戏状态标志
             };
             
             // 写入文件
@@ -117,6 +122,28 @@ namespace Save
 
         #region 加载逻辑
 
+        public static async Task LoadGame()
+        {
+            // 异步加载最新的存档
+            string[] files = Directory.GetFiles(SaveDirectory, "*.sav");
+            if (files.Length == 0)
+            {
+                Debug.LogWarning("没有找到任何存档文件");
+                return;
+            }
+
+            // 获取最新的存档文件
+            string latestFile = files[0];
+            foreach (string file in files)
+            {
+                if (File.GetLastWriteTime(file) > File.GetLastWriteTime(latestFile))
+                {
+                    latestFile = file;
+                }
+            }
+            await SetGameData(latestFile);
+        }
+        
         public static async Task LoadGame(int slotIdx)
         {
             string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
@@ -125,7 +152,11 @@ namespace Save
                 Debug.LogError("保存文件不存在: " + savePath);
                 return;
             }
+            await SetGameData(savePath);
+        }
 
+        private static async Task SetGameData(string savePath)
+        {
             try
             {
                 // 异步读取保存文件
@@ -133,21 +164,52 @@ namespace Save
                 saveData = JsonConvert.DeserializeObject<SaveData>(jsonData);
                 
                 // 设置玩家数据
-                PlayerManager.Instance.SetPlayerGameData(saveData.PlayerGameData);
+                if (PlayerManager.Instance.SetPlayerGameData(saveData.PlayerGameData))
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.1f,"玩家数据加载成功"); // 更新加载进度
+                }
+                
                 // 设置NPC数据
-                NPCManager.Instance.SetNpcDatas(saveData.NpcGameDatas);
+                if (NPCManager.Instance.SetNpcDatas(saveData.NpcGameDatas))
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.2f,"NPC数据加载成功"); // 更新加载进度
+                }
+                
                 // 设置物品数据
-                InventoryManager.Instance.SetAllItemsByIDs(saveData.itemIDs);
+                if (InventoryManager.Instance.SetAllItemsByIDs(saveData.itemIDs))
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.3f,"物品数据加载成功"); // 更新加载进度 
+                }
+                
                 // 设置当前任务
                 QuestManager.Instance.SetCurrentQuest(saveData.currentQuest);
                 // 设置所有任务
-                QuestManager.Instance.SetAllQuests(saveData.allQuests);
+                if (QuestManager.Instance.SetAllQuests(saveData.allQuests))
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.4f,"任务数据加载成功"); // 更新加载进度
+                }
+                
                 // 设置当前对话
                 DialogueManager.Instance.SetCurrentDialogueData(saveData.currentDialogue);
                 // 设置所有对话
-                DialogueManager.Instance.SetAllDialogues(saveData.allDialogues);
+                if (DialogueManager.Instance.SetAllDialogues(saveData.allDialogues))
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.5f,"对话数据加载成功"); // 更新加载进度
+                }
                 
-                Debug.Log("游戏加载完成: " + saveData.saveName);
+                // 设置所有新闻数据
+                if (NewsManager.Instance.SetAllNewsData(saveData.allNewsData))
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.6f,"新闻数据加载成功"); // 更新加载进度
+                }
+                
+                // 设置游戏状态标志
+                if (GameStateManager.Instance.SetAllFlags(saveData.allGameFlags))
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.7f,"游戏状态标志加载成功"); // 更新加载进度
+                }
+                
+                Debug.Log("游戏数据加载完成: " + saveData.saveName);
                 
                 OnLoadComplete?.Invoke("加载成功: " + saveData.saveName);
             }

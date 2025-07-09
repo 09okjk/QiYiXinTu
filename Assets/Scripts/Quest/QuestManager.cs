@@ -84,33 +84,43 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    private void SetAllQuest(Dictionary<string,QuestGameData> questGameDatas = null)
+    private bool SetAllQuest(Dictionary<string,QuestGameData> questGameDatas = null)
     {
-        if (questGameDatas == null)
+        try
         {
-            runtimeQuestDictionary.Clear();
-            originalQuestDataList = Resources.LoadAll<QuestData>("ScriptableObjects/Quests");
-            foreach (var questData in originalQuestDataList)
+            if (questGameDatas == null)
             {
-                var questGameData = new QuestGameData
+                runtimeQuestDictionary.Clear();
+                originalQuestDataList = Resources.LoadAll<QuestData>("ScriptableObjects/Quests");
+                foreach (var questData in originalQuestDataList)
                 {
-                    questID = questData.questID,
-                    questName = questData.questName,
-                    questConditionType = questData.questConditionType,
-                    conditionValue = questData.conditionValue,
-                    questText = questData.questText,
-                    nextQuestID = questData.nextQuestID,
-                    isCompleted = questData.isCompleted
-                };
-                runtimeQuestDictionary[questGameData.questID] = questGameData;
-            }
+                    var questGameData = new QuestGameData
+                    {
+                        questID = questData.questID,
+                        questName = questData.questName,
+                        questConditionType = questData.questConditionType,
+                        conditionValue = questData.conditionValue,
+                        questText = questData.questText,
+                        nextQuestID = questData.nextQuestID,
+                        isCompleted = questData.isCompleted
+                    };
+                    runtimeQuestDictionary[questGameData.questID] = questGameData;
+                }
 
-            Debug.Log($"成功加载 {originalQuestDataList?.Length ?? 0} 个原始任务数据");
+                Debug.Log($"成功加载 {originalQuestDataList?.Length ?? 0} 个原始任务数据");
+            }
+            else
+            {
+                runtimeQuestDictionary = new Dictionary<string, QuestGameData>(questGameDatas);
+            }
+            return true;
         }
-        else
+        catch (Exception e)
         {
-            runtimeQuestDictionary = new Dictionary<string, QuestGameData>(questGameDatas);
+            Debug.LogError($"设置所有任务数据时发生错误: {e.Message}");
+            return false;
         }
+
     }
 
     /// <summary>
@@ -222,9 +232,9 @@ public class QuestManager : MonoBehaviour
     }
 
     // 设置所有任务
-    public void SetAllQuests(Dictionary<string, QuestGameData> questGameDatas)
+    public bool SetAllQuests(Dictionary<string, QuestGameData> questGameDatas)
     {
-        SetAllQuest(questGameDatas);
+        return SetAllQuest(questGameDatas);
     }
     
     // 获取所有任务

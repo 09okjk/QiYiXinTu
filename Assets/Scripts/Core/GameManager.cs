@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using System;
 using Manager;
 using News;
+using Save;
 
 public class GameManager : MonoBehaviour
 {
@@ -211,10 +212,11 @@ public class GameManager : MonoBehaviour
     {
         // 显示加载界面
         ShowLoadingScreen($"正在加载场景: {sceneName}");
-        
+        // 先保存数据
+        yield return SaveLoadAsyncSystem.SaveGame(true, 0);
         // 异步加载场景
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = false;
+        asyncLoad.allowSceneActivation = false; // 禁止自动激活场景，直到加载完成
         
         float startTime = Time.time;
         
@@ -233,38 +235,26 @@ public class GameManager : MonoBehaviour
             }
             yield return null;
         }
+        Debug.Log($"场景 {sceneName} 加载完成");
     }
     
     // 处理场景加载完成事件
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 隐藏加载界面
-        if (scene.name == "MainMenu")
-            HideLoadingScreen();
         InitializeScene(scene.name);
     }
     
     // 初始化场景
     private void InitializeScene(string sceneName)
     {
-        // 建立场景初始化逻辑
-        switch (sceneName)
+        if (!LevelManager.Instance)
         {
-            case "MainMenu":
-                Time.timeScale = 1f; // 确保游戏没有暂停
-                break;
-            case "女生宿舍":
-                break;
-            case "outside1":
-                // 触发开场对话
-                break;
-            case "outside1_1":
-                break;
-            case "In_LiDe":
-                break;
-            case "Scene 4":
-                break;
-            // 根据需要添加更多场景
+            HideLoadingScreen();
+        }
+        else
+        {
+            Debug.Log($"开始初始化关卡: {sceneName}");
+            LevelManager.Instance.InitializeLevel();
         }
     }
     

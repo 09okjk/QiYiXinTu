@@ -189,7 +189,7 @@ public class InventoryManager : MonoBehaviour
     }
     
     // 设置所有物品
-    public void SetAllItemsByIDs(List<string> itemIDs)
+    public bool SetAllItemsByIDs(List<string> itemIDs)
     {
         questItems.Clear();
         puzzleItems.Clear();
@@ -198,6 +198,7 @@ public class InventoryManager : MonoBehaviour
         {
             AddItemById(itemID);
         }
+        return true;
     }
     // 清空背包
     public void ClearInventory()

@@ -75,7 +75,7 @@ namespace Manager
         /// 加载玩家数据
         /// </summary>
         /// <param name="playerGameData">如果提供了玩家数据，则使用该数据，否则加载默认数据</param>
-        private void LoadPlayerData(PlayerGameData playerGameData = null)
+        private bool LoadPlayerData(PlayerGameData playerGameData = null)
         {
             try
             {
@@ -118,10 +118,13 @@ namespace Manager
                 {
                     runtimePlayerData = playerGameData;
                 }
+
+                return true;
             }
             catch (Exception e)
             {
                 Debug.LogError($"加载玩家数据时发生错误: {e.Message}");
+                return false;
             }
         }
 
@@ -313,35 +316,34 @@ namespace Manager
 
         public bool SetPlayerPosition(GameObject playerPoint)
         {
-            if (player == null)
+            try
             {
-                Debug.LogError("玩家对象为空，无法设置位置");
+                if (player == null)
+                {
+                    Debug.LogError("玩家对象为空，无法设置位置");
+                    return false;
+                }
+
+                if (playerPoint == null)
+                {
+                    Debug.LogError("玩家出生点为空");
+                    return false;
+                }
+
+                player.playerData.playerPosition = playerPoint.transform.position;
+                player.transform.position = player.playerData.playerPosition;
+
+                Debug.Log($"玩家位置设置为: {player.playerData.playerPosition}");
+
+                isPlayerInitialized = true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                isPlayerInitialized = false;
+                Debug.LogError($"设置玩家位置时发生错误: {e.Message}");
                 return false;
             }
-
-            if (playerPoint == null)
-            {
-                Debug.LogError("玩家出生点为空");
-                return false;
-            }
-
-            player.playerData.playerPosition = playerPoint.transform.position;
-            player.transform.position = player.playerData.playerPosition;
-            
-            Debug.Log($"玩家位置设置为: {player.playerData.playerPosition}");
-            
-            // 确保玩家在设置位置后是激活的
-            // if (!player.gameObject.activeInHierarchy)
-            // {
-            //     if (SceneManager.GetActiveScene().name != "女生宿舍")
-            //         SetPlayerActive(true);
-            //     
-            //     if (!GameStateManager.Instance.GetFlag("FirstEntry_" + SceneManager.GetActiveScene().name))
-            //         SetPlayerActive(true);
-            // }
-            
-            isPlayerInitialized = true;
-            return true;
         }
 
         private void TriggerNameChangeDialogue()
@@ -523,9 +525,9 @@ namespace Manager
             return runtimePlayerData;
         }
 
-        public void SetPlayerGameData(PlayerGameData playerGameData)
+        public bool SetPlayerGameData(PlayerGameData playerGameData)
         {
-            LoadPlayerData(playerGameData);
+            return LoadPlayerData(playerGameData);
         }
         
         public void ChangePlayerName(string newName)

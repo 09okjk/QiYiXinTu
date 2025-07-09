@@ -8,6 +8,15 @@ using Utils;
 
 namespace News
 {
+    [Serializable]
+    public class NewsGameData
+    { 
+        public string newsID; // 新闻ID
+        public string newsTitle; // 新闻标题
+        [TextArea] public string newsContent; // 新闻内容
+        public Sprite newsImage; // 新闻图片ID
+        public bool isRead; // 是否已读
+    }
     public class NewsManager : MonoBehaviour
     {
         public static NewsManager Instance; // 单例实例
@@ -33,12 +42,11 @@ namespace News
         // 原始新闻数据（只读）
         private NewsData[] originalNewsDataArray;
         // 运行时新闻数据副本
-        private Dictionary<string, NewsData> runtimeNewsDataDict = new Dictionary<string, NewsData>();
-        private List<NewsData> runtimeNewsDataArray = new List<NewsData>();
+        private Dictionary<string, NewsGameData> runtimeNewsDataDict = new();
         
-        public List<NewsData> checkedNewsDataArray = new List<NewsData>();
-        private NewsData currentNewsData;
-        private List<GameObject> newsInfoSlotPool = new List<GameObject>();
+        public List<NewsGameData> checkedNewsDataArray = new();
+        private NewsGameData currentNewsData;
+        private List<GameObject> newsInfoSlotPool = new();
 
         public event Action<bool> OnNewsBookStateChanged;
 
@@ -48,15 +56,51 @@ namespace News
             {
                 Instance = this;
                 LoadOriginalNewsData();
-                CreateRuntimeDataCopies();
+                SaveAllNewsData();
             }
             else
             {
                 Destroy(gameObject);
-                return;
             }
         }
+                
+        private void Start()
+        {
+            newsInfoUI.SetActive(false);
+            newsInfoBookPanel.SetActive(false);
+            newsInfoPanel.SetActive(false);
+
+
+            
+            closeButton.onClick.AddListener(CloseNewsInfo);
+            newsInfoCloseButton.onClick.AddListener(ToggleNewsInfoBook);
+        }
         
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (newsInfoBookPanel.activeSelf)
+                {
+                    ToggleNewsInfoBook();
+                }
+            }
+        }
+
+        private void OnEnable()
+        {
+            OnNewsBookStateChanged += OnNewsBookStateChangedHandler;
+        }
+
+        private void OnDisable()
+        {
+            OnNewsBookStateChanged -= OnNewsBookStateChangedHandler;
+        }
+        
+        private void OnNewsBookStateChangedHandler(bool isOpen)
+        {
+            PlayerManager.Instance.player.HandleNewsBookStateChanged(isOpen);
+        }
         /// <summary>
         /// 加载原始新闻数据（只读）
         /// </summary>
@@ -76,26 +120,43 @@ namespace News
         /// <summary>
         /// 创建运行时数据副本
         /// </summary>
-        private void CreateRuntimeDataCopies()
+        private bool SaveAllNewsData(Dictionary<string,NewsGameData> newsGameDataDict = null)
         {
-            runtimeNewsDataDict.Clear();
-            runtimeNewsDataArray.Clear();
-    
-            if (originalNewsDataArray == null) return;
-
-            foreach (var originalNews in originalNewsDataArray)
+            try
             {
-                if (originalNews != null && !string.IsNullOrEmpty(originalNews.newsID))
-                {
-                    // 使用增强后的工具类
-                    var runtimeCopy = Utils.ScriptableObjectUtils.CreateNewsDataCopy(originalNews);
-                    runtimeNewsDataDict[originalNews.newsID] = runtimeCopy;
-                    runtimeNewsDataArray.Add(runtimeCopy);
-                }
-            }
+                runtimeNewsDataDict.Clear();
 
-            checkedNewsDataArray = new List<News.NewsData>();
-            Debug.Log($"创建了 {runtimeNewsDataDict.Count} 个新闻运行时数据副本");
+                if (newsGameDataDict == null)
+                {
+                    foreach (var originalNewsData in originalNewsDataArray)
+                    {
+                        var newsGameData = new NewsGameData
+                        {
+                            newsID = originalNewsData.newsID,
+                            newsTitle = originalNewsData.newsTitle,
+                            newsContent = originalNewsData.newsContent,
+                            newsImage = originalNewsData.newsImage,
+                            isRead = originalNewsData.isRead
+                        };
+                        runtimeNewsDataDict[newsGameData.newsID] = newsGameData;
+                    }
+                }
+                else
+                {
+                    runtimeNewsDataDict = new Dictionary<string, NewsGameData>(newsGameDataDict);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"设置新闻数据时发生错误: {e.Message}");
+                return false;
+            }
+        }
+
+        public bool SetAllNewsData(Dictionary<string, NewsGameData> newsGameDataDict)
+        {
+            return SaveAllNewsData(newsGameDataDict);
         }
 
         /// <summary>
@@ -103,14 +164,7 @@ namespace News
         /// </summary>
         public void ResetAllNewsData()
         {
-            foreach (var originalNews in originalNewsDataArray)
-            {
-                if (originalNews != null && runtimeNewsDataDict.ContainsKey(originalNews.newsID))
-                {
-                    var runtimeNews = runtimeNewsDataDict[originalNews.newsID];
-                    ScriptableObjectUtils.ResetToOriginal(originalNews, runtimeNews);
-                }
-            }
+            SaveAllNewsData();
             
             // 重置已读新闻列表
             checkedNewsDataArray.Clear();
@@ -119,99 +173,12 @@ namespace News
             Debug.Log("已重置所有新闻数据到原始状态");
         }
 
-        /// <summary>
-        /// 清理运行时数据
-        /// </summary>
-        private void CleanupRuntimeData()
-        {
-            foreach (var runtimeNews in runtimeNewsDataDict.Values)
-            {
-                if (runtimeNews != null)
-                {
-                    DestroyImmediate(runtimeNews);
-                }
-            }
-            runtimeNewsDataDict.Clear();
-            runtimeNewsDataArray.Clear();
-        }
 
-        private void OnDestroy()
-        {
-            CleanupRuntimeData();
-        }
         
-        private void Start()
-        {
-            newsInfoUI.SetActive(false);
-            newsInfoBookPanel.SetActive(false);
-            newsInfoPanel.SetActive(false);
-
-            // 使用运行时数据副本
-            foreach (NewsData data in runtimeNewsDataArray)
-            {
-                if (data.isRead)
-                {
-                    checkedNewsDataArray.Add(data);
-                }
-            }
-            
-            closeButton.onClick.AddListener(CloseNewsInfo);
-            newsInfoCloseButton.onClick.AddListener(ToggleNewsInfoBook);
-        }
-
-        private void OnEnable()
-        {
-            OnNewsBookStateChanged += OnNewsBookStateChangedHandler;
-        }
-
-        private void OnDisable()
-        {
-            OnNewsBookStateChanged -= OnNewsBookStateChangedHandler;
-        }
-
-        private void OnNewsBookStateChangedHandler(bool isOpen)
-        {
-            PlayerManager.Instance.player.HandleNewsBookStateChanged(isOpen);
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (newsInfoBookPanel.activeSelf)
-                {
-                    ToggleNewsInfoBook();
-                }
-            }
-        }
-
-        public void ApplyNewsDatas(Dictionary<string, bool> newsDatas)
-        {
-            // 使用运行时数据副本，不会污染原始资源
-            foreach (var newsData in newsDatas)
-            {
-                if (runtimeNewsDataDict.TryGetValue(newsData.Key, out NewsData data))
-                {
-                    data.isRead = newsData.Value; // 修改运行时副本
-                }
-            }
-        }
-        
-        public Dictionary<string, bool> GetNewsDatas()
-        {
-            // 从运行时数据副本获取数据
-            Dictionary<string, bool> newsDataDict = new Dictionary<string, bool>();
-            foreach (var newsData in runtimeNewsDataArray)
-            {
-                newsDataDict[newsData.newsID] = newsData.isRead;
-            }
-            return newsDataDict;
-        }
-        
-        public NewsData GetNewsByID(string newsID)
+        public NewsGameData GetNewsByID(string newsID)
         {
             // 返回运行时数据副本
-            if (runtimeNewsDataDict.TryGetValue(newsID, out NewsData newsData))
+            if (runtimeNewsDataDict.TryGetValue(newsID, out NewsGameData newsData))
             {
                 return newsData;
             }
@@ -222,7 +189,13 @@ namespace News
             }
         }
         
-        public void OpenNewsInfo(NewsData newsData)
+        public Dictionary<string, NewsGameData> GetAllNewsData()
+        {
+            // 返回运行时数据副本
+            return new Dictionary<string, NewsGameData>(runtimeNewsDataDict);
+        }
+        
+        public void OpenNewsInfo(NewsGameData newsData)
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             newsBasePanel.SetActive(true);
@@ -273,6 +246,14 @@ namespace News
 
         private void ShowNewsInfoSlotList()
         {
+            checkedNewsDataArray.Clear();
+            foreach (NewsGameData data in runtimeNewsDataDict.Values)
+            {
+                if (data.isRead)
+                {
+                    checkedNewsDataArray.Add(data);
+                }
+            }
             // 首先隐藏所有池中的对象
             foreach (var obj in newsInfoSlotPool)
             {
@@ -302,7 +283,7 @@ namespace News
             }
         }
 
-        public void ShowNewsInfoPanel(NewsData newsData)
+        public void ShowNewsInfoPanel(NewsGameData newsData)
         {
             newsInfoTitleText.text = newsData.newsTitle;
             newsInfoContentText.text = newsData.newsContent;

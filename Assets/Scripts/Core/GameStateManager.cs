@@ -109,19 +109,6 @@ public class GameStateManager : MonoBehaviour
         gameFlags[flagName] = value;
     }
     
-    // 切换标志值
-    public void ToggleFlag(string flagName)
-    {
-        if (gameFlags.TryGetValue(flagName, out bool value))
-        {
-            gameFlags[flagName] = !value;
-        }
-        else
-        {
-            gameFlags[flagName] = true;
-        }
-    }
-    
     // 检查标志是否存在
     public bool HasFlag(string flagName)
     {
@@ -144,14 +131,15 @@ public class GameStateManager : MonoBehaviour
     }
     
     // 设置所有标志（用于加载）
-    public void SetAllFlags(Dictionary<string, bool> flags)
+    public bool SetAllFlags(Dictionary<string, bool> flags)
     {
         if (flags == null)
         {
             Debug.LogWarning("Attempted to set game flags with a null dictionary.");
-            return;
+            return false;
         }
         gameFlags = new Dictionary<string, bool>(flags);
+        return true;
     }
     
     // 清除所有标志

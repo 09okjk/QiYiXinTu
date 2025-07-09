@@ -146,7 +146,7 @@ public class NPCManager : MonoBehaviour
     /// 加载当前场景的NPC数据
     /// </summary>
     /// <param name="currentSceneName">当前场景名称</param>
-    public bool LoadCurrentSceneNPCs(string currentSceneName)
+    public bool LoadCurrentSceneNpCs(string currentSceneName)
     {
         try
         {
@@ -339,15 +339,16 @@ public class NPCManager : MonoBehaviour
         return new Dictionary<string, NpcGameData>(runtimeNpcDataDictionary);
     }
 
-    public void SetNpcDatas(Dictionary<string, NpcGameData> npcDataDictionary)
+    public bool SetNpcDatas(Dictionary<string, NpcGameData> npcDataDictionary)
     {
         if (npcDataDictionary == null || npcDataDictionary.Count == 0)
         {
             Debug.LogWarning("传入的NPC数据字典为空或无效");
-            return;
+            return false;
         }
         
         runtimeNpcDataDictionary = new Dictionary<string, NpcGameData>(npcDataDictionary);
+        return true;
     }
 
     #endregion

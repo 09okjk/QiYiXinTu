@@ -13,7 +13,7 @@ public class NpcGameData
     public string npcName;
     public string spriteID;
     public string sceneName; // NPC所在场景名称
-    public bool canInteract = true; // 是否可以交互
+    public bool canInteract = false; // 是否可以交互
     public bool isActive = true; // 是否激活NPC
     public Vector3 position; // NPC位置
     // follow settings
@@ -393,6 +393,7 @@ public class NPC : Entity
         try
         {
             npcGameData.dialogueIDs.Remove(dialogueID);
+            SetCanInteract(false);
         }
         catch (Exception e)
         {
