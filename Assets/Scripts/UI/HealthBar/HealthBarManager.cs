@@ -58,7 +58,6 @@ namespace UI
             var currentHealth = PlayerManager.Instance.player.playerData.CurrentHealth;
             HealthBarAnimator.SetInteger("Health", currentHealth);
             int spriteIndex = 5 - currentHealth;
-            Debug.LogWarning("spriteIndex: " + spriteIndex);
             healthBar.sprite = healthBarSprites[spriteIndex];
         }
         //

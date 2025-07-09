@@ -522,9 +522,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f84a9ff0b75842cab755f98576e9da70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useJsonFormat: 1
-  showSaveProgress: 1
-  useGameManagerLoadingScreen: 1
 --- !u!1 &160279488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2138,7 +2135,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -4258,7 +4255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 717ee04c0da0486596d1b8a279a302bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcPrefabs: []
+  npcPrefabs:
+  - {fileID: 7864850018175732794, guid: 423a21c300727404da4393f2d2242b7f, type: 3}
   initialPoolSize: 10
   useObjectPool: 1
 --- !u!4 &1071374920
@@ -4625,8 +4623,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "*\u6E38\u620F\u8BD5\u73A9demo\u4E0D\u4EE3\u8868\u6700\u7EC8\u54C1\u8D28\u3002"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 37e4b8523b2a2c844905e38b6c372af8, type: 2}
+  m_sharedMaterial: {fileID: 6079054293803428108, guid: 37e4b8523b2a2c844905e38b6c372af8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4894,7 +4892,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -6888,7 +6886,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioMixer: {fileID: 24100000, guid: 24b54050736a8474997b8550c175482e, type: 2}
-  levelAudioClips: []
+  levelAudioClips:
+  - {fileID: 8300000, guid: 76af02ed08e0a364cbf135509064bfae, type: 3}
+  - {fileID: 8300000, guid: 57a9c9eab83ad0647b7c109d36e6187a, type: 3}
+  - {fileID: 8300000, guid: c1dd3e8cf0fb72146a7d083e863a8a34, type: 3}
+  - {fileID: 8300000, guid: 0ca43bd49e39f03499df73e6c7f431dc, type: 3}
   effectAudioClips: []
   backgroundAudioSource: {fileID: 586718918}
   effectAudioSource: {fileID: 1291178042}

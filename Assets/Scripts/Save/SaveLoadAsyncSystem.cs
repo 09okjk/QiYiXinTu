@@ -42,7 +42,7 @@ namespace Save
        
         #region 事件
         
-        public static event Action<string> OnSaveComplete;
+        // public static event Action<string> OnSaveComplete;
         public static event Action<string> OnLoadComplete;
 
         #endregion
@@ -73,33 +73,42 @@ namespace Save
         // 保存游戏数据
         public static async Task SaveGame(bool saveType,int slotIdx)
         {
+            Debug.Log("SaveGame");
             // 创建保存数据对象
-            SaveData saveData = new SaveData
+            try
             {
-                saveName = "Save_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"),
-                saveTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                saveDateTime = DateTime.Now.ToFileTimeUtc(), // 保存时间戳
-                saveSlotIndex = slotIdx, // 这里可以根据实际情况设置存档槽位索引
-                gameVersion = Application.version,
-                sceneName = SceneManager.GetActiveScene().name, // 获取当前场景名称
-                saveType = saveType,
-                PlayerGameData = PlayerManager.Instance.GetPlayerGameData(), // 获取玩家游戏数据
-                NpcGameDatas = NPCManager.Instance.GetAllNPCData(), // 获取所有NPC数据
-                itemIDs = InventoryManager.Instance.GetAllItemIDs(), // 获取所有物品ID列表
-                currentQuest = QuestManager.Instance.currentQuest, // 获取当前任务数据
-                allQuests = QuestManager.Instance.GetAllQuests(), // 获取所有任务数据
-                currentDialogue = DialogueManager.Instance.GetCurrentDialogueData(), // 获取当前对话数据
-                allDialogues = DialogueManager.Instance.GetAllDialogues(), // 获取所有对话数据
-                allNewsData = NewsManager.Instance.GetAllNewsData(), // 获取所有新闻数据
-                allGameFlags = GameStateManager.Instance.GetAllFlags(), // 获取所有游戏状态标志
-                audioGameData = AudioManager.Instance.GetAudioGameData() // 获取音频数据
-            };
+                SaveData saveData = new SaveData
+                {
+                    saveName = "Save_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"),
+                    saveTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    saveDateTime = DateTime.Now.ToFileTimeUtc(), // 保存时间戳
+                    saveSlotIndex = slotIdx, // 这里可以根据实际情况设置存档槽位索引
+                    gameVersion = Application.version,
+                    sceneName = SceneManager.GetActiveScene().name, // 获取当前场景名称
+                    saveType = saveType,
+                    PlayerGameData = PlayerManager.Instance?.GetPlayerGameData(), // 获取玩家游戏数据
+                    NpcGameDatas = NPCManager.Instance?.GetAllNPCData() ?? new Dictionary<string, NpcGameData>(), // 获取所有NPC数据
+                    itemIDs = InventoryManager.Instance?.GetAllItemIDs() ?? new List<string>(), // 获取所有物品ID列表
+                    currentQuest = QuestManager.Instance?.currentQuest, // 获取当前任务数据
+                    allQuests = QuestManager.Instance?.GetAllQuests() ?? new Dictionary<string, QuestGameData>(), // 获取所有任务数据
+                    currentDialogue = DialogueManager.Instance?.GetCurrentDialogueData(), // 获取当前对话数据
+                    allDialogues = DialogueManager.Instance?.GetAllDialogues() ?? new Dictionary<string, DialogueGameData>(), // 获取所有对话数据
+                    allNewsData = NewsManager.Instance?.GetAllNewsData() ?? new Dictionary<string, NewsGameData>(), // 获取所有新闻数据
+                    allGameFlags = GameStateManager.Instance?.GetAllFlags() ?? new Dictionary<string, bool>(), // 获取所有游戏状态标志
+                    audioGameData = AudioManager.Instance?.GetAudioGameData() // 获取音频数据
+                };
+                
+                // 写入文件
+                string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
             
-            // 写入文件
-            string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
-            bool success = await WriteSaveFileAsync(saveData, savePath);
-            
-            OnSaveComplete?.Invoke(success ? "保存成功" : "保存失败");
+                await WriteSaveFileAsync(saveData, savePath);
+                
+                GameManager.Instance?.OnGameEvent("SaveGameComplete");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"创建保存数据失败: {e.Message}\n{e.StackTrace}");
+            }
         }
         
         /// <summary>
@@ -109,8 +118,18 @@ namespace Save
         {
             try
             {
+                Debug.Log("WriteSaveFileAsync");
+                
+                // 配置JSON序列化设置来处理循环引用
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    Formatting = Formatting.Indented,
+                    ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+                };
+                
                 // 以JSON格式保存（使用UTF-8编码，带格式）
-                string jsonData = JsonConvert.SerializeObject(saveData, Formatting.Indented);
+                string jsonData = JsonConvert.SerializeObject(saveData, settings);
                 await File.WriteAllTextAsync(savePath, jsonData, Encoding.UTF8);
                 return true;
             }
@@ -197,6 +216,7 @@ namespace Save
                 // 设置所有对话
                 if (DialogueManager.Instance.SetAllDialogues(saveData.allDialogues))
                 {
+                    GameManager.Instance.OnGameEvent("DialogueManagerReady");
                     GameManager.Instance.UpdateLoadingProgress(0.5f,"对话数据加载成功"); // 更新加载进度
                 }
                 

@@ -6,8 +6,6 @@ public class LuXinsheng : NPC
 {
     [Header("LuXinsheng特殊设置")]
     [SerializeField] private string[] specialScenes = { "outside1" }; // 特殊场景列表
-    [SerializeField] private LuXinshengDialogueConfig dialogueConfig; // 对话配置
-    
     #region States
     internal LuXinshengIdleState IdleState { get; set; }
     internal LuXinshengMoveState MoveState { get; set; }
@@ -23,7 +21,6 @@ public class LuXinsheng : NPC
         base.Awake();
 
         InitializeStates();
-        LoadDialogueConfig();
     }
 
     protected override void Start()
@@ -47,30 +44,6 @@ public class LuXinsheng : NPC
         IdleState = new LuXinshengIdleState(this, stateMachine, "Idle", this);
         MoveState = new LuXinshengMoveState(this, stateMachine, "Move", this);
         AnxiousState = new LuXinshengAnxiousState(this, stateMachine, "Anxious", this);
-    }
-
-    private void LoadDialogueConfig()
-    {
-        if (dialogueConfig == null)
-        {
-            // 尝试从Resources加载配置
-            dialogueConfig = Resources.Load<LuXinshengDialogueConfig>("ScriptableObjects/NPCs/LuXinshengDialogueConfig");
-            
-            if (dialogueConfig == null)
-            {
-                Debug.LogWarning("未找到LuXinsheng对话配置，使用默认设置");
-                CreateDefaultDialogueConfig();
-            }
-        }
-    }
-
-    private void CreateDefaultDialogueConfig()
-    {
-        // 创建默认配置以避免硬编码
-        dialogueConfig = ScriptableObject.CreateInstance<LuXinshengDialogueConfig>();
-        dialogueConfig.firstDialogueID = "lu_first_dialogue";
-        dialogueConfig.fightDialogueID = "fight_dialogue";
-        dialogueConfig.lideDialogueID = "lide_dialogue";
     }
 
     #endregion
@@ -139,9 +112,9 @@ public class LuXinsheng : NPC
             FollowTargetPlayer();
             
             // 触发战斗对话
-            if (DialogueManager.Instance != null && dialogueConfig != null)
+            if (DialogueManager.Instance != null)
             {
-                DialogueManager.Instance.StartDialogueByID(dialogueConfig.fightDialogueID);
+                DialogueManager.Instance.StartDialogueByID("fight_dialogue");
             }
         }
         catch (Exception e)
@@ -237,12 +210,6 @@ public class LuXinsheng : NPC
     protected override void OnDialogueEnd(string dialogueID)
     {
         base.OnDialogueEnd(dialogueID);
-        
-        if (dialogueConfig == null)
-        {
-            Debug.LogWarning("对话配置未加载，无法处理对话结束");
-            return;
-        }
 
         try
         {
@@ -256,15 +223,15 @@ public class LuXinsheng : NPC
 
     private void HandleSpecificDialogue(string dialogueID)
     {
-        if (dialogueID == dialogueConfig.firstDialogueID)
+        if (dialogueID == "lu_first_dialogue")
         {
             HandleFirstDialogueEnd();
         }
-        else if (dialogueID == dialogueConfig.fightDialogueID)
+        else if (dialogueID == "fight_dialogue")
         {
             HandleFightDialogueEnd();
         }
-        else if (dialogueID == dialogueConfig.lideDialogueID)
+        else if (dialogueID == "lide_dialogue")
         {
             HandleLideDialogueEnd();
         }

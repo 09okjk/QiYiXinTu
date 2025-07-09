@@ -98,8 +98,9 @@ public class SaveSlotUI : MonoBehaviour
     {
         if (!isEmpty)
         {
-            SaveLoadAsyncSystem.LoadGame(slotIndex);
             MenuManager.Instance.CloseAllPanels();
+            if (sceneNameText.text == "MainMenu") sceneNameText.text = "女生宿舍";
+            GameManager.Instance.LoadScene(sceneNameText.text);
         }
     }
     

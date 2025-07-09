@@ -77,6 +77,7 @@ public class EnemyManager:MonoBehaviour
     
     public void EnemyDied(Enemy enemy)
     {
+        Debug.Log("Enemy died: " + enemy.enemyData.enemyID);
         if (OnEnemyDeath != null)
         {
             OnEnemyDeath.Invoke(enemy.enemyData.enemyID); // 触发敌人死亡事件
@@ -85,7 +86,7 @@ public class EnemyManager:MonoBehaviour
         
         enemies = Array.FindAll(enemies, e => e.enemyData.enemyID != enemy.enemyData.enemyID); // 从列表中移除死亡的敌人
         
-        if (CheckActiveEnemyType(enemy.enemyData.enemyType))
+        if (!CheckActiveEnemyType(enemy.enemyData.enemyType))
         {
             Debug.Log($"All Enemies of type {enemy.enemyData.enemyType} were died.");
             OnEnemyTypeCleared?.Invoke(enemy.enemyData.enemyType); // 触发敌人类型清除事件

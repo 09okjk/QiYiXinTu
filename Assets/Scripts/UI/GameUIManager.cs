@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using Manager;
 using News;
 using UnityEngine;
@@ -127,6 +128,7 @@ public class GameUIManager : MonoBehaviour
 
     public void PlaySceneAnimation()
     {
+        AudioManager.Instance.PlayBackgroundAudio(SceneManager.GetActiveScene().name);
         if (sceneAnimator != null)
         {
             sceneAnimator.gameObject.SetActive(true);

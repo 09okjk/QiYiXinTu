@@ -90,14 +90,12 @@ public class MenuManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        SaveLoadAsyncSystem.OnSaveComplete += OnDataSave;
         OnMenuStateChanged += OnMenuStateChangedHandler;
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        SaveLoadAsyncSystem.OnSaveComplete -= OnDataSave;
         OnMenuStateChanged -= OnMenuStateChangedHandler;
     }
 
@@ -120,9 +118,9 @@ public class MenuManager : MonoBehaviour
         // Debug.Log($"场景加载：{scene.name}，当前 MenuManager 是否为实例：{this == Instance}");
         // Debug.Log($"当前 TimeScale: {Time.timeScale}");
     }
-    private void OnDataSave(string obj)
+    public void OnDataSave()
     {
-        Debug.Log($"数据保存完成: {obj}");
+        Debug.Log($"数据保存完成");
         if (savePanel.activeSelf)
         {
             PopulateSaveSlots();
@@ -264,7 +262,7 @@ public class MenuManager : MonoBehaviour
             List<SaveData> saveDataInfos = await SaveLoadAsyncSystem.GetAllSaves();
 
             // 创建一个与maxSaveSlots大小相同的数组，默认值为null
-            List<SaveData> sortedSaveData = new List<SaveData>();
+            SaveData[] sortedSaveData = new SaveData[maxSaveSlots];
 
             // 将现有存档信息放入对应的索引位置
             for (int i = 0; i < saveDataInfos.Count; i++)
@@ -283,12 +281,6 @@ public class MenuManager : MonoBehaviour
             for (int i = 0; i < maxSaveSlots; i++)
             {
                 CreateSaveSlot(i, sortedSaveData[i]);
-            }
-            
-            // 创建空插槽到最大
-            for (int i = saveDataInfos.Count; i < maxSaveSlots; i++)
-            {
-                CreateSaveSlot(i, null);
             }
             
             Debug.Log("存档插槽加载完成");

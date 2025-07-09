@@ -6697,7 +6697,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &896210355
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7542,7 +7542,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1000652999
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8049,7 +8049,12 @@ MonoBehaviour:
   newsID: news_001
   newsButton: {fileID: 0}
   shadowImage: {fileID: 0}
-  newsData: {fileID: 0}
+  newsData:
+    newsID: 
+    newsTitle: 
+    newsContent: 
+    newsImage: {fileID: 0}
+    isRead: 0
 --- !u!1 &1032393957
 GameObject:
   m_ObjectHideFlags: 0
@@ -12828,7 +12833,6 @@ MonoBehaviour:
   settingsPanel: {fileID: 972630686}
   controlsPanel: {fileID: 1412594115}
   savePanel: {fileID: 1533203876}
-  audioMixer: {fileID: 24100000, guid: 24b54050736a8474997b8550c175482e, type: 2}
   masterVolumeSlider: {fileID: 1899263117}
   musicVolumeSlider: {fileID: 1150267665}
   sfxVolumeSlider: {fileID: 848896380}

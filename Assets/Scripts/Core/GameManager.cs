@@ -215,7 +215,8 @@ public class GameManager : MonoBehaviour
         // 显示加载界面
         ShowLoadingScreen($"正在加载场景: {sceneName}");
         // 先保存数据
-        yield return SaveLoadAsyncSystem.SaveGame(true, 0);
+        if(SceneManager.GetActiveScene().name != "Initialization Scene")
+            yield return SaveLoadAsyncSystem.SaveGame(true, 0);
         // 异步加载场景
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false; // 禁止自动激活场景，直到加载完成
@@ -282,6 +283,9 @@ public class GameManager : MonoBehaviour
             case "DialogueManagerReady":
                 // 触发对话管理器准备就绪事件
                 OnDialogueManagerReady?.Invoke();
+                break;
+            case "SaveGameComplete":
+                MenuManager.Instance.OnDataSave();
                 break;
                 
             // 根据需要添加更多事件

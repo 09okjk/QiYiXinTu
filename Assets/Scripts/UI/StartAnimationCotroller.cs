@@ -62,7 +62,7 @@ namespace UI
                 {
                     loadingScreen.SetActive(false);
                 }
-                GameUIManager.Instance.PlaySceneAnimation();
+                // GameUIManager.Instance.PlaySceneAnimation();
             }
             //videoPlayer.gameObject.SetActive(false); // 确保视频播放器初始状态为不激活
             if (GameStateManager.Instance.GetFlag("StartAnimationFinished"))

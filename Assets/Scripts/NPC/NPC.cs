@@ -92,6 +92,10 @@ public class NPC : Entity
             // 处理交互输入
             HandleInteractionInput();
         }
+        else
+        {
+            interactionIndicator.SetActive(false);
+        }
     }
     
     protected virtual void FixedUpdate()
