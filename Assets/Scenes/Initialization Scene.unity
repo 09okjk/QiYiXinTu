@@ -2132,7 +2132,7 @@ AudioSource:
   m_GameObject: {fileID: 586718917}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 5971760209381217239, guid: 24b54050736a8474997b8550c175482e, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -3611,7 +3611,6 @@ MonoBehaviour:
   systemDialoguePanel: {fileID: 581828089}
   systemDialogueText: {fileID: 1405157792}
   typewriterSpeed: 0.05
-  dialogueAudioSource: {fileID: 0}
   pauseGameDuringDialogue: 1
 --- !u!114 &938126839
 MonoBehaviour:
@@ -4889,7 +4888,7 @@ AudioSource:
   m_GameObject: {fileID: 1291178041}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 6412912700200017970, guid: 24b54050736a8474997b8550c175482e, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -6888,6 +6887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f65aebb6d24d4271846029a9c1b6b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: 24b54050736a8474997b8550c175482e, type: 2}
   levelAudioClips: []
   effectAudioClips: []
   backgroundAudioSource: {fileID: 586718918}

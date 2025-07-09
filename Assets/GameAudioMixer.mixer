@@ -46,12 +46,12 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
-  - guid: 2dfc3ca13ad7aaf43a9bf4346a517cdf
-    name: MasterVolume
-  - guid: 903bf06db21284041be943cd2ac4c53e
-    name: MusicVolume
-  - guid: 008eb6b17ecf265498f914f3a7261c6b
-    name: SFXVolume
+  - guid: 98583b3b25cbb554285e3b1dc72ec2b6
+    name: BackgroundVolume
+  - guid: 742f11f1544e2a345aaa703fdd2cce03
+    name: EffectVolume
+  - guid: 5c69ceef1ae16914eb3f2757d50eeaea
+    name: MainVolume
   m_AudioMixerGroupViews:
   - guids:
     - 62890b1cc451af3459a38623797e4abb
@@ -126,7 +126,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MusicVolume
+  m_Name: BackgroundVolume
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: c1cefb143749a664f854aea3370ce505
   m_Children: []
@@ -145,7 +145,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SFXVolume
+  m_Name: EffectVolume
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 7dd37b7aa7885854eb476b92fdcbac27
   m_Children: []

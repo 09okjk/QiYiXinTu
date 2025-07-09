@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Audio;
 using Manager;
 using News;
 using Newtonsoft.Json;
@@ -31,6 +32,7 @@ namespace Save
         public Dictionary<string, DialogueGameData> allDialogues = new(); // 所有对话数据
         public Dictionary<string, NewsGameData> allNewsData = new(); // 所有新闻数据
         public Dictionary<string, bool> allGameFlags = new(); // 游戏状态标志
+        public AudioGameData audioGameData; // 音频数据（如果需要保存音频状态）
     }
     public class SaveLoadAsyncSystem:MonoBehaviour
     {
@@ -89,7 +91,8 @@ namespace Save
                 currentDialogue = DialogueManager.Instance.GetCurrentDialogueData(), // 获取当前对话数据
                 allDialogues = DialogueManager.Instance.GetAllDialogues(), // 获取所有对话数据
                 allNewsData = NewsManager.Instance.GetAllNewsData(), // 获取所有新闻数据
-                allGameFlags = GameStateManager.Instance.GetAllFlags() // 获取所有游戏状态标志
+                allGameFlags = GameStateManager.Instance.GetAllFlags(), // 获取所有游戏状态标志
+                audioGameData = AudioManager.Instance.GetAudioGameData() // 获取音频数据
             };
             
             // 写入文件
@@ -207,6 +210,12 @@ namespace Save
                 if (GameStateManager.Instance.SetAllFlags(saveData.allGameFlags))
                 {
                     GameManager.Instance.UpdateLoadingProgress(0.7f,"游戏状态标志加载成功"); // 更新加载进度
+                }
+                
+                // 设置音频数据
+                if (AudioManager.Instance.SetAudioGameData(saveData.audioGameData))
+                {
+                    GameManager.Instance.UpdateLoadingProgress(0.7f,"音频数据加载成功"); // 更新加载进度
                 }
                 
                 Debug.Log("游戏数据加载完成: " + saveData.saveName);

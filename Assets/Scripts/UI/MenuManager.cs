@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Audio;
 using Manager;
 using Save;
 using UnityEngine;
@@ -22,10 +23,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject savePanel;
     
     [Header("Audio Settings")]
-    [SerializeField] private AudioMixer audioMixer;
-    [SerializeField] private Slider masterVolumeSlider;
-    [SerializeField] private Slider musicVolumeSlider;
-    [SerializeField] private Slider sfxVolumeSlider;
+    [SerializeField] private Slider masterVolumeSlider; // 主音量滑动条
+    [SerializeField] private Slider musicVolumeSlider; // 音乐音量滑动条
+    [SerializeField] private Slider sfxVolumeSlider;// 音效音量滑动条
     
     [Header("Save/Load")]
     [SerializeField] private Transform saveSlotContainer;
@@ -57,13 +57,10 @@ public class MenuManager : MonoBehaviour
             masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
             
         if (musicVolumeSlider != null)
-            musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+            musicVolumeSlider.onValueChanged.AddListener(SetBackgroundVolume);
             
         if (sfxVolumeSlider != null)
-            sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
-        
-        // 初始化保存的值
-        LoadAudioSettings();
+            sfxVolumeSlider.onValueChanged.AddListener(SetEffectVolume);
         
         // 初始时隐藏所有面板
         CloseAllPanels();
@@ -74,7 +71,22 @@ public class MenuManager : MonoBehaviour
             mainMenuPanel.SetActive(true);
         }
     }
+
+    private void SetMasterVolume(float volume)
+    {
+        AudioManager.Instance.SetMainVolume(volume);
+    }
     
+    private void SetBackgroundVolume(float volume)
+    {
+        AudioManager.Instance.SetBackgroundAudioVolume(volume);
+    }
+    
+    private void SetEffectVolume(float volume)
+    {
+        AudioManager.Instance.SetEffectAudioVolume(volume);
+    }
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -303,53 +315,6 @@ public class MenuManager : MonoBehaviour
             // 空插槽
             slotUI.SetupEmptySlot(slotIndex);
         }
-    }
-    
-    // 音频设置
-    // 设置音量
-    public void SetMasterVolume(float volume)
-    {
-        SetAudioMixerVolume("MasterVolume", volume);
-        PlayerPrefs.SetFloat("MasterVolume", volume);
-        PlayerPrefs.Save();
-    }
-    // 设置音乐音量
-    public void SetMusicVolume(float volume)
-    {
-        SetAudioMixerVolume("MusicVolume", volume);
-        PlayerPrefs.SetFloat("MusicVolume", volume);
-        PlayerPrefs.Save();
-    }
-    // 设置音效音量
-    public void SetSFXVolume(float volume)
-    {
-        SetAudioMixerVolume("SFXVolume", volume);
-        PlayerPrefs.SetFloat("SFXVolume", volume);
-        PlayerPrefs.Save();
-    }
-    // 设置音频混合器音量
-    private void SetAudioMixerVolume(string parameterName, float normalizedValue)
-    {
-        // 将归一化值（0-1）转换为混音器值（对数，-80db到0db）
-        float mixerValue = normalizedValue > 0.001f ? Mathf.Log10(normalizedValue) * 20 : -80f;
-        audioMixer.SetFloat(parameterName, mixerValue);
-    }
-    // 加载音频设置
-    private void LoadAudioSettings()
-    {
-        float masterVolume = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
-        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
-        
-        // Set slider values
-        if (masterVolumeSlider != null) masterVolumeSlider.value = masterVolume;
-        if (musicVolumeSlider != null) musicVolumeSlider.value = musicVolume;
-        if (sfxVolumeSlider != null) sfxVolumeSlider.value = sfxVolume;
-        
-        // 应用到音频混合器
-        SetAudioMixerVolume("MasterVolume", masterVolume);
-        SetAudioMixerVolume("MusicVolume", musicVolume);
-        SetAudioMixerVolume("SFXVolume", sfxVolume);
     }
     
     // 返回主菜单
