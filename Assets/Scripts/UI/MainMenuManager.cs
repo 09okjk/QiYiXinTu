@@ -95,7 +95,26 @@ namespace UI
         {
             try
             {
-                GameManager.Instance.LoadScene(SaveLoadAsyncSystem.Instance.GetNewestSaveLevelName());
+                if (GameManager.Instance == null)
+                {
+                    Debug.LogError("GameManager实例为空");
+                    return;
+                }
+                
+                if (SaveLoadAsyncSystem.Instance == null)
+                {
+                    Debug.LogError("SaveLoadAsyncSystem实例为空");
+                    return;
+                }
+                
+                string levelName = SaveLoadAsyncSystem.Instance.GetNewestSaveLevelName();
+                if (string.IsNullOrEmpty(levelName))
+                {
+                    Debug.LogError("没有找到可加载的存档");
+                    return;
+                }
+                
+                GameManager.Instance.LoadScene(levelName);
             }
             catch (Exception e)
             {
