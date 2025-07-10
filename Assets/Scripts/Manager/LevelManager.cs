@@ -32,7 +32,6 @@ namespace Manager
         [SerializeField] private GameObject startAinimation; // 开场动画对象
         
         [Header("场景动画")]
-        [SerializeField] private Animator sceneAnimator; // 场景动画控制器
         [SerializeField] private List<string> animationNames; // 场景动画名称列表
         
         [Header("初始化设置")]
@@ -91,10 +90,7 @@ namespace Manager
         
         private void Start()
         {
-            if (sceneAnimator != null)
-            {
-                sceneAnimator.gameObject.SetActive(false);
-            }
+
         }
 
         private void OnDestroy()
@@ -494,7 +490,6 @@ namespace Manager
                 if (GameStateManager.Instance.GetFlag("startAnimationFinished"))
                 {
                     startAinimation.SetActive(false);
-                    sceneAnimator.gameObject.SetActive(false);
                     PlayerManager.Instance.SetPlayerActive(true);
                     NPCManager.Instance.ActivateNPC(NPCManager.Instance.GetNPC("LuXinsheng"));
                 }
