@@ -41,9 +41,6 @@ namespace Manager
         
         private string levelName;
         private bool isLevelInitialized = false;
-        private bool isDataLoaded = false;
-        private bool isSceneLoaded = false;
-
         private void Awake()
         {
             if (Instance == null)
@@ -215,7 +212,6 @@ namespace Manager
                 switch (levelName)
                 {
                     case "女生宿舍":
-                        // 设置开场动画
                         PlayerManager.Instance.SetPlayerActive(false);
                         NPCManager.Instance.HideNPC(NPCManager.Instance.GetNPC("LuXinsheng"));
                         break;
@@ -479,7 +475,6 @@ namespace Manager
         private void OnDataLoaded(string obj)
         {
             Debug.Log($"数据加载完成: {obj}");
-            isDataLoaded = true;
             
             // 添加小延迟确保所有组件都已准备就绪
             StartCoroutine(DelayedInitLevel());
@@ -496,7 +491,13 @@ namespace Manager
 
             if (levelName == "女生宿舍")
             {
-                StartAnimationCotroller.Instance.PlayVideo(0);
+                if (GameStateManager.Instance.GetFlag("startAnimationFinished"))
+                {
+                    startAinimation.SetActive(false);
+                    sceneAnimator.gameObject.SetActive(false);
+                    PlayerManager.Instance.SetPlayerActive(true);
+                    NPCManager.Instance.ActivateNPC(NPCManager.Instance.GetNPC("LuXinsheng"));
+                }
             }
             else
             {

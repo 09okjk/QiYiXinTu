@@ -233,10 +233,10 @@ public class NPCManager : MonoBehaviour
             if (npcObject == null) return false;
 
             // 设置NPC位置
-            SetNPCPosition(npcPoint, npcDictionary[npcID]);
+            SetNPCPosition(npcPoint, npc);
             
             // 激活NPC
-            ActivateNPC(npcDictionary[npcID]);
+            ActivateNPC(npc);
             
             return true;
         }
@@ -281,7 +281,7 @@ public class NPCManager : MonoBehaviour
         }
     }
 
-    private void ActivateNPC(NPC npc)
+    public void ActivateNPC(NPC npc)
     {
         if (npc == null) return;
         npc.ActivateNpc();
