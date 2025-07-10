@@ -67,7 +67,7 @@ public class NPCManager : MonoBehaviour
         {
             if (npc != null)
             {
-                SaveNpcRuntimeData(npc.GetNpcGameData().npcID);
+                SaveNpcRuntimeData(npc);
             }
         }
         Debug.Log($"保存了 {runtimeNpcDataDictionary.Count} 个NPC运行时数据");
@@ -77,19 +77,12 @@ public class NPCManager : MonoBehaviour
     /// 保存指定NPC的运行时数据
     /// </summary>
     /// <param name="npcID">NPC的唯一标识符</param>
-    private void SaveNpcRuntimeData(string npcID)
+    private void SaveNpcRuntimeData(NPC npc)
     {
-        if (npcDictionary.TryGetValue(npcID, out var npc))
+        if (npc != null)
         {
-            if (npc != null)
-            {
-                runtimeNpcDataDictionary[npcID] = npc.GetNpcGameData();
-                Debug.Log($"保存NPC {npcID} 的运行时数据");
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"未找到NPC {npcID}，无法保存运行时数据");
+            runtimeNpcDataDictionary[npc.GetNpcGameData().npcID] = npc.GetNpcGameData();
+            Debug.Log($"保存NPC {npc.GetNpcGameData().npcID} 的运行时数据");
         }
     }
 
@@ -219,6 +212,7 @@ public class NPCManager : MonoBehaviour
         }
 
         NPC npc = npcDictionary[npcID];
+        
         
         // 检查是否应该在当前场景显示此NPC
         if (!ShouldShowNPCInCurrentScene(npc.GetNpcGameData()))

@@ -31,8 +31,7 @@ public class NpcGameData
 }
 public class NPC : Entity
 {
-    [Header("NPC Data")] 
-    private NpcGameData npcGameData;
+    [Header("NPC Data")] protected NpcGameData npcGameData;
     
     [Header("渲染设置")]
     public SpriteRenderer spriteRenderer;
@@ -529,7 +528,7 @@ public class NPC : Entity
             
             gameObject.SetActive(true);
         
-            if (npcGameData.isFollowing)
+            if (GetNpcGameData().isFollowing)
             {
                 FollowTargetPlayer();
             }
