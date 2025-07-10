@@ -193,18 +193,21 @@ namespace Save
                 // 设置玩家数据
                 if (PlayerManager.Instance.SetPlayerGameData(saveData.PlayerGameData))
                 {
+                    Debug.Log("玩家数据加载成功: " + saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.1f,"玩家数据加载成功"); // 更新加载进度
                 }
                 
                 // 设置NPC数据
                 if (NPCManager.Instance.SetNpcDatas(saveData.NpcGameDatas))
                 {
+                    Debug.Log("NPC数据加载成功: " + saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.2f,"NPC数据加载成功"); // 更新加载进度
                 }
                 
                 // 设置物品数据
                 if (InventoryManager.Instance.SetAllItemsByIDs(saveData.itemIDs))
                 {
+                    Debug.Log("物品数据加载成功: " + saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.3f,"物品数据加载成功"); // 更新加载进度 
                 }
                 
@@ -213,6 +216,7 @@ namespace Save
                 // 设置所有任务
                 if (QuestManager.Instance.SetAllQuests(saveData.allQuests))
                 {
+                    Debug.Log("任务数据加载成功: " + saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.4f,"任务数据加载成功"); // 更新加载进度
                 }
                 
@@ -221,6 +225,7 @@ namespace Save
                 // 设置所有对话
                 if (DialogueManager.Instance.SetAllDialogues(saveData.allDialogues))
                 {
+                    Debug.Log("对话数据加载成功: " + saveData.saveName);
                     GameManager.Instance.OnGameEvent("DialogueManagerReady");
                     GameManager.Instance.UpdateLoadingProgress(0.5f,"对话数据加载成功"); // 更新加载进度
                 }
@@ -228,18 +233,21 @@ namespace Save
                 // 设置所有新闻数据
                 if (NewsManager.Instance.SetAllNewsData(saveData.allNewsData))
                 {
+                    Debug.Log("新闻数据加载成功: " + saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.6f,"新闻数据加载成功"); // 更新加载进度
                 }
                 
                 // 设置游戏状态标志
                 if (GameStateManager.Instance.SetAllFlags(saveData.allGameFlags))
                 {
+                    Debug.Log("游戏状态标志加载成功: " + saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.7f,"游戏状态标志加载成功"); // 更新加载进度
                 }
                 
                 // 设置音频数据
                 if (AudioManager.Instance.SetAudioGameData(saveData.audioGameData))
                 {
+                    Debug.Log("音频数据加载成功: " + saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.7f,"音频数据加载成功"); // 更新加载进度
                 }
                 
