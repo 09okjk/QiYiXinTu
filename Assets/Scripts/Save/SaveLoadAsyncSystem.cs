@@ -309,7 +309,7 @@ namespace Save
         }
 
         // 获取最新的存档的levelname
-        public string GetNewestSaveLevelName()
+        public static string GetNewestSaveLevelName()
         {
             string[] files = Directory.GetFiles(SaveDirectory, "*.sav");
             if (files.Length == 0)

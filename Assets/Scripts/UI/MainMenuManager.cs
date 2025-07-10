@@ -101,13 +101,7 @@ namespace UI
                     return;
                 }
                 
-                if (SaveLoadAsyncSystem.Instance == null)
-                {
-                    Debug.LogError("SaveLoadAsyncSystem实例为空");
-                    return;
-                }
-                
-                string levelName = SaveLoadAsyncSystem.Instance.GetNewestSaveLevelName();
+                string levelName = SaveLoadAsyncSystem.GetNewestSaveLevelName();
                 if (string.IsNullOrEmpty(levelName))
                 {
                     Debug.LogError("没有找到可加载的存档");
