@@ -31,7 +31,9 @@ public class NpcGameData
 }
 public class NPC : Entity
 {
-    [Header("NPC Data")] protected NpcGameData npcGameData;
+    [Header("NPC Data")] 
+    [SerializeField] private float defaultSpeed = 2f; // 默认速度
+    private NpcGameData npcGameData;
     
     [Header("渲染设置")]
     public SpriteRenderer spriteRenderer;
@@ -43,7 +45,6 @@ public class NPC : Entity
     // 私有字段
     private Transform playerTransform; // 缓存玩家Transform
     private GameObject playerGameObject; // 缓存玩家GameObject
-    private float defaultSpeed;
     private bool hasSubscribedToEvents = false;
     
     // 性能优化相关
@@ -72,8 +73,6 @@ public class NPC : Entity
         
         // 设置NPC
         // SetupNPC();
-        
-        // defaultSpeed = followSpeed;
         
         // 缓存玩家引用
         CachePlayerReferences();
