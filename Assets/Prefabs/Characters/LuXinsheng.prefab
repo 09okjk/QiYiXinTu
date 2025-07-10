@@ -423,12 +423,12 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
-  followDistance: 1.5
-  followSpeed: 2
+  defaultSpeed: 2
   spriteRenderer: {fileID: 8768182462212275438}
   interactionDistance: 2
   interactionIndicator: {fileID: 6195114081013649416}
-  dialogueDataList: []
+  specialScenes:
+  - outside1
 --- !u!61 &512005600884524315
 BoxCollider2D:
   m_ObjectHideFlags: 0
