@@ -98,6 +98,7 @@ public class NPC : Entity
     
     protected virtual void FixedUpdate()
     {
+        Debug.LogWarning("should follow player:"+ShouldFollowPlayer());
         // 优化的跟随逻辑
         if (ShouldFollowPlayer())
         {
