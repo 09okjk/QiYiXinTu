@@ -307,5 +307,38 @@ namespace Save
             }
             return Task.FromResult(saves);
         }
+
+        // 获取最新的存档的levelname
+        public string GetNewestSaveLevelName()
+        {
+            string[] files = Directory.GetFiles(SaveDirectory, "*.sav");
+            if (files.Length == 0)
+            {
+                Debug.LogWarning("没有找到任何存档文件");
+                return null;
+            }
+
+            // 获取最新的存档文件
+            string latestFile = files[0];
+            foreach (string file in files)
+            {
+                if (File.GetLastWriteTime(file) > File.GetLastWriteTime(latestFile))
+                {
+                    latestFile = file;
+                }
+            }
+
+            try
+            {
+                string jsonData = File.ReadAllText(latestFile, Encoding.UTF8);
+                SaveData saveData = JsonConvert.DeserializeObject<SaveData>(jsonData);
+                return saveData.sceneName;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"读取最新存档失败: {e.Message}");
+                return null;
+            }
+        }
     }
 }

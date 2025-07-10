@@ -95,7 +95,7 @@ namespace UI
         {
             try
             {
-                await SaveLoadAsyncSystem.LoadGame();
+                GameManager.Instance.LoadScene(SaveLoadAsyncSystem.Instance.GetNewestSaveLevelName());
             }
             catch (Exception e)
             {

@@ -194,10 +194,29 @@ public class InventoryManager : MonoBehaviour
         questItems.Clear();
         puzzleItems.Clear();
         
+        var currentQuestItems = new List<ItemGameData>();
+        var currentPuzzleItems = new List<ItemGameData>();
         foreach (var itemID in itemIDs)
         {
-            AddItemById(itemID);
+            var item = ItemManager.Instance.GetItem(itemID);
+            if (item != null)
+            {
+                if (item.itemType == ItemType.QuestItem)
+                {
+                    currentQuestItems.Add(item);
+                }
+                else
+                {
+                    currentPuzzleItems.Add(item);
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Item with ID {itemID} not found.");
+            }
         }
+        questItems = currentQuestItems;
+        puzzleItems = currentPuzzleItems;
         return true;
     }
     // 清空背包

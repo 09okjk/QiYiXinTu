@@ -39,16 +39,11 @@ public class Item : MonoBehaviour
                 // 处理消耗品逻辑：直接应用效果
                 ApplyConsumableEffect(player);
                 break;
-                
             case ItemType.QuestItem:
             case ItemType.PuzzleItem:
                 // 任务道具和解谜道具添加到背包
                 InventoryManager.Instance.AddItem(_itemData);
                 Debug.Log($"已添加{_itemData.itemName}到背包");
-                break;
-                
-            default:
-                InventoryManager.Instance.AddItem(_itemData);
                 break;
         }
         
