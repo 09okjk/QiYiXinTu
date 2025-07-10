@@ -27,9 +27,8 @@ public class NPCState
     
         if (Npc.Anim == null)
         {
-            Debug.LogError("NPC的Anim组件为空");
+            Debug.LogWarning("NPC的Anim组件为空");
             Npc.Anim = Npc.GetComponentInChildren<Animator>();
-            return;
         }
     
         Npc.Anim.SetBool(_animBoolName, true);

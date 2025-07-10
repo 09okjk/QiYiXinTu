@@ -14,6 +14,15 @@ public class PlayerAttackChecker: MonoBehaviour
 
     private void Awake()
     {
+
+    }
+    private void Start()
+    {
+        if (attackCollider == null)
+        {
+            Debug.LogError("Attack collider is not assigned in PlayerAttackChecker.");
+        }
+        
         switch (currentAttackType)
         {
             case AttackType.SkillAttack1_1:
