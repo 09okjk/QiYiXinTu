@@ -491,7 +491,7 @@ namespace Manager
                 {
                     startAinimation.SetActive(false);
                     PlayerManager.Instance.SetPlayerActive(true);
-                    NPCManager.Instance.ActivateNPC(NPCManager.Instance.GetNPC("LuXinsheng"));
+                    NPCManager.Instance.ShowNPC("LuXinsheng", leftPlayerPoint);
                 }
             }
             else
