@@ -215,7 +215,7 @@ public class GameManager : MonoBehaviour
         // 显示加载界面
         ShowLoadingScreen($"正在加载场景: {sceneName}");
         // 先保存数据
-        if(SceneManager.GetActiveScene().name != "Initialization Scene")
+        if(SceneManager.GetActiveScene().name != "Initialization Scene" && SceneManager.GetActiveScene().name != "MainMenu")
             yield return SaveLoadAsyncSystem.SaveGame(true, 0);
         // 异步加载场景
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
