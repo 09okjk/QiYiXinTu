@@ -146,10 +146,10 @@ public class NPCManager : MonoBehaviour
             int npcCount = 0;
             foreach (var runtimeData in runtimeNpcDataDictionary.Values)
             {
-                if (runtimeData != null && runtimeData.sceneName == currentSceneName)
+                if (runtimeData != null && (runtimeData.sceneName == currentSceneName ||runtimeData.sceneName == "AllScenes"))
                 {
                     SetNpc(npcDictionary[runtimeData.npcID], runtimeData);
-                    npcCount++;
+                    npcCount+=1;
                 }
             }
 

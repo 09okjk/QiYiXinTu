@@ -170,7 +170,7 @@ namespace Save
         {
             if (slotIdx < 0)
             {
-                await LoadGame();
+                await LoadGame().ConfigureAwait(false);
                 return;
             }
             string savePath = SaveDirectory + "save_" + slotIdx + ".sav";

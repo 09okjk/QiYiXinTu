@@ -484,6 +484,11 @@ namespace Manager
             GameManager.Instance.UpdateLoadingProgress(1f, "初始化完成！");
             GameManager.Instance.HideLoadingScreen();
             DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
+            
+            if(GameUIManager.Instance)
+            {
+                GameUIManager.Instance.UpdatePlayerUI();
+            }
 
             if (levelName == "女生宿舍")
             {
@@ -492,6 +497,7 @@ namespace Manager
                     startAinimation.SetActive(false);
                     PlayerManager.Instance.SetPlayerActive(true);
                     NPCManager.Instance.ShowNPC("LuXinsheng", leftPlayerPoint);
+                    AudioManager.Instance.PlayBackgroundAudio(levelName);
                 }
             }
             else

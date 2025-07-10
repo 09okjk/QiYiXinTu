@@ -98,7 +98,7 @@ public class NPC : Entity
     
     protected virtual void FixedUpdate()
     {
-        Debug.LogWarning("should follow player:"+ShouldFollowPlayer());
+        // Debug.LogWarning("should follow player:"+ShouldFollowPlayer());
         // 优化的跟随逻辑
         if (ShouldFollowPlayer())
         {
@@ -254,16 +254,16 @@ public class NPC : Entity
 
     #region NPC设置
 
-    private void SetupNpc(NpcGameData npcGameData = null)
+    private void SetupNpc(NpcGameData _npcGameData = null)
     {
-        if (npcGameData != null)
+        if (_npcGameData != null)
         {
-            this.npcGameData = npcGameData;
+            npcGameData = _npcGameData;
         }
         else
         {
             NPCData npcData = baseData as NPCData;
-            this.npcGameData = new NpcGameData
+            npcGameData = new NpcGameData
             {
                 npcID = npcData.npcID,
                 npcName = npcData.npcName,
@@ -283,13 +283,14 @@ public class NPC : Entity
 
         try
         {
+            Debug.Log("Start setting up NPC: " + npcGameData?.npcName+"isFollowing:"+npcGameData?.isFollowing);
             // 设置精灵
             SetupSprite();
 
-            defaultSpeed = this.npcGameData.followSpeed;
+            defaultSpeed = GetNpcGameData().followSpeed;
             
             // 初始化跟随状态
-            if (this.npcGameData.isFollowing)
+            if (GetNpcGameData().isFollowing)
             {
                 FollowTargetPlayer();
             }else
@@ -501,7 +502,7 @@ public class NPC : Entity
     
     public virtual void StopFollowing()
     {
-        npcGameData.isFollowing = false;
+        GetNpcGameData().isFollowing = false;
         
         // 重置朝向
         if (spriteRenderer != null)
@@ -509,7 +510,7 @@ public class NPC : Entity
             spriteRenderer.flipX = false;
         }
         
-        Debug.Log($"NPC {npcGameData?.npcID} 停止跟随玩家");
+        Debug.Log($"NPC {GetNpcGameData()?.npcID} 停止跟随玩家");
     }
 
     #endregion

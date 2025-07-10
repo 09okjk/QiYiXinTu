@@ -64,6 +64,9 @@ public class Player : Entity
     [SerializeField] private InputActionReference skillAttackAction;
     [SerializeField] private InputActionReference skillHealAction;
     
+    [Header("Player Data")]
+    public int currentHealth => playerData.CurrentHealth;
+    public float currentMana => playerData.CurrentMana;
     public bool isBusy {get; private set;}
     // public SkillManager skillManager { get; private set; }
     

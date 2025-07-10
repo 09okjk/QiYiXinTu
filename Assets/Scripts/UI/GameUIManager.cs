@@ -246,7 +246,12 @@ public class GameUIManager : MonoBehaviour
     {
         manaSlider.value = 1 - (current / max);
     }
-    
+
+    public void UpdatePlayerUI()
+    {
+        UpdateHealth(PlayerManager.Instance.player.playerData.CurrentHealth,false);
+        UpdateMana(PlayerManager.Instance.player.playerData.CurrentMana, PlayerManager.Instance.player.playerData.MaxMana);
+    }
     private void InitializeSkillBar()
     {
         // 清除现有技能槽

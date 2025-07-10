@@ -24,14 +24,7 @@ namespace UI
 
         private void Update()
         {
-            if (GameStateManager.Instance.GetFlag("CanEnter_" + nextSceneName))
-            {
-                boxCollider.isTrigger = true;
-            }
-            else
-            {
-                boxCollider.isTrigger = false;
-            }
+            boxCollider.isTrigger = GameStateManager.Instance.GetFlag("canEnter_" + nextSceneName);
         }
 
         private async void OnTriggerEnter2D(Collider2D other)
