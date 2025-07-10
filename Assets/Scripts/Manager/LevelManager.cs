@@ -109,6 +109,7 @@ namespace Manager
                 DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
             }
         }
+        
         #region 初始化逻辑
         
         /// <summary>
@@ -491,6 +492,7 @@ namespace Manager
         {
             GameManager.Instance.UpdateLoadingProgress(1f, "初始化完成！");
             GameManager.Instance.HideLoadingScreen();
+            DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
 
             if (levelName == "女生宿舍")
             {

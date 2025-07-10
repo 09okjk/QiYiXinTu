@@ -79,8 +79,7 @@ namespace UI
                 }
             }
         }
-
-
+        
         private void OnStartButtonClicked()
         {
             // EnterGame();
