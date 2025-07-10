@@ -138,7 +138,7 @@ namespace Manager
             
             SaveLoadAsyncSystem.OnLoadComplete += OnDataLoaded;
             // 加载数据
-            _ = SaveLoadAsyncSystem.LoadGame();
+            _ = SaveLoadAsyncSystem.LoadGame(GameStateManager.Instance.GetCurrentSaveSlot());
         }
 
         /// <summary>

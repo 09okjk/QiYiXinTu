@@ -168,6 +168,11 @@ namespace Save
         
         public static async Task LoadGame(int slotIdx)
         {
+            if (slotIdx < 0)
+            {
+                await LoadGame();
+                return;
+            }
             string savePath = SaveDirectory + "save_" + slotIdx + ".sav";
             if (!File.Exists(savePath))
             {

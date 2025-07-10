@@ -100,6 +100,7 @@ public class SaveSlotUI : MonoBehaviour
         {
             MenuManager.Instance.CloseAllPanels();
             if (sceneNameText.text == "MainMenu") sceneNameText.text = "女生宿舍";
+            GameStateManager.Instance.SetCurrentSaveSlot(slotIndex);
             GameManager.Instance.LoadScene(sceneNameText.text);
         }
     }

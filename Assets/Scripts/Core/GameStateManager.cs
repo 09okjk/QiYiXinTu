@@ -10,7 +10,7 @@ public class GameStateManager : MonoBehaviour
     
     // 用于存储游戏状态标志的字典
     private Dictionary<string, bool> gameFlags = new Dictionary<string, bool>();
-    
+    private int currentSaveSlot = -1; // 当前使用的存档槽位，默认为-1表示未选择
     private void Awake()
     {
         if (Instance == null)
@@ -91,6 +91,18 @@ public class GameStateManager : MonoBehaviour
             return (PlayerPointType)PlayerPrefs.GetInt("PlayerPointType");
         }
         return PlayerPointType.Right;
+    }
+    
+    public int GetCurrentSaveSlot()
+    {
+        var saveSlot = currentSaveSlot;
+        currentSaveSlot = -1; // 重置当前存档槽位
+        return saveSlot;
+    }
+
+    public void SetCurrentSaveSlot(int slot)
+    {
+        currentSaveSlot = slot;
     }
     
     // 获取标志值，如果标志不存在则返回false
