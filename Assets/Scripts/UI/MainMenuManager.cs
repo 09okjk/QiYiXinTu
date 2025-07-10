@@ -37,7 +37,7 @@ namespace UI
             
             // 设置按钮的点击事件
             startButton.onClick.AddListener(OnLoadButtonClicked);
-            continueButton.onClick.AddListener(OncontinueButtonClicked);
+            continueButton.onClick.AddListener(OnContinueButtonClicked);
             loadButton.onClick.AddListener(OnLoadButtonClicked);
             settingButton.onClick.AddListener(OnSettingButtonClicked);
             exitButton.onClick.AddListener(OnExitButtonClicked);
@@ -91,29 +91,16 @@ namespace UI
             //MenuManager.Instance.OpenSavePanel();
         }
 
-        private async void OncontinueButtonClicked()
+        private async void OnContinueButtonClicked()
         {
-            // 从存档中获取更新时间最近的游戏数据
-            List<SaveData> dataList =await SaveLoadAsyncSystem.GetAllSaves();
-            SaveData saveDataInfo = dataList[0];
-            // 从存档中加载SaveDataInfo.saveDate最近的存档
-            foreach (var saveData in dataList)
+            try
             {
-                if (saveData == null) continue; // 跳过空的存档数据
-                // 如果当前存档的日期比已记录的日期新，则更新
-                if (saveData.saveDateTime > saveDataInfo.saveDateTime)
-                {
-                    saveDataInfo = saveData;
-                }
+                await SaveLoadAsyncSystem.LoadGame();
             }
-            // 如果没有找到存档，则提示用户
-            if (saveDataInfo == null)
+            catch (Exception e)
             {
-                Debug.LogWarning("没有找到可用的存档。");
-                return;
+                Debug.LogError($"加载游戏时发生错误: {e.Message}\nStackTrace: {e.StackTrace}");
             }
-            // 加载存档
-            await SaveLoadAsyncSystem.LoadGame(saveDataInfo.saveSlotIndex);
         }
 
         private void OnSettingButtonClicked()
