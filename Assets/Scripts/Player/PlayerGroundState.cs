@@ -26,7 +26,7 @@ public class PlayerGroundState : PlayerState
             StateMachine.ChangeState(Player.CounterAttackState);
         }
 
-        if (Input.GetKey(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.J))
+        if (Player.attackAction.action.triggered)
         {
             StateMachine.ChangeState(Player.PrimaryAttackState);
         }

@@ -14,9 +14,6 @@ public class Skeleton : Enemy
     public SkeletonDeathState DeathState { get; private set; }
 
     #endregion
-
-
-
     protected override void Awake()
     {
         base.Awake();
@@ -61,6 +58,7 @@ public class Skeleton : Enemy
     {
         base.Damage(damage);
 
+        baseData.CurrentHealth-= damage;
         if (baseData.CurrentHealth <= 0)
         {
             baseData.CurrentHealth = 0;

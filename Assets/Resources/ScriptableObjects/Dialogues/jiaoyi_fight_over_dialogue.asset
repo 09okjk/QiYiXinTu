@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: jiaoyi_fight_over_dialogue
+  m_EditorClassIdentifier: 
+  dialogueID: jiaoyi_fight_over_dialogue
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u8FD9\u662F\u201C\u8BC8\u9A97snake\u201D\u3002\u865A\u5047\u5E7F\u544A\u5728\u5343\u4EBA\u8F6C\u53D1\u4E2D\u81A8\u8139\u6210\u5996\u86C7\uFF0C\u6BCF\u4E2A\u5145\u6EE1\u8BF1\u60D1\u7684\u6807\u9898\u90FD\u5728\u5543\u566C\u7406\u6027\u7684\u5730\u57FA\u3002\u5B83\u7684\u9CDE\u7247\u53D8\u6210\u95EA\u70C1\u7684\u201C\u7EA2\u5305\u201D\uFF0C\u662F\u8BF1\u4EBA\u5815\u5165\u4F20\u64AD\u9677\u9631\u7684\u9975\u6599\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 

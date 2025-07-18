@@ -60,6 +60,9 @@ TagManager:
   - name: Item
     uniqueID: 3773721101
     locked: 0
+  - name: FrontScene
+    uniqueID: 665523107
+    locked: 0
   - name: UI
     uniqueID: 1884647393
     locked: 0

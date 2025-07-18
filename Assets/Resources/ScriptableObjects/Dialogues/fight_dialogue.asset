@@ -23,6 +23,20 @@ MonoBehaviour:
       speakerName: ???
       speakerType: 0
       emotion: 0
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node002
+    text: "\u6309J\u53D1\u52A8\u653B\u51FB\u8FDE\u51FB."
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
     nextNodeID: 
     choices: []
     questID: fight_jiaolv

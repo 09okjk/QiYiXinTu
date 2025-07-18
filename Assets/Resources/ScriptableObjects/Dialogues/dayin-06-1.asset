@@ -1,0 +1,657 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: dayin-06-1
+  m_EditorClassIdentifier: 
+  dialogueID: dayin-06-1
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u4F60\u548C\u8DEF\u85AA\u58F0\u5E76\u80A9\u8D70\u5411\u4F4D\u4E8E\u4E00\u697C\u89D2\u843D\u7684\u6253\u5370\u5E97\u3002\u8DEF\u85AA\u58F0\u4ECE\u4E66\u5305\u91CC\u638F\u51FA\u76F8\u673A\u548C\u7535\u8111\uFF0C\u51C6\u5907\u5BFC\u51FA\u505A\u62A5\u9053\u7D20\u6750\uFF0C\u4EE5\u53CA\u91C7\u8BBF\u7B14\u8BB0\u548C\u62A5\u9053\u521D\u7A3F\u6587\u4EF6\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node002
+    text: "\u5514\uFF0C\u8FD8\u597D\u521A\u521A\u5728\u7ACB\u5FB7\u697C\u7B49\u4F60\u7684\u65F6\u5019\u90FD\u6574\u7406\u597D\u4E86\uFF0C\u4E0D\u7136\u8981\u8BA9\u4F60\u7B49\u597D\u4E45\u5462\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node003
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node003
+    text: "\u8FD9\u4E24\u53EA\u5C0F\u732B\u7684\u7167\u7247\u771F\u6709\u610F\u601D\uFF0C\u4E0A\u6B21\u8FD8\u770B\u5230\u5B83\u4EEC\u4FE9\u53CB\u597D\u76F8\u5904\u5462\uFF0C\u8FD9\u624D\u51E0\u5929\u5C31\u6253\u8D77\u6765\u4E86\u3002\u5C31\u662F\u8FD9\u7167\u7247\u2026\u5149\u5F71\u7684\u5BF9\u6BD4\u4F1A\u4E0D\u4F1A\u592A\u5F3A\u4E86\uFF1F\u6211\u603B\u611F\u89C9\u6211\u62CD\u7684\u4E0D\u597D......"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: 
+    choices:
+    - text: "\u9F13\u52B1"
+      nextNodeID: node004
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node004
+    text: "\u8FD9\u5F20\u52A8\u6001\u611F\u5F3A\uFF0C\u5149\u5F71\u66F4\u663E\u751F\u52A8\uFF0C\u7167\u7247\u7684\u6C1B\u56F4\u886C\u6258\u5F97\u5F88\u597D\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node005
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node005
+    text: "\u771F\u7684\u5417\uFF01\u5176\u5B9E\u6211\u6709\u70B9\u4E0D\u592A\u786E\u5B9A\uFF0C\u6211\u4EE5\u524D\u603B\u611F\u89C9\u65B0\u95FB\u7684\u7167\u7247\u4E00\u5B9A\u8981\u975E\u5E38\u4E25\u8083\uFF0C\u800C\u4E14\u4E0D\u9700\u8981\u8BB2\u7A76\u7F8E\u611F\u5462\uFF0C\u4E0D\u8FC7{playerName}\u90FD\u8FD9\u4E48\u8BF4\u4E86\uFF0C\u6211\u542C\u4F60\u7684\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node006
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node006
+    text: "\u65B0\u95FB\u6444\u5F71\u7167\u7247\u4E0D\u4EC5\u8981\u7B26\u5408\u89C4\u8303\u6027\u539F\u5219\uFF0C\u2018\u6C42\u7F8E\u2019\u4E5F\u662F\u4E0D\u53EF\u6216\u7F3A\u7684\u4E00\u73AF\uFF0C\u65E0\u8BBA\u662F\u6784\u56FE\u3001\u5149\u5F71\u3001\u753B\u8D28\u3001\u89D2\u5EA6\u7B49\u7B49\uFF0C\u8FD9\u4E9B\u90FD\u5F88\u91CD\u8981\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node007
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node007
+    text: "\u54C7\uFF0C\u8FD9\u4E48\u8BF4\uFF0C\u6211\u53EF\u8981\u5F00\u59CB\u671F\u5F85\u4E0B\u5B66\u671F\u7684\u65B0\u95FB\u6444\u5F71\u7406\u8BBA\u4E86\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node008
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node008
+    text: "\u554A\u5BF9\u4E86\uFF01\u6211\u73B0\u5728\u8FD8\u4E0D\u786E\u5B9A\u73B0\u5728\u8FD9\u4E2A\u4F5C\u4E1A\u6253\u5370\u51FA\u6765......\u8BE5\u662F\u4EC0\u4E48\u6837\u5F0F\u5462\uFF1F\u6211\u4E0D\u592A\u60F3\u5C31\u53EA\u6709\u666E\u901AA4\u7EB8\u9489\u5728\u4E00\u8D77\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node009
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node009
+    text: "\u6559\u6388\u53EA\u8BF4\u201C\u5448\u73B0\u91C7\u5199\u5B9E\u8DF5\u7684\u6700\u7EC8\u6210\u679C\u201D\uFF0C\u53EF\u8FD9\u201C\u5448\u73B0\u201D\u2026
+      \u662F\u4E0D\u662F\u5F97\u5F04\u70B9\u5F62\u5F0F\u611F\uFF1F\u6211\u5FC3\u91CC\u6709\u70B9\u6CA1\u8C31\u3002{playerName}\u89C9\u5F97\u5462\uFF1F\u6211\u60F3\u542C\u542C\u4F60\u7684\u610F\u89C1\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: 
+    choices:
+    - text: "\u53C2\u8003\u300A\u5317xx\u62A5\u300B\uFF0C\u505A\u62A5\u7EB8\u7684\u5F62\u5F0F\u3002"
+      nextNodeID: node010
+    - text: "\u7ED3\u5408\u9605\u8BFB\u4E60\u60EF\uFF0C\u505A\u7F51\u9875\u65B0\u95FB\u6837\u5F0F\u3002"
+      nextNodeID: node017
+    - text: "\u65B9\u4FBF\u8001\u5E08\u6279\u9605\uFF0C\u505Apdf\u6587\u4EF6\u3002"
+      nextNodeID: node021
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node010
+    text: "\u8FD9\u4E2A\u4E3B\u610F\u597D\uFF01\u6211\u53EF\u4EE5\u5F04\u4E00\u4E2A\u7B80\u5355\u7684\u62A5\u7EB8\u6392\u7248\uFF0C\u6807\u9898\u3001\u6B63\u6587\u3001\u7167\u7247\u7684\u4F4D\u7F6E\u6392\u4E00\u6392\uFF0C\u611F\u89C9\u66F4\u50CF\u4E2A\u65B0\u95FB\u4EA7\u54C1\u5462\uFF01\u8FD9\u53EF\u662F\u6211\u4EEC\u65B0\u95FB\u91C7\u5199\u6700\u7ECF\u5178\u7684\u8F7D\u4F53\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node011
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node011
+    text: "\u62A5\u7EB8\u6392\u7248\u662F\u7ECF\u5178\u7684\u680F\u5F0F\u7ED3\u6784\uFF0C\u4FE1\u606F\u5BC6\u5EA6\u9AD8\uFF0C\u7A7A\u95F4\u7F16\u6392\u672C\u8EAB\u5C31\u662F\u4E00\u79CD\u53D9\u4E8B\u903B\u8F91\u3002\u6807\u9898\u5B57\u53F7\u3001\u56FE\u7247\u5927\u5C0F\u3001\u7559\u767D\u2026\u90FD\u5728\u4F20\u9012\u7F16\u8F91\u7684\u610F\u56FE\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node012
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node012
+    text: "\u62A5\u7EB8\u7248\u9762\u7684\u5B66\u95EE\u5F88\u591A\uFF0C\u4F8B\u5982\u2018\u5370\u5F20\u2019\u4E0E\u2018\u5F00\u2019\u3001\u7248\u82AF\u3001\u7248\u6B21\u3001\u62A5\u5934\u3001\u62A5\u773C\u3001\u62A5\u7EBF\u3001\u62A5\u7709\u3001\u4E2D\u7F1D\u3001\u901A\u7248\u3001\u57FA\u672C\u680F......"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node013
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node013
+    text: "\u54C7......"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node014
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node014
+    text: "\u542C\u8D77\u6765\u592A\u5389\u5BB3\u4E86\uFF01\u8111\u6D77\u91CC\u5DF2\u7ECF\u6709\u62A5\u7EB8\u90A3\u79CD\u590D\u53E4\u7ECF\u5178\u5F62\u5F0F\u7684\u6837\u5B50\u4E86\uFF0C\u800C\u4E14\u62A5\u7EB8\u6392\u7248\u6E05\u65B0\u76F4\u63A5\uFF0C\u8BA9\u4EBA\u4E00\u773C\u6293\u4F4F\u91CD\u70B9\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node015
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node015
+    text: "\u8DEF\u85AA\u58F0\u8D70\u5411\u6253\u5370\u673A\u64CD\u4F5C\u7535\u8111\uFF0C\u8BED\u6C14\u8F7B\u5FEB\u8D77\u6765\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node016
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node016
+    text: "\u6807\u9898\u7528\u51E0\u53F7\u5B57\uFF1F\u7167\u7247\u653E\u5DE6\u8FB9\u8FD8\u662F\u53F3\u8FB9\uFF1F\u2026\u5567\uFF0C\u611F\u89C9\u6392\u4E00\u6B21\u7248\uFF0C\u6BD4\u5199\u7A3F\u5B50\u8FD8\u8D39\u8111\u5B50\uFF0C\u4F46\u2026\u597D\u50CF\u66F4\u6709\u610F\u601D\u4E86\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node026
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node017
+    text: "\u8FD9\u4E2A\u4E3B\u610F\u597D\uFF01\u6211\u53EF\u4EE5\u5F04\u4E00\u4E2A\u7F51\u9875\u65B0\u95FB\u7684\u6837\u5F0F\uFF0C\u5355\u680F\u957F\u6587\u6EDA\u52A8\u4E0B\u53BB\uFF0C\u91CD\u70B9\u4FE1\u606F\u52A0\u7C97\u7A81\u51FA\uFF0C\u7167\u7247\u7A7F\u63D2\u5728\u76F8\u5173\u7684\u6BB5\u843D\u65C1\u8FB9\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node018
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node018
+    text: "\u7F51\u9875\u65B0\u95FB\u66F4\u8D34\u8FD1\u73B0\u5728\u5927\u5BB6\u7684\u771F\u5B9E\u9605\u8BFB\u4E60\u60EF\uFF0C\u800C\u4E14\u6CA1\u6709\u7248\u9762\u7684\u7269\u7406\u9650\u5236\uFF0C\u7406\u8BBA\u4E0A\u53EF\u4EE5\u65E0\u9650\u957F\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node019
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node019
+    text: "\u4F46\u662F\u8FD9\u79CD\u7EBF\u4E0A\u65B0\u95FB\u9605\u8BFB\u5F62\u5F0F\u5F88\u96BE\u7559\u4F4F\u8BFB\u8005\u7684\u6CE8\u610F\u529B\uFF0C\u7167\u7247\u5F97\u5728\u5173\u952E\u8282\u70B9\u2018\u5361\u2019\u4F4F\u89C6\u7EBF\uFF0C\u5F15\u8BED\u548C\u6807\u9898\u4E5F\u8981\u591F\u5438\u5F15\u4EBA\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node020
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node020
+    text: "\u542C\u8D77\u6765\u5F88\u8003\u9A8C\u2018\u94A9\u5B50\u2019\u7684\u8BBE\u8BA1\u5462\u3002\u597D\uFF0C\u8BD5\u8BD5\u770B\uFF01\u611F\u89C9\u4F1A\u5F88\u6709\u610F\u601D\u5462\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node026
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node021
+    text: "\u6709\u9053\u7406\uFF01\u65E2\u7136\u662F\u4F5C\u4E1A\uFF0C\u76EE\u7684\u8FD8\u662F\u8BA9\u8001\u5E08\u6E05\u6670\u3001\u9AD8\u6548\u5730\u770B\u5230\u6211\u4EEC\u7684\u91C7\u5199\u8FC7\u7A0B\uFF0C\u6211\u8981\u4E00\u9875\u9875\u5730\u6392\u597D\uFF0C\u52A0\u4E0A\u9875\u7709\u9875\u811A\u6CE8\u660E\u8BFE\u7A0B\u3001\u59D3\u540D\u3001\u65E5\u671F......"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node022
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node022
+    text: "pdf\u7684\u597D\u5904\u662F\u683C\u5F0F\u7A33\u5B9A\uFF0C\u800C\u4E14\u517C\u5BB9\u6027\u5F3A\uFF0C\u8FD8\u65B9\u4FBF\u6279\u6CE8\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node023
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node023
+    text: "\u4E0D\u8FC7\u5982\u679C\u662F\u7B80\u5355\u7684pdf\uFF0C\u4F1A\u4E0D\u4F1A\u663E\u5F97\u4E00\u70B9\u2018\u5305\u88C5\u2019\u90FD\u6CA1\u6709\u5462\uFF1F"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node024
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node024
+    text: "\u5C31\u7B97\u662F\u6700\u6734\u7D20\u7684pdf\u3001\u5B57\u53F7\u3001\u95F4\u8DDD\u3001\u6BB5\u95F4\u8DDD\u3001\u56FE\u7247\u4E0E\u6587\u5B57\u7684\u642D\u914D......\u8FD9\u4E9B\u9009\u62E9\u672C\u8EAB\u4E5F\u5728\u65E0\u58F0\u5730\u5F71\u54CD\u7740\u9605\u8BFB\u4F53\u9A8C\u548C\u4FE1\u606F\u7684\u63A5\u53D7\u6548\u7387\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node025
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node025
+    text: "\u4E86\u89E3\u4E86\uFF01\u90A3\u5C31\u8FD9\u4E48\u5B9A\u4E86\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node026
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node026
+    text: "\u5979\u6CA1\u6709\u8BA9\u4F60\u7B49\u592A\u4E45\uFF0C\u77ED\u77ED\u51E0\u5206\u949F\u7684\u65F6\u95F4\uFF0C\u8FD9\u4EFD\u62A5\u9053\u7684\u7EB8\u8D28\u7248\u4F5C\u4E1A\u5C31\u505A\u51FA\u6765\u4E86\u3002\u968F\u7740\u5F69\u8272\u6253\u5370\u673A2\u53F7\u7684\u55E1\u9E23\uFF0C\u8FD9\u4EFD\u4F5C\u4E1A\u5F00\u59CB\u6253\u5370\u4E86\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node027
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node027
+    text: "{playerName}\u4F60\u771F\u7684\u77E5\u9053\u597D\u591A\u4E8B\u60C5\u5440\uFF01\u6211\u6709\u70B9\u597D\u5947\u4F60\u7A76\u7ADF\u662F\u4EC0\u4E48\u6765\u5934\u5462\uFF0C\u867D\u7136\u4F60\u8BF4\u4F60\u81EA\u5DF1\u90FD\u4E0D\u8BB0\u5F97\u4E86\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node028
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node028
+    text: "\u6216\u8BB8\u5C31\u50CF\u4F60\u4EEC\u65B9\u8001\u5E08\u8BF4\u7684\uFF0C\u6211\u53EA\u662F\u300A\u9662\u53F2\u5E74\u9274\u300B\u91CC\u7684\u7CBE\u7075\u5427\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node029
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node029
+    text: "\u8FD9\u6837\u60F3\u60F3\u4E5F\u5F88\u5408\u7406\u5462\uFF0C\u6BD5\u7ADF\u770B\u8D77\u6765\u65B0\u95FB\u77E5\u8BC6\u5BF9\u4F60\u6765\u8BF4\u5C31\u662F\u4E86\u5982\u6307\u638C\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node030
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node030
+    text: "\u4E0D\u8FC7\u4E0D\u7BA1\u4F60\u662F\u8C01\uFF0C\u6211\u5C31\u662F\u89C9\u5F97\u4F60\u5F88\u5389\u5BB3\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node031
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node031
+    text: "\u800C\u4E14\u603B\u6709\u4E00\u79CD\u8BA9\u4EBA\u719F\u6089\u53C8\u60F3\u8981\u4EB2\u8FD1\u7684\u611F\u89C9!"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node032
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node032
+    text: "\u7B2C\u4E00\u5F20\u5370\u7740\u62A5\u9053\u7684\u7EB8\u5F20\u88AB\u5410\u51FA\u6765\u3002\u8DEF\u85AA\u58F0\u62FF\u8D77\u8FD8\u5E26\u7740\u5FAE\u5FAE\u6E29\u70ED\u7684\u7EB8\u9875\uFF0C\u4ED4\u7EC6\u770B\u4E86\u770B\uFF0C\u8138\u4E0A\u9732\u51FA\u4E00\u4E2A\u6DF7\u5408\u7740\u5B8C\u6210\u4EFB\u52A1\u7684\u91CA\u7136\u548C\u5BF9\u6210\u679C\u5BA1\u89C6\u7684\u8BA4\u771F\u8868\u60C5\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node033
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node033
+    text: "\u563F\u563F\u8FD9\u4E0B\u53EF\u4EE5\u4EA4\u4E0A\u4F5C\u4E1A\u54AF\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node034
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node034
+    text: "\u6B63\u5F53\u4F60\u548C\u8DEF\u85AA\u58F0\u51C6\u5907\u79BB\u5F00\uFF0C\u8FCE\u9762\u8D70\u6765\u4E00\u4E2A\u540C\u6837\u5E26\u7740\u76F8\u673A\u548C\u7535\u8111\u7684\u540C\u5B66\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node035
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node035
+    text: "\u54CE\uFF1F\u4F60\u4E5F\u6765\u6253\u5370\u4F5C\u4E1A\u5417\u3002"
+    speaker:
+      speakerID: Jiangwei
+      speakerName: "\u6C5F\u82C7"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node036
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node036
+    text: "\u54C8\u55BD\u54C8\u55BD\u8001\u6C5F\uFF01\u6211\u5DF2\u7ECF\u6253\u5370\u5B8C\u5566\uFF0C\u665A\u4E0A\u5C31\u4EA4\u4E0A\u53BB\u4E86\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node037
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node037
+    text: "\u7537\u540C\u5B66\u770B\u4E86\u770B\u8DEF\u85AA\u58F0\u624B\u4E2D\u5355\u8584\u7684\u4E00\u5F20\u7EB8\uFF0C\u867D\u7136\u5F88\u7591\u60D1\uFF0C\u4F46\u8FD8\u662F\u5FCD\u4E0D\u4F4F\u63D0\u9192\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node038
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node038
+    text: "\u59D0\u59B9\uFF0C\u8981\u6211\u8BF4\u4F60\u8FD8\u662F\u53BB\u770B\u770B\u8001\u5E08\u53D1\u7684\u5B57\u6570\u8981\u6C42\u5427\uFF0C\u4F60\u662F\u4E0D\u662F\u628A\u300A\u65B0\u95FB\u4F20\u64AD\u4F26\u7406\u4E0E\u6CD5\u89C4\u300B\u548C\u300A\u65B0\u95FB\u91C7\u5199\u5B9E\u8DF5\u300B\u7684\u5B57\u6570\u8981\u6C42\u8BB0\u6DF7\u4E86\uFF1F"
+    speaker:
+      speakerID: Jiangwei
+      speakerName: "\u6C5F\u82C7"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node039
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node039
+    text: "\u54CE......\u4EC0\u4E48\uFF01\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node040
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node040
+    text: "\u7D20\u7684\u5B9D\u5B9D~\u300A\u65B0\u95FB\u91C7\u5199\u5B9E\u8DF5\u300B\u786C\u6027\u8981\u6C42\u4E00\u5171\u662F8000\u5B57\u54E6\uFF0C\u800C\u300A\u65B0\u95FB\u4F20\u64AD\u4F26\u7406\u4E0E\u6CD5\u89C4\u300B\u53EA\u9700\u89811500\u5B57\u3002"
+    speaker:
+      speakerID: Jiangwei
+      speakerName: "\u6C5F\u82C7"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node041
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node041
+    text: "\u4F60\u770B\u5230\u8DEF\u85AA\u58F0\u4ECE\u9707\u60CA\u3001\u56DE\u60F3\u5230\u9519\u6115\u3001\u540E\u6094\uFF0C\u4F60\u77E5\u9053\u5979\u786E\u5B9E\u662F\u628A\u5B57\u6570\u8981\u6C42\u8BB0\u53CD\u4E86\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node042
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node042
+    text: "\u6211\u591A\u5199\u4E866500\u4E2A\u5B57\uFF01\uFF01\u800C\u624B\u5934\u7684\u4F5C\u4E1A\u53EA\u5B8C\u6210\u4E86\u4E00\u70B9\u70B9......"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node043
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node043
+    text: "\u54C0\u568E\u58F0\u53EA\u5230\u4E00\u534A\u5C31\u621B\u7136\u800C\u6B62\uFF0C\u5979\u4F3C\u4E4E\u60F3\u5230\u4E86\u4EC0\u4E48\uFF0C\u8D76\u7D27\u6536\u8D77\u4F24\u5FC3\u7684\u60C5\u7EEA\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node044
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node044
+    text: "\u6CA1\u4E8B\uFF0C\u8FD8\u6765\u5F97\u53CA\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: node045
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node045
+    text: "\u6CA1\u5173\u7CFB\uFF0C\u6CA1\u5173\u7CFB\uFF0C\u6211\u4F1A\u505A\u5B8C\u7684\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 1
+    conditionType: 0
+    conditionValue: 

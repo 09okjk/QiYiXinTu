@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Audio;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
@@ -88,11 +89,14 @@ namespace UI
         private void OnLoadButtonClicked()
         {
             titleImage.gameObject.GetComponent<Animator>().enabled = true;
+            AudioManager.Instance.PlayEffectAudio("button_menu_audio");
             //MenuManager.Instance.OpenSavePanel();
         }
 
         private async void OnContinueButtonClicked()
         {
+            AudioManager.Instance.PlayEffectAudio("button_menu_audio");
+
             try
             {
                 if (GameManager.Instance == null)
@@ -118,12 +122,16 @@ namespace UI
 
         private void OnSettingButtonClicked()
         {
+            AudioManager.Instance.PlayEffectAudio("button_menu_audio");
             MenuManager.Instance.OpenSettings();
+
         }
 
         private void OnExitButtonClicked()
         {
+            AudioManager.Instance.PlayEffectAudio("button_menu_audio");
             MenuManager.Instance.QuitToDesktop();
+
         }
 
         public void EnableAnimator()

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Manager;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 namespace Audio
 {
@@ -32,6 +34,8 @@ namespace Audio
         private const string MAIN_VOLUME_PARAM = "MainVolume";
         private const string BACKGROUND_VOLUME_PARAM = "BackgroundVolume";
         private const string EFFECT_VOLUME_PARAM = "EffectVolume";
+        
+        private string oldLevelName = string.Empty;
 
         private void Awake()
         {
@@ -154,8 +158,15 @@ namespace Audio
                 Debug.LogWarning("Background audio source is not assigned!");
                 return false;
             }
-
             string clipName = levelName + "_audio";
+            
+            // 如果levelName中包含“In_LiDe"的字符则cilpName为"In_LiDe_audio"
+            // 否则为"{levelName}_audio" 
+            if (levelName.Contains("In_LiDe"))// 检查levelName是否包含"In_LiDe"
+            {
+                clipName = "In_LiDe_audio";
+            }
+
             AudioClip clip = levelAudioClips.Find(c => c.name == clipName);
             
             if (clip != null)
@@ -176,7 +187,7 @@ namespace Audio
             }
         }
         
-        public bool PlayEffectAudio(string effectName, bool loop = false, float delay = 0f)
+        public bool PlayEffectAudio(string effectName, bool loop = false, float delay = 0f, float speed = 1f,float defaultVolume = 1f)
         {
             if (effectAudioSource == null)
             {
@@ -189,7 +200,8 @@ namespace Audio
             {
                 effectAudioSource.clip = clip;
                 effectAudioSource.loop = loop;
-                
+                effectAudioSource.pitch = speed;
+                effectAudioSource.volume = defaultVolume;
                 if (delay > 0f)
                     effectAudioSource.PlayDelayed(delay);
                 else
@@ -201,6 +213,18 @@ namespace Audio
             {
                 Debug.LogWarning($"Effect audio clip '{effectName}' not found!");
                 return false;
+            }
+        }
+
+        public void CheckFightState()
+        {
+            if (PlayerManager.Instance.player.EnemyCount > 0)
+            {
+                PlayBackgroundAudio("fight_audio");
+            }
+            else
+            {
+                PlayBackgroundAudio(SceneManager.GetActiveScene().name+ "_audio");
             }
         }
         

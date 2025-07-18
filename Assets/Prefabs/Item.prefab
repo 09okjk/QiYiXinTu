@@ -85,7 +85,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.5019531, y: 0.5175781}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -103,7 +103,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45c16a7ae5044bb183653d94b4136d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemData: {fileID: 11400000, guid: f92fcb84f4691d842bec865cba61f20c, type: 2}
+  _itemData:
+    itemID: ink_bottle
+    itemName: "\u58A8\u6C34\u74F6"
+    description: "\u6062\u590D\u5C11\u91CF\u9B54\u529B"
+    itemType: 2
+    icon: {fileID: 2415917035509507012, guid: 464059aa64914654f8a9798a46743405, type: 3}
+    properties:
+    - key: manaRestore
+      value: 1
   icon: {fileID: 5505734194710205256}
 --- !u!50 &5003218625602845986
 Rigidbody2D:

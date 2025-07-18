@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -123,6 +124,7 @@ public class InventoryManager : MonoBehaviour
 
         // 通知玩家获得新物品
         UIManager.Instance.ShowNotification($"新物品获得: {item.itemName}");
+        AudioManager.Instance.PlayEffectAudio("button_e_audio");
         UIManager.Instance.ShowConfirmDialog(
             "获得新物品",
             $"你获得了新物品: {item.itemName}",

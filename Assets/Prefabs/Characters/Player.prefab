@@ -481,6 +481,7 @@ MonoBehaviour:
   newsBookAction: {fileID: -1765460919835589781, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   skillAttackAction: {fileID: 5885169326616349034, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   skillHealAction: {fileID: 3057123866217073958, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  attackAction: {fileID: 1120369429361536294, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!114 &3462125541728108764
 MonoBehaviour:
   m_ObjectHideFlags: 0

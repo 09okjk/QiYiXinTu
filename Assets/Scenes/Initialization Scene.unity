@@ -519,7 +519,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 109490800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f84a9ff0b75842cab755f98576e9da70, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a729d9f77654c72b7f7d2a142593742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &160279488
@@ -4564,6 +4564,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1083379506}
   m_CullTransparentMesh: 1
+--- !u!1 &1092908255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1092908256}
+  m_Layer: 0
+  m_Name: PuzzleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1092908256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092908255}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.113380335, y: -1.0617617, z: 0.066832595}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1121927110
 GameObject:
   m_ObjectHideFlags: 0
@@ -6891,7 +6922,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 57a9c9eab83ad0647b7c109d36e6187a, type: 3}
   - {fileID: 8300000, guid: c1dd3e8cf0fb72146a7d083e863a8a34, type: 3}
   - {fileID: 8300000, guid: 0ca43bd49e39f03499df73e6c7f431dc, type: 3}
-  effectAudioClips: []
+  effectAudioClips:
+  - {fileID: 8300000, guid: 7017c16ca3182314aa0f05328fe44e32, type: 3}
   backgroundAudioSource: {fileID: 586718918}
   effectAudioSource: {fileID: 1291178042}
 --- !u!4 &1781047094
@@ -8019,6 +8051,7 @@ SceneRoots:
   - {fileID: 1399916214}
   - {fileID: 938126837}
   - {fileID: 160279489}
+  - {fileID: 1092908256}
   - {fileID: 1781047094}
   - {fileID: 1294829778}
   - {fileID: 943936974}

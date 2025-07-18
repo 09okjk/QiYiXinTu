@@ -1,4 +1,6 @@
-﻿public class PlayerHurtState : PlayerState
+﻿using Audio;
+
+public class PlayerHurtState : PlayerState
 {
     public PlayerHurtState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
@@ -9,6 +11,7 @@
         base.Enter();
         
         StateTimer = Player.InvincibleTime;
+        AudioManager.Instance.PlayEffectAudio("hurt_audio", false);    
     }
 
     public override void Update()

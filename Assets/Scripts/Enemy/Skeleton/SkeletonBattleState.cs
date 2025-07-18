@@ -1,5 +1,7 @@
-﻿using Manager;
+﻿using Audio;
+using Manager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SkeletonBattleState: EnemyState
 {
@@ -35,7 +37,7 @@ public class SkeletonBattleState: EnemyState
         if (skeleton.IsPlayerDetected())
         {
             stateTimer = skeleton.battleTime;
-            
+            PlayerManager.Instance.player.EnemyCount++;
             if (skeleton.IsPlayerInAttackRange())
             {
                 if (CanAttack())
@@ -50,6 +52,7 @@ public class SkeletonBattleState: EnemyState
         {
             if (stateTimer < 0)
             {
+                if (PlayerManager.Instance.player.EnemyCount > 0) PlayerManager.Instance.player.EnemyCount--;
                 stateMachine.ChangeState(skeleton.IdleState);
             }
             skeleton.SetVelocity(skeleton.moveSpeed * moveDir, rb.linearVelocity.y);

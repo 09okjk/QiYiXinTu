@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: chenyan-05-3
+  m_EditorClassIdentifier: 
+  dialogueID: chenyan-05-3
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u6211\u6709\u4E8B\u8981\u5148\u8D70\u5566{playerName}\uFF0C\u5F88\u9AD8\u5174\u8BA4\u8BC6\u4F60\uFF01......\u8FD8\u6709\uFF0C\u4E0B\u6B21\u89C1~\u6211\u7684\u624B\u4E0B\u8D25\u5C06\xB7\u5C0F\u77EE\u5B50\xB7\u4E07\u5E74\u8001\u4E8C\xB7\u8DEF\u85AA\u58F0\u3002"
+    speaker:
+      speakerID: Cenyanzhi
+      speakerName: "\u9648\u781A\u77E5"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node002
+    text: "\u8FD8\u4E0D\u7B49\u8DEF\u85AA\u58F0\u53CD\u9A73\u5979\uFF0C\u9648\u781A\u77E5\u5C31\u5306\u5306\u79BB\u5F00\u4E86\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node003
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node003
+    text: "\u771F\u662F\u7684\uFF0C{playerName}\uFF0C\u6211\u624D\u4E0D\u662F\u5979\u8BF4\u7684\u90A3\u6837\uFF0C\u5BF9\u5427\uFF01"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 1
+    conditionType: 0
+    conditionValue: 

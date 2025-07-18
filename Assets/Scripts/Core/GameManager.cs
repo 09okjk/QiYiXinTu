@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour
             gameStarted = true;
             pressAnyKeyPrompt.SetActive(false);
             loadingBar.gameObject.SetActive(true);
+            AudioManager.Instance.PlayEffectAudio("button_e_audio");
             LoadScene("MainMenu");
         }
     }
@@ -273,6 +274,7 @@ public class GameManager : MonoBehaviour
                 break;
                 
             case "PlayerDied":
+                AudioManager.Instance.PlayEffectAudio("death_audio");
                 // 显示游戏结束界面
                 UIManager.Instance.ShowConfirmDialog(
                     "你死了",
@@ -290,15 +292,6 @@ public class GameManager : MonoBehaviour
                 
             // 根据需要添加更多事件
         }
-    }
-    
-    public void TriggerSceneChangeEvent(string sceneName)
-    {
-        // 在切换场景前触发事件
-        OnBeforeLevelChange?.Invoke(sceneName);
-        
-        // 这里可以添加其他需要在场景切换前执行的逻辑
-        Debug.Log($"触发场景切换事件: {sceneName}");
     }
     
     // 加载最近的保存

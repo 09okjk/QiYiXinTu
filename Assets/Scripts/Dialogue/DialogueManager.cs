@@ -274,7 +274,7 @@ public class DialogueManager : MonoBehaviour
         Time.timeScale = 0f;
         
         // 暂停音频监听器（可选）
-        AudioListener.pause = true;
+        // AudioListener.pause = true;
         
         Debug.Log("游戏已暂停 - 对话开始");
     }
@@ -293,7 +293,7 @@ public class DialogueManager : MonoBehaviour
         }
         
         // 恢复音频监听器（可选）
-        AudioListener.pause = false;
+        // AudioListener.pause = false;
         
         Debug.Log("游戏已恢复 - 对话结束");
     }
@@ -486,8 +486,6 @@ public class DialogueManager : MonoBehaviour
             StopCoroutine(typingCoroutine);
         }
         typingCoroutine = StartCoroutine(TypeText(currentDialogueText,currentDialogueNode.text, () => {
-            // 文本打字完成后，等待玩家点击继续
-            AudioManager.Instance.StopEffectAudio();
             // 发布任务
             if (!string.IsNullOrEmpty(currentDialogueNode.questID))
             {
@@ -518,7 +516,7 @@ public class DialogueManager : MonoBehaviour
     {
         isTyping = true;
         dialogueText.text = "";
-        AudioManager.Instance.PlayEffectAudio("Dialogue_audio");
+        AudioManager.Instance.PlayEffectAudio("dialogue_audio",true,0.2f);
         // 逐字符显示文本
         foreach (char c in text)
         {
@@ -528,7 +526,8 @@ public class DialogueManager : MonoBehaviour
             // 这样即使 Time.timeScale = 0，打字效果仍然可以正常工作
             yield return new WaitForSecondsRealtime(typewriterSpeed);
         }
-        
+        // 文本打字完成后，等待玩家点击继续
+        AudioManager.Instance.StopEffectAudio();
         isTyping = false;
         onComplete?.Invoke();
     }
@@ -593,6 +592,8 @@ public class DialogueManager : MonoBehaviour
     // 点击对话面板事件
     public void OnDialoguePanelClicked()
     {
+        // 文本打字完成后，等待玩家点击继续
+        AudioManager.Instance.StopEffectAudio();
         // 如果正在打字，停止打字动画并显示完整文本，但不继续执行后续逻辑
         if (isTyping)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using UI.Puzzle;
 using UnityEngine;
 
 namespace UI
@@ -31,6 +32,31 @@ namespace UI
             DialogueManager.Instance.OnDialogueEnd += OnDialogueEnd;
         }
 
+        private void Update()
+        {
+            if (GameStateManager.Instance.GetFlag("close_TimeGate"))
+            {
+                bgImageAnimator.SetBool("IsOpen", false);
+                bgImage.gameObject.SetActive(false);
+                bgImageGirl.SetActive(false);
+                bgImageOpen.SetActive(true);
+                bgImageAnimator.gameObject.SetActive(false);
+            }
+            else if (GameStateManager.Instance.GetFlag("show_TimeGate"))
+            {
+                bgImageAnimator.SetBool("IsOpen", true);
+                bgImageGirl.SetActive(false);
+                TimeGate.SetActive(true);
+            }
+            else if (GameStateManager.Instance.GetFlag("silence_DoorOpen"))
+            {
+                bgImage.gameObject.SetActive(false);
+                bgImageOpen.SetActive(true);
+                bgImageGirl.SetActive(true);
+                bgImageAnimator.gameObject.SetActive(true);
+            }
+        }
+
         private void OnDestroy()
         {
             DialogueManager.Instance.OnDialogueEnd -= OnDialogueEnd;
@@ -40,18 +66,15 @@ namespace UI
         {
             if (dialogueId == "silence_dialogue")
             {
-                bgImage.gameObject.SetActive(false);
-                bgImageOpen.SetActive(true);
-                bgImageGirl.SetActive(true);
-                bgImageAnimator.gameObject.SetActive(true);
-                
+                GameStateManager.Instance.SetFlag("silence_DoorOpen", true);
                 DialogueManager.Instance.StartDialogueByID("silence_in_dialogue");
             }
             
             if (dialogueId == "silence_in_dialogue")
             {
-                bgImageAnimator.SetBool("IsOpen", true);
-                TimeGate.SetActive(true);
+                GameStateManager.Instance.SetFlag("silence_DoorOpen",false);
+                GameStateManager.Instance.SetFlag("show_TimeGate",true);
+                PuzzleManager.Instance.OpenPanel();
             }
         }
     }

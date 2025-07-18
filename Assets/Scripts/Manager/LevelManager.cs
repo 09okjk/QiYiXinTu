@@ -137,10 +137,15 @@ namespace Manager
         /// <summary>
         /// 延迟初始化关卡
         /// </summary>
-        private IEnumerator DelayedInitLevel()
+        private IEnumerator DelayedInitLevel(float delayValue = 0)
         {
-            yield return new WaitForSeconds(initializationDelay);
-            
+            if (delayValue > 0) 
+            {
+                yield return new WaitForSeconds(delayValue);
+            }else
+            {
+                yield return new WaitForSeconds(initializationDelay);
+            }
             // 按照正确的顺序进行初始化
             StartCoroutine(InitLevelSequence());
         }
@@ -213,7 +218,8 @@ namespace Manager
                         break;
                     case "outside1":
                         break;
-                    case "In_LiDe":
+                    case "In_LiDe_4":
+                        _ = SaveLoadAsyncSystem.SaveGame(true,0);
                         break;
                     case "Space_Time":
                         break;
@@ -441,10 +447,9 @@ namespace Manager
                 if (news == null)
                 {
                     Debug.LogWarning($"未找到新闻ID: {newsObject.newsID}");
+                    newsObject.NewsUI.gameObject.SetActive(false);
                     continue;
                 }
-                newsObject.SetNewsData(news);
-                
                 // 更新进度
                 if (showLoadingScreen && GameManager.Instance != null && GameManager.Instance.IsLoadingScreenActive())
                 {
@@ -515,9 +520,17 @@ namespace Manager
 
                 if (levelName == "Space_Time")
                 {
-                    DialogueManager.Instance.StartDialogueByID("rift_1955_dialogue");
+                    Invoke(nameof(StartRiftDialogue), 2f); // 延迟2秒开始时空裂缝对话
                 }
             }
+        }
+        
+        /// <summary>
+        /// 开始时空裂缝对话
+        /// </summary>
+        private void StartRiftDialogue()
+        {
+            DialogueManager.Instance.StartDialogueByID("rift_1955_dialogue");
         }
 
         /// <summary>
@@ -530,14 +543,15 @@ namespace Manager
             {
                 if (GameStateManager.Instance != null)
                 {
-                    GameStateManager.Instance.SetFlag("CanEnter_outside1", true);
+                    GameStateManager.Instance.SetFlag("canEnter_outside1", true);
                     Debug.Log("女生宿舍对话完成，设置outside1可进入标志");
                 }
             }
 
             if (dialogueID == "fang_dialogue")
             {
-                GameStateManager.Instance.SetFlag("CanEnter_"+"In_LiDe", true);
+                GameStateManager.Instance.SetFlag("canEnter_"+"In_LiDe", true);
+                Debug.Log("方对话完成，设置In_LiDe可进入标志");
             }
         }
         

@@ -48,6 +48,10 @@ public class MenuManager : MonoBehaviour
             Debug.Log($"发现重复的 MenuManager 实例：{gameObject.name}，当前实例：{Instance.gameObject.name}");
             Destroy(gameObject);
         }
+        // 初始化音量滑块
+        masterVolumeSlider.value = 1f;
+        musicVolumeSlider.value = 1f;
+        sfxVolumeSlider.value = 1f;
     }
     
     private void Start()
@@ -167,6 +171,21 @@ public class MenuManager : MonoBehaviour
     {
         CloseAllPanels();
         OnMenuStateChanged?.Invoke(true);
+        // 设置音量滑块的当前值
+        var audioData = AudioManager.Instance.GetAudioGameData();
+        if (audioData != null)
+        {
+            masterVolumeSlider.value = audioData.mainVolume;
+            musicVolumeSlider.value = audioData.backgroundVolume;
+            sfxVolumeSlider.value = audioData.effectVolume;
+        }
+        else
+        {
+            Debug.LogWarning("AudioGameData is null, using default values.");
+            masterVolumeSlider.value = 1f;
+            musicVolumeSlider.value = 1f;
+            sfxVolumeSlider.value = 1f;
+        }
         settingsPanel.SetActive(true);
     }
     

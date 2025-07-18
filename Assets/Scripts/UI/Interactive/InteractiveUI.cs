@@ -23,13 +23,10 @@ namespace UI
         public InteractionType interactionType = InteractionType.None; // 交互类型
         public string interactionValue; // 交互后触发值
         public bool isActive = true; // 是否激活交互
-        protected virtual void Awake()
-        {
-            isActive = GameStateManager.Instance.GetFlag("CanInteract_" + interactionName);
-        }
 
         protected virtual void Start()
         {
+            isActive = GameStateManager.Instance.GetFlag("canInteract_" + interactionName);
             interactImage.gameObject.SetActive(false); // 初始隐藏交互按钮
         }
 
@@ -60,7 +57,7 @@ namespace UI
         protected void SetActive(bool active)
         {
             isActive = active;
-            GameStateManager.Instance.SetFlag("CanInteract_" + interactionName, active);
+            GameStateManager.Instance.SetFlag("canInteract_" + interactionName, active);
         }
 
         protected void OnInteractButtonClicked()
@@ -80,7 +77,7 @@ namespace UI
                     // 处理获得物品逻辑
                     Debug.Log("Pick up interaction triggered.");
                     InventoryManager.Instance.AddItemById(interactionValue);
-                    GameStateManager.Instance.SetFlag("CanInteract_" + interactionName, false);
+                    GameStateManager.Instance.SetFlag("canInteract_" + interactionName, false);
                     break;
                 case InteractionType.Use:
                     // 处理使用物品逻辑

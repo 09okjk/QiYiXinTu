@@ -1,4 +1,5 @@
-﻿using Manager;
+﻿using Audio;
+using Manager;
 
 public class PlayerAttackSkillState: PlayerGroundState
 {
@@ -10,6 +11,7 @@ public class PlayerAttackSkillState: PlayerGroundState
     {
         base.Enter();
         StateTimer = 0.1f;
+        AudioManager.Instance.PlayEffectAudio("skill_attack_audio", false);
         SkillManager.Instance.attackSkill.UseSkill();
     }
 

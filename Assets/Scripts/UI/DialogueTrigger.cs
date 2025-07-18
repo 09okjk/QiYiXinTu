@@ -22,6 +22,7 @@ namespace UI
             if (dialogueId == "rift_1955_dialogue")
             {
                 // 显示下一个关卡的GameObject
+                GameStateManager.Instance.SetFlag("close_TimeGate",true);
                 NextLevelGameObject.SetActive(true);
             }
         }

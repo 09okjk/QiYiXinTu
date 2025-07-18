@@ -1,4 +1,6 @@
-﻿public class PlayerDeathState:PlayerState
+﻿using Audio;
+
+public class PlayerDeathState:PlayerState
 {
     public PlayerDeathState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
@@ -8,6 +10,7 @@
     {
         base.Enter();
         StateTimer = 5f;
+        AudioManager.Instance.PlayEffectAudio("death_audio", false);
     }
 
     public override void Update()

@@ -120,18 +120,8 @@ public class NewsImporter : EditorWindow
                     newsData.newsID = newsID;
                     newsData.newsTitle = newsTitle;
                     newsData.newsContent = newsContent;
+                    newsData.newsImageID = imageFileName;
                     newsData.isRead = isRead;
-
-                    string imagePath = $"{imageFolderPath}/{imageFileName}.png";
-                    Sprite newsImage = AssetDatabase.LoadAssetAtPath<Sprite>(imagePath);
-                    if (newsImage != null)
-                    {
-                        newsData.newsImage = newsImage;
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"新闻 '{newsID}': 图片未找到: {imagePath}");
-                    }
 
                     string assetPath = Path.Combine(SAVE_PATH, $"{newsID}.asset");
                     AssetDatabase.CreateAsset(newsData, assetPath);

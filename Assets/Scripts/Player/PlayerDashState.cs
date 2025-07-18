@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using Manager;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class PlayerDashState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        AudioManager.Instance.PlayEffectAudio("dash_audio", false);
         StateTimer = SkillManager.Instance.dashSkill.dashDuration;
     }
 

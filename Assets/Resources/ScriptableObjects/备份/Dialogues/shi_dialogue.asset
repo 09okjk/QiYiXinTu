@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: shi_dialogue
+  m_EditorClassIdentifier: 
+  dialogueID: shi_dialogue
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u5947\u5F02\u73B0\u8C61\uFF1F\u65F6\u7A7A\u88C2\u7F1D\uFF1F\u4F60\u5728\u8BF4\u4EC0\u4E48\uFF01\u6211\u53EF\u662F\u575A\u5B9A\u7684\u552F\u7269\u4E3B\u4E49......\u800C\u4E14\u5C31\u7B97\u771F\u771F\u3001\u771F\u6709\u602A\u7269\u6211\u6211\u6211\u6211\u4E5F\u2014\u2014"
+    speaker:
+      speakerID: ShiDapao
+      speakerName: "\u77F3\u8FBE\u70AE"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node002
+    text: "\uFF08\u7A81\u7136\u5664\u58F0\uFF09"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 

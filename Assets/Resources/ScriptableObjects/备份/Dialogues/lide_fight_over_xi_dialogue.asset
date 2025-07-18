@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: lide_fight_over_xi_dialogue
+  m_EditorClassIdentifier: 
+  dialogueID: lide_fight_over_xi_dialogue
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u8FD9\u662F\u6D17\u7A3F\u7F1D\u5408\u602A\uFF0C\u4F2A\u539F\u521B\u98CE\u66B4\u7A81\u7136\u505C\u6EDE\uFF0C\u602A\u7269\u6838\u5FC3\u88C2\u5F00\u300A\u7533\u62A5\u300B\u526A\u62A5\u865A\u5F71\u2014\u2014\u300E\u6C11\u56FD\u5EFF\u4E09\u5E74\uFF0C\u53F2\u91CF\u624D\u66FE\u8A00\uFF1A\u56FD\u6709\u56FD\u683C\uFF0C\u62A5\u6709\u62A5\u683C\uFF0C\u4EBA\u6709\u4EBA\u683C\u300F\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node002
+    text: "\u8089\u5757\u5728\u523A\u76EE\u7684\u5149\u4E2D\u84B8\u53D1\uFF0C\u6EE1\u5730\u6B8B\u9AB8\u91CC\u6D6E\u73B0\u51FA\u88AB\u527D\u7A83\u7684\u521D\u7A3F\u548C\u6D6E\u52A8\u7740\u7684\u67E5\u91CD\u7387\u7EA2\u5B57\u2014\u2014\u300E\u65B0\u95FB\u662F\u5386\u53F2\u7684\u8349\u7A3F\uFF0C\u800C\u6709\u4E9B\u4EBA\u53EA\u4F1A\u63CF\u7EA2\u300F\u3002"
+    speaker:
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 

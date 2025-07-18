@@ -14,7 +14,7 @@ namespace News
         public string newsID; // 新闻ID
         public string newsTitle; // 新闻标题
         [TextArea] public string newsContent; // 新闻内容
-        public Sprite newsImage; // 新闻图片ID
+        public string newsImageID; // 新闻图片ID
         public bool isRead; // 是否已读
     }
     public class NewsManager : MonoBehaviour
@@ -126,7 +126,7 @@ namespace News
             {
                 runtimeNewsDataDict.Clear();
 
-                if (newsGameDataDict == null)
+                if (newsGameDataDict == null || newsGameDataDict.Count == 0)
                 {
                     foreach (var originalNewsData in originalNewsDataArray)
                     {
@@ -135,7 +135,7 @@ namespace News
                             newsID = originalNewsData.newsID,
                             newsTitle = originalNewsData.newsTitle,
                             newsContent = originalNewsData.newsContent,
-                            newsImage = originalNewsData.newsImage,
+                            newsImageID = originalNewsData.newsImageID,
                             isRead = originalNewsData.isRead
                         };
                         runtimeNewsDataDict[newsGameData.newsID] = newsGameData;
@@ -195,9 +195,15 @@ namespace News
             return new Dictionary<string, NewsGameData>(runtimeNewsDataDict);
         }
         
-        public void OpenNewsInfo(NewsGameData newsData)
+        public void OpenNewsInfo(string newsID)
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            
+            if (!runtimeNewsDataDict.TryGetValue(newsID, out NewsGameData newsData))
+            {
+                Debug.LogError($"找不到ID为 {newsID} 的新闻数据");
+                return;
+            }
             newsBasePanel.SetActive(true);
     
             if (newsData.isRead)
@@ -206,7 +212,7 @@ namespace News
             currentNewsData = newsData;
             newsTitleText.text = newsData.newsTitle;
             newsContentText.text = newsData.newsContent;
-            newsImage.sprite = newsData.newsImage;
+            newsImage.sprite = GetNewsImageByID(newsData.newsImageID);
             newsInfoUI.SetActive(true);
             OnNewsBookStateChanged?.Invoke(true);
             
@@ -215,6 +221,17 @@ namespace News
             {
                 Debug.LogWarning($"OpenNewsInfo took {stopwatch.ElapsedMilliseconds}ms");
             }
+        }
+
+        public Sprite GetNewsImageByID(string imageID)
+        {
+            Sprite sprite = Resources.Load<Sprite>($"Art/News/{imageID}");
+            if (sprite == null)
+            {
+                Debug.LogError($"找不到ID为 {imageID} 的新闻图片");
+                return null;
+            }
+            return sprite;
         }
         
         private void CloseNewsInfo()
@@ -287,7 +304,7 @@ namespace News
         {
             newsInfoTitleText.text = newsData.newsTitle;
             newsInfoContentText.text = newsData.newsContent;
-            newsInfoImage.sprite = newsData.newsImage;
+            newsInfoImage.sprite = GetNewsImageByID(newsData.newsImageID);
             newsInfoPanel.SetActive(true);
         }
     }

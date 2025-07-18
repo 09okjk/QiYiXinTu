@@ -22,7 +22,7 @@ namespace News
         {
             newsID = newsData.newsID; // 设置新闻ID
             newsTitleText.text = newsData.newsTitle; // 设置新闻标题
-            newsImage.sprite = newsData.newsImage; // 设置新闻图片
+            newsImage.sprite = NewsManager.Instance.GetNewsImageByID(newsData.newsImageID); // 设置新闻图片
             currentNewsData = newsData; // 设置当前新闻数据
             
             gameObject.SetActive(true); // 显示新闻信息

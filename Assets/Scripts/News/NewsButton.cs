@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Audio;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace News
@@ -8,7 +9,7 @@ namespace News
         public string newsID;
         public Button newsButton;
         public Image shadowImage; // 用于显示按钮的阴影效果
-        public NewsGameData newsData;
+        public GameObject NewsUI; // 新闻信息UI
         
         private void Awake()
         {
@@ -28,28 +29,16 @@ namespace News
                 Debug.Log($"按钮 {gameObject.name} 已添加点击监听器");
             }
         }
-        
-        public void InitializeNewsButton(string id)
-        {
-            newsID = id;
-            Debug.Log($"按钮 {gameObject.name} 已初始化，ID: {id}");
-        }
 
         private void OnNewsButtonClicked()
         {
             Debug.Log($"按钮 {gameObject.name} 被点击，ID: {newsID}");
-            
+            AudioManager.Instance.PlayEffectAudio("news_audio");
             // 确保NewsManager实例存在
             if (NewsManager.Instance != null)
             {
-                if (newsData == null)
-                {
-                    Debug.LogError("新闻数据未设置，无法打开新闻信息");
-                    return;
-                }
-                NewsManager.Instance.OpenNewsInfo(newsData);
-                shadowImage.gameObject.SetActive(false);
-                gameObject.SetActive(false); // 隐藏按钮
+                NewsManager.Instance.OpenNewsInfo(newsID);
+                NewsUI.gameObject.SetActive(false);
             }
             else
             {
@@ -57,27 +46,5 @@ namespace News
             }
         }
         
-        public void SetNewsData(NewsGameData data)
-        {
-            if (newsData == null)
-            {
-                return;
-            }
-            
-            if(newsID == data.newsID)
-            {
-                Debug.Log($"设置新闻数据: {data.newsID}");
-                newsData = data;
-                if (newsData.isRead)
-                {
-                    shadowImage.gameObject.SetActive(false); // 隐藏阴影效果
-                    gameObject.SetActive(false); // 如果新闻已读，隐藏按钮
-                }
-            }
-            else
-            {
-                Debug.LogError("新闻ID不匹配: " + newsID + " != " + data.newsID);
-            }
-        }
     }
 }

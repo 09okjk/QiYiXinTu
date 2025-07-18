@@ -34,6 +34,10 @@ public class PlayerAnimationTriggers : MonoBehaviour
         }
         player.attackCheckerManager.EnableAttackCollider(attackType);
     }
+    private void AttackEndTrigger()
+    {
+        player.attackCheckerManager.DisableAllAttackColliders();
+    }
     
     private void DefendTrigger()
     {

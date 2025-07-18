@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: dialogue_001
   state: 2
-  currentNodeID: 
+  currentNodeID: node001
   nodes:
   - nodeID: node001
     text: "\u4F60\u53EF\u4EE5\u53EB\u6211{playerName}"
@@ -31,7 +31,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node002
-    text: "\u8C22\u8C22\u4F60{playerName}\uFF0C\u6211\u53EB\u8DEF\u85AA\u58F0\uFF01\u4F60\u53EF\u4EE5\u53EB\u6211\u5C0F\u8DEF~"
+    text: "\u8C22\u8C22\u4F60{playerName}\uFF0C\u6211\u662F\u65B0\u95FB\u5B66\u9662\u65B0\u95FB\u7CFB\u7684\u8DEF\u85AA\u58F0\uFF01\u4F60\u53EF\u4EE5\u53EB\u6211\u5C0F\u8DEF\u3002"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
@@ -45,7 +45,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node003
-    text: "\u55EF\u2026{playerName}\uFF0C\u53EF\u2026\u53EF\u4EE5\u518D\u9EBB\u70E6\u4F60\u4E00\u4E2A\u4E8B\u60C5\u5417\uFF01\uFF01"
+    text: "\u55EF\u2026{playerName}\uFF0C\u867D\u7136\u6211\u53EF\u4EE5\u5E26\u4F60\u53BB\u8FD8\u4E66\uFF0C\u4E0D\u8FC7\u4F60\u5F97\u966A\u6211\u5B8C\u6210\u4E00\u4E2A\u4EFB\u52A1\uFF01"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
@@ -87,7 +87,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node006
-    text: "\u2026\u2026\u53EF\u4EE5\u9EBB\u70E6\u4F60\u5728\u4ECA\u5929\u966A\u6211\u5B8C\u6210\u201C\u65B0\u95FB\u91C7\u5199\u5B9E\u8DF5\u201D\u7684\u4F5C\u4E1A\u561B~\u62DC\u6258\u62DC\u6258\u4E86\uFF01\u6709\u4F60\u5728\u4E00\u5B9A\u4F1A\u5982\u6709\u795E\u52A9\u7684\uFF0C\u563F\u563F~"
+    text: "\u2026\u2026\u53EF\u4EE5\u9EBB\u70E6\u4F60\u5728\u4ECA\u5929\u966A\u6211\u5B8C\u6210\u201C\u65B0\u95FB\u91C7\u5199\u5B9E\u8DF5\u201D\u7684\u4F5C\u4E1A\u561B~\u62DC\u6258\u62DC\u6258\u4E86\uFF01\u5982\u679C\u5916\u9762\u4E5F\u8FD9\u4E48\u5371\u9669\u6211\u4E0D\u6562\u4E00\u4E2A\u4EBA\u51FA\u53BB\uFF0C\u8981\u662F\u6709\u4F60\u5728\u7684\u8BDD......"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
@@ -117,7 +117,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node008
-    text: "\u8036yeeeee~\u592A\u597D\u5566\uFF01\uFF01\uFF01"
+    text: "\u592A\u597D\u5566\uFF01\u8C22\u8C22\u4F60{playerName}."
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
@@ -131,7 +131,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node009
-    text: "\u563B\u563B\u5BF9\u4E86{playerName}\uFF0C\u9001\u4F60\u4E00\u4E2A\u89C1\u9762\u793C\u2026\u2026\u6211\u521A\u624D\u770B\u5230\u4F60\u628A\u624B\u91CC\u7684\u94A2\u7B14\u53D8\u6210\u6B66\u5668\u6218\u6597\u4E86\uFF0C\u6211\u60F3\u4F60\u5E94\u8BE5\u4F1A\u9700\u8981\u8FD9\u4E2A\u5427\uFF01"
+    text: "\u54E6\u54E6\u5BF9\u4E86\uFF0C{playerName}\u9001\u4F60\u4E00\u4E2A\u89C1\u9762\u793C\u2026\u2026\u6211\u521A\u624D\u770B\u5230\u4F60\u628A\u624B\u91CC\u7684\u94A2\u7B14\u53D8\u6210\u6B66\u5668\u6218\u6597\u4E86\uFF0C\u6211\u60F3\u4F60\u5E94\u8BE5\u4F1A\u9700\u8981\u8FD9\u4E2A\u5427\uFF01"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
@@ -146,7 +146,21 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node010
-    text: "\u53EA\u8981\u6211\u4EEC\u5728\u4E00\u5929\u5185\u5B8C\u6210\u4E00\u4EFD\u771F\u5B9E\u7684\u6821\u56ED\u65B0\u95FB\u62A5\u9053\u5C31\u7B97\u5B8C\u6210\u4EFB\u52A1\u4E86\uFF01\u563F\u563F\uFF0C\u62FF\u4E0A\u6211\u7684\u76F8\u673Agogogo\u51FA\u53D1\u54AF\uFF01"
+    text: "\u547C\u547C\uFF0C\u653E\u677E\u5FC3\u6001\uFF01\u53EA\u8981\u6211\u5728\u4E00\u5929\u5185\u5B8C\u6210\u4E00\u4EFD\u771F\u5B9E\u7684\u6821\u56ED\u65B0\u95FB\u62A5\u9053\u5C31\u53EF\u4EE5\u53CA\u65F6\u5B8C\u6210\u4F5C\u4E1A\u4E86"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 2
+    nextNodeID: node011
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node011
+    text: "\u6211\u2014\u2014\u6211\u4EEC\u8D76\u7D27\u51FA\u53D1\u5427\uFF01"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Audio;
 using Core;
 using Manager;
 using News;
@@ -56,6 +57,8 @@ public class Player : Entity
     public LayerMask whatIsEnemy;
     public Vector2[] attackMovements;
     public PlayerAttackCheckerManager attackCheckerManager;
+    // 发现玩家的敌人数量
+    public int EnemyCount = 0;
     
     [Header("Input Actions")]
     [SerializeField] private InputActionReference inventoryAction;
@@ -63,6 +66,7 @@ public class Player : Entity
     [SerializeField] private InputActionReference newsBookAction;
     [SerializeField] private InputActionReference skillAttackAction;
     [SerializeField] private InputActionReference skillHealAction;
+    [SerializeField] public InputActionReference attackAction;
     
     [Header("Player Data")]
     public int currentHealth => playerData.CurrentHealth;
@@ -157,7 +161,10 @@ public class Player : Entity
     {
         inventoryAction.action.Enable();
         menuAction.action.Enable();
+        newsBookAction.action.Enable();
         skillAttackAction.action.Enable();
+        skillHealAction.action.Enable();
+        attackAction.action.Enable();
         
         // MenuManager.Instance.OnMenuStateChanged += HandleMenuStateChanged;
         InventoryManager.Instance.OnInventoryStateChanged += HandleInventoryStateChanged;
@@ -172,7 +179,10 @@ public class Player : Entity
     {
         inventoryAction.action.Disable();
         menuAction.action.Disable();
+        newsBookAction.action.Disable();
         skillAttackAction.action.Disable();
+        skillHealAction.action.Disable();
+        attackAction.action.Disable();
         
         // MenuManager.Instance.OnMenuStateChanged -= HandleMenuStateChanged;
         InventoryManager.Instance.OnInventoryStateChanged -= HandleInventoryStateChanged;
@@ -187,7 +197,6 @@ public class Player : Entity
     protected override void Update()
     {
         base.Update();
-        
         // 如果菜单、背包、新闻库打开，不响应输入
         if (_isMenuOpen || _isInventoryOpen || _isNewsBookOpen || _isPopWindowOpen)
         {
@@ -300,14 +309,15 @@ public class Player : Entity
     {
         base.Damage(damage);
 
-        if (baseData.CurrentHealth <= 0)
+        playerData.CurrentHealth -= damage;
+        if (playerData.CurrentHealth <= 0)
         {
-            baseData.CurrentHealth = 0;
-            OnHealthChanged?.Invoke(baseData.CurrentHealth, true);
+            playerData.CurrentHealth = 0;
+            OnHealthChanged?.Invoke(playerData.CurrentHealth, true);
             stateMachine.ChangeState(DeathState);
             return;
         }
-        OnHealthChanged?.Invoke(baseData.CurrentHealth, true);
+        OnHealthChanged?.Invoke(playerData.CurrentHealth, true);
         if (stateMachine.CurrentState == HurtState)
         {
             return;

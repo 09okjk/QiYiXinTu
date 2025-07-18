@@ -184,7 +184,8 @@ public class GameUIManager : MonoBehaviour
     // 在UI开始交互时调用
     public void SetInteractingWithUI(bool isInteracting)
     {
-        IsInteractingWithUI = isInteracting;
+        // IsInteractingWithUI = isInteracting;
+        IsInteractingWithUI = false;
     }
     
     private void OnSceneLoaded()
@@ -212,7 +213,7 @@ public class GameUIManager : MonoBehaviour
             
             // 初始化数值
             // UpdateHealth(player.playerData.CurrentHealth, false);
-            UpdateMana(player.GetManaPercentage() * 100, 100);
+            UpdateMana(player.playerData.CurrentMana, player.playerData.MaxMana);
             
             // 更新技能栏
             // if (playerCombat != null)
@@ -249,6 +250,8 @@ public class GameUIManager : MonoBehaviour
 
     public void UpdatePlayerUI()
     {
+        Debug.Log("current health: " + PlayerManager.Instance.player.playerData.CurrentHealth);
+        Debug.Log("current mana: " + PlayerManager.Instance.player.playerData.CurrentMana);
         UpdateHealth(PlayerManager.Instance.player.playerData.CurrentHealth,false);
         UpdateMana(PlayerManager.Instance.player.playerData.CurrentMana, PlayerManager.Instance.player.playerData.MaxMana);
     }
@@ -309,16 +312,19 @@ public class GameUIManager : MonoBehaviour
     
     private void OpenMenu()
     {
+        AudioManager.Instance.PlayEffectAudio("button_menu_audio");
         MenuManager.Instance.ToggleMenu();
     }
     
     private void OpenInventory()
     {
+        AudioManager.Instance.PlayEffectAudio("button_menu_audio");
         InventoryManager.Instance.ToggleInventory();
     }
 
     private void OpenNews()
     {
+        AudioManager.Instance.PlayEffectAudio("button_menu_audio");
         NewsManager.Instance.ToggleNewsInfoBook();
     }
     

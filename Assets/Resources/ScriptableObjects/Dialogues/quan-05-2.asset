@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: quan-05-2
+  m_EditorClassIdentifier: 
+  dialogueID: quan-05-2
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u4F60\u5FEB\u770B\u770B\u6211\u6234\u5047\u9762\u7684\u6837\u5B50\u3002"
+    speaker:
+      speakerID: Lili
+      speakerName: "\u8389\u8389"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node002
+    text: "\u600E\u4E48\u4E86\uFF1F"
+    speaker:
+      speakerID: Xiaochen
+      speakerName: "\u5C0F\u9648"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node003
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node003
+    text: "\u50CF\u4E0D\u50CF\u4E30\u5DDDx\u5B50\u3002"
+    speaker:
+      speakerID: Lili
+      speakerName: "\u8389\u8389"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node004
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node004
+    text: "\u54CE\u4F60......"
+    speaker:
+      speakerID: Xiaochen
+      speakerName: "\u5C0F\u9648"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 

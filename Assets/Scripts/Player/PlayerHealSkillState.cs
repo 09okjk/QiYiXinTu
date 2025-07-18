@@ -1,4 +1,5 @@
-﻿using Manager;
+﻿using Audio;
+using Manager;
 
 public class PlayerHealSkillState:PlayerGroundState
 {
@@ -11,6 +12,7 @@ public class PlayerHealSkillState:PlayerGroundState
         base.Enter();
         
         StateTimer = 0.5f;
+        AudioManager.Instance.PlayEffectAudio("heal_audio", false,0.5f,defaultVolume:0.5f);
     }
     
     public override void Update()

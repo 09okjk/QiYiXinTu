@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Manager;
 using UnityEngine;
 public enum EnemyType
 {
@@ -61,6 +62,7 @@ public class Enemy : Entity
                     icon = itemData.icon,
                     itemType = itemData.itemType,
                     description = itemData.description,
+                    properties = itemData.properties
                 };
                 items.Add(item);
             }
@@ -135,6 +137,7 @@ public class Enemy : Entity
     {
         await base.Die();
         await DropItem();
+        PlayerManager.Instance.player.EnemyCount--;
         // 发布游戏事件
         EnemyManager.Instance.EnemyDied(this);
         Destroy(gameObject); 
@@ -174,14 +177,14 @@ public class Enemy : Entity
         if (questItems.Count > 0)
         {
             // 随机选择一个任务物品
-            ItemGameData selectedQuest = questItems[UnityEngine.Random.Range(0, questItems.Count)];
+            ItemGameData selectedQuest = questItems[Random.Range(0, questItems.Count)];
             SpawnItem(selectedQuest);
         }
         
         if (puzzleItems.Count > 0)
         {
             // 随机选择一个谜题物品
-            ItemGameData selectedPuzzle = puzzleItems[UnityEngine.Random.Range(0, puzzleItems.Count)];
+            ItemGameData selectedPuzzle = puzzleItems[Random.Range(0, puzzleItems.Count)];
             SpawnItem(selectedPuzzle);
         }
         
@@ -189,7 +192,7 @@ public class Enemy : Entity
         if (consumables.Count > 0)
         {
             // 基础掉落数量
-            int baseDropCount = UnityEngine.Random.Range(0, 2);
+            int baseDropCount = Random.Range(0, 2);
             int finalDropCount = baseDropCount;
             
             // 根据敌人类型调整掉落数量
@@ -200,10 +203,10 @@ public class Enemy : Entity
                 case EnemyType.Enemy3:
                 case EnemyType.Enemy4:
                 case EnemyType.Magic:
-                    finalDropCount += UnityEngine.Random.Range(1, 3);
+                    finalDropCount += Random.Range(1, 3);
                     break;
                 case EnemyType.Ranged:
-                    if (UnityEngine.Random.value < 0.3f)
+                    if (Random.value < 0.3f)
                         finalDropCount += 1;
                     break;
                 case EnemyType.Boss:
@@ -216,10 +219,10 @@ public class Enemy : Entity
             {
                 Debug.Log("第" + (i + 1) + "次掉落");
                 // 概率掉落 (70%几率)
-                if (UnityEngine.Random.value <= 0.7f)
+                if (Random.value <= 0.7f)
                 {
                     Debug.Log("成功掉落消耗品");
-                    ItemGameData selectedConsumable = consumables[UnityEngine.Random.Range(0, consumables.Count)];// 随机选择一个消耗品
+                    ItemGameData selectedConsumable = consumables[Random.Range(0, consumables.Count)];// 随机选择一个消耗品
                     SpawnItem(selectedConsumable);
                 }
                 else
@@ -244,7 +247,7 @@ public class Enemy : Entity
         if (itemPrefab != null)
         {
             // 在敌人周围随机位置生成物品，避免堆叠
-            Vector2 dropPosition = (Vector2)transform.position + UnityEngine.Random.insideUnitCircle * 0.5f;
+            Vector2 dropPosition = (Vector2)transform.position + Random.insideUnitCircle * 0.5f;
             Instantiate(itemPrefab, dropPosition, Quaternion.identity);
             itemPrefab.GetComponent<Item>().SetItemData(itemData);
         }

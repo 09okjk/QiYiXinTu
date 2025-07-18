@@ -287,7 +287,7 @@ public class NPC : Entity
             // 设置精灵
             SetupSprite();
 
-            defaultSpeed = GetNpcGameData().followSpeed;
+            // defaultSpeed = GetNpcGameData().followSpeed;
             
             // 初始化跟随状态
             if (GetNpcGameData().isFollowing)

@@ -1,4 +1,5 @@
 ﻿using System;
+using Audio;
 using UnityEngine;
 
 public class Item : MonoBehaviour
@@ -38,6 +39,7 @@ public class Item : MonoBehaviour
             case ItemType.Consumable:
                 // 处理消耗品逻辑：直接应用效果
                 ApplyConsumableEffect(player);
+                AudioManager.Instance.PlayEffectAudio("get_consumable_item_audio");
                 break;
             case ItemType.QuestItem:
             case ItemType.PuzzleItem:

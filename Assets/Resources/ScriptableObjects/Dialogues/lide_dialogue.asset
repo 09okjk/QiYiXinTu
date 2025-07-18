@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueID: lide_dialogue
   state: 2
-  currentNodeID: 
+  currentNodeID: node001
   nodes:
   - nodeID: node001
     text: "\u600E\u4E48\u5566\uFF1F"
@@ -22,12 +22,12 @@ MonoBehaviour:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
       speakerType: 1
-      emotion: 10
+      emotion: 11
     nextNodeID: 
     choices:
-    - text: "\u4F60\u4EEC\u4F4F\u7684\u5BBF\u820D\u697C\u6709\u4E00\u79CD\u6C89\u6DC0\u7684\u5386\u53F2\u611F\u3002"
+    - text: "\u8FD9\u662F\u4F60\u4EEC\u7684\u5BBF\u820D\u697C\u5417\uFF1F"
       nextNodeID: node002
-    - text: "\u8FD9\u4E48\u7834\u65E7\u7684\u5417"
+    - text: "\u8FD9\u662F\u4EC0\u4E48\u5E74\u4EE3\u7684\u5EFA\u7B51\uFF1F"
       nextNodeID: node003
     questID: 
     rewardIDs: []
@@ -35,7 +35,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node002
-    text: "\u4F60\u4EEC\u4F4F\u7684\u5BBF\u820D\u697C\u6709\u4E00\u79CD\u6C89\u6DC0\u7684\u5386\u53F2\u611F\u3002"
+    text: "\u8FD9\u662F\u4F60\u4EEC\u7684\u5BBF\u820D\u697C\u5417\uFF1F"
     speaker:
       speakerID: player
       speakerName: playerName
@@ -49,7 +49,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node003
-    text: "\u8FD9\u4E48\u7834\u65E7\u7684\u5417"
+    text: "\u8FD9\u662F\u4EC0\u4E48\u5E74\u4EE3\u7684\u5EFA\u7B51\uFF1F"
     speaker:
       speakerID: player
       speakerName: playerName
@@ -63,12 +63,12 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node004
-    text: "\u8FD9\u662F\u6211\u4EEC\u5B66\u6821\u5176\u4E2D\u4E00\u680B\u5BBF\u820D\u697C\uFF0C\u540D\u5B57\u662F\u4E1C\u98CE\u591C\u653E\u82B1\u5343\u6811\u7684\u4E1C\u98CE\u3002\u867D\u7136\u540D\u5B57\u5F88\u6C14\u6D3E\uFF0C\u4E0D\u8FC7\u6211\u4EEC\u5B66\u6821\u80FD\u8DDF\u5B83\u5AB2\u7F8E\u7684\u8001\u5EFA\u7B51\u4E0D\u591A\u4E86......"
+    text: "\u8FD9\u662F\u6211\u4EEC\u5B66\u6821\u5176\u4E2D\u4E00\u680B\u5BBF\u820D\u697C\uFF0C\u540D\u5B57\u662F\u4E1C\u98CE\u591C\u653E\u82B1\u5343\u6811\u7684\u4E1C\u98CE\u3002"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
       speakerType: 1
-      emotion: 10
+      emotion: 11
     nextNodeID: node005
     choices: []
     questID: 
@@ -77,12 +77,12 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node005
-    text: "\u4E0D\u8FC7\u6211\u5012\u662F\u633A\u559C\u6B22\u8FD9\u91CC\u7684\uFF0C\u867D\u7136\u6211\u8DDF\u5927\u5BB6\u603B\u662F\u8C03\u4F83\u5BBF\u820D\u592A\u7834\u4E86\u4EE5\u81F3\u4E8E\u5F88\u96BE\u751F\u5B58\u54C8\u54C8\u54C8\u54C8\uFF01"
+    text: "\u5982\u679C\u80FD\u6362\u6210\u4E0A\u5E8A\u4E0B\u684C\u7684\u8BDD\u5C31\u597D\u4E86......\uFF08\u5C0F\u58F0\uFF09"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
       speakerType: 1
-      emotion: 10
+      emotion: 11
     nextNodeID: node006
     choices: []
     questID: 
@@ -91,7 +91,7 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node006
-    text: "\u5982\u679C\u80FD\u6362\u6210\u4E0A\u5E8A\u4E0B\u684C\u7684\u8BDD\u5C31\u597D\u4E86......\uFF08\u5C0F\u58F0\uFF09"
+    text: "\u4ECA\u5929\u4E5F\u591A\u5E26\u4F60\u901B\u4E00\u901B\u6821\u56ED\u5427\uFF0C\u5982\u679C\u7559\u610F\u5230\u6821\u56ED\u91CC\u53D1\u751F\u7684\u6709\u8DA3\u65B0\u95FB\u9EBB\u70E6\uFF08\u73A9\u5BB6id\uFF09\u63D0\u9192\u6211\u54E6\uFF01"
     speaker:
       speakerID: LuXinsheng
       speakerName: "\u8DEF\u85AA\u58F0"
@@ -105,12 +105,12 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
   - nodeID: node007
-    text: "\u4ECA\u5929\u4E5F\u591A\u5E26\u4F60\u901B\u4E00\u901B\u6821\u56ED\u5427\uFF0C\u5982\u679C\u7559\u610F\u5230\u6821\u56ED\u91CC\u53D1\u751F\u7684\u6709\u8DA3\u65B0\u95FB\u9EBB\u70E6{playerName}\u63D0\u9192\u6211\u54E6\uFF01"
+    text: "\u8FDB\u5165\u6E38\u620F\u6559\u5B66\uFF1A\u5728\u6E38\u620F\u573A\u666F\u91CC\u5982\u9047\u9EC4\u8272\u611F\u53F9\u53F7\uFF0C\u70B9\u51FB\u67E5\u770B\u8BB0\u5F55\u4E8B\u4EF6\uFF0C\u4E8B\u4EF6\u4F1A\u81EA\u52A8\u4FDD\u5B58\u6536\u5F55\u8FDB\u201CRuc\u4E00\u65E5\u65B0\u95FB\u7D20\u6750\u5E93\u201D\u529F\u80FD\u91CC\u3002"
     speaker:
-      speakerID: LuXinsheng
-      speakerName: "\u8DEF\u85AA\u58F0"
-      speakerType: 1
-      emotion: 2
+      speakerID: system
+      speakerName: "\u65C1\u767D"
+      speakerType: 2
+      emotion: 0
     nextNodeID: 
     choices: []
     questID: 
