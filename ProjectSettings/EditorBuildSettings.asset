@@ -35,6 +35,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Space_Time.unity
     guid: fdda6cad88c47f641b1c070f4c4d7a00
+  - enabled: 1
+    path: Assets/Scenes/outside2.unity
+    guid: a99d53f4369049848943bd7064768cfa
+  - enabled: 1
+    path: Assets/Scenes/DaYinDian.unity
+    guid: 994bceb7a8c76cb48a0f55428a5bda2d
+  - enabled: 1
+    path: Assets/Scenes/DinnerHall.unity
+    guid: 92eb0496180dc5443add47f695f0da25
+  - enabled: 1
+    path: Assets/Scenes/In_No_1.unity
+    guid: 7c086306842388245884d0957e8e3767
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

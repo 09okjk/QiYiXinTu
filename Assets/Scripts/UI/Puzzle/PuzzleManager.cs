@@ -16,6 +16,8 @@ namespace UI.Puzzle
         public GameObject puzzlePanel; // 拼图面板
         public Button closeButton; // 关闭按钮
         public int truePieceCount = 0; // 正确拼图块数量
+        public string puzzleID = "puzzle"; // 拼图面板ID
+        public GameObject TrueObject;
         
         [Header("Puzzle Item")]
         public Button puzzleItemButton; // 拼图物品按钮
@@ -102,8 +104,15 @@ namespace UI.Puzzle
         }
         public void FinishPuzzle()
         {
-            GameStateManager.Instance.SetFlag("show_TimeGate",false);
-            GameStateManager.Instance.SetFlag("puzzleCompleted", true); // 设置拼图完成标志
+            if (puzzleID == "puzzle")
+            {
+                GameStateManager.Instance.SetFlag("show_TimeGate",false);
+            }else if (puzzleID == "puzzle2")
+            {
+                
+            }
+            TrueObject.SetActive(true);
+            GameStateManager.Instance.SetFlag(puzzleID+"Completed", true); // 设置拼图完成标志
             Debug.Log("拼图完成，隐藏拼图面板");
             HidePuzzlePanel(); // 隐藏拼图面板
         }

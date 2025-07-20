@@ -48,6 +48,9 @@ TagManager:
   - name: NPC
     uniqueID: 2606864155
     locked: 0
+  - name: Item
+    uniqueID: 3773721101
+    locked: 0
   - name: Player
     uniqueID: 2153639235
     locked: 0
@@ -56,9 +59,6 @@ TagManager:
     locked: 0
   - name: Weapon
     uniqueID: 2624463411
-    locked: 0
-  - name: Item
-    uniqueID: 3773721101
     locked: 0
   - name: FrontScene
     uniqueID: 665523107

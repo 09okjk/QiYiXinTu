@@ -12,6 +12,9 @@ public enum EnemyType
     Enemy2,
     Enemy3,
     Enemy4,
+    Enemy5,
+    Enemy5_2,
+    Enemy6,
 }
 
 public class Enemy : Entity
@@ -202,6 +205,9 @@ public class Enemy : Entity
                 case EnemyType.Enemy2:
                 case EnemyType.Enemy3:
                 case EnemyType.Enemy4:
+                case EnemyType.Enemy5:
+                case EnemyType.Enemy5_2:
+                case EnemyType.Enemy6:
                 case EnemyType.Magic:
                     finalDropCount += Random.Range(1, 3);
                     break;

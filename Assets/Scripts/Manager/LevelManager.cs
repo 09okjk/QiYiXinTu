@@ -508,19 +508,32 @@ namespace Manager
             else
             {
                 AudioManager.Instance.PlayBackgroundAudio(levelName);
-                if (levelName == "outside1")
+                switch (levelName)
                 {
-                    DialogueManager.Instance.StartDialogueByID("lide_dialogue");
-                }
-
-                if (levelName == "In_LiDe")
-                {
-                    DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
-                }
-
-                if (levelName == "Space_Time")
-                {
-                    Invoke(nameof(StartRiftDialogue), 2f); // 延迟2秒开始时空裂缝对话
+                    case "outside1":
+                        DialogueManager.Instance.StartDialogueByID("lide_dialogue");
+                        break;
+                    case "In_LiDe":
+                        DialogueManager.Instance.StartDialogueByID("lide_inside1_instruction_dialogue");
+                        break;
+                    case "Space_Time":
+                        Invoke(nameof(StartRiftDialogue), 2f); // 延迟2秒开始时空裂缝对话
+                        break;
+                    case "outside2":
+                        if (GameStateManager.Instance.GetFlag("canEnter_outside2"))
+                        {
+                            DialogueManager.Instance.StartDialogueByID("lide-05-1");
+                        }
+                        break;
+                    case "DinnerHall":
+                        Invoke(nameof(StartDinnerHallDialogue), 2f); // 延迟2秒开始餐厅对话
+                        break;
+                    case "In_No_1":
+                        DialogueManager.Instance.StartDialogueByID("jiaoyi-06-1");
+                        break;
+                    case "DaYinDian":
+                        Invoke(nameof(StartDaYinDianDialogue), 2f); // 延迟2秒开始打印店对话
+                        break;
                 }
             }
         }
@@ -532,26 +545,51 @@ namespace Manager
         {
             DialogueManager.Instance.StartDialogueByID("rift_1955_dialogue");
         }
+        
+        /// <summary>
+        /// 开始时空裂缝对话
+        /// </summary>
+        private void StartDinnerHallDialogue()
+        {
+            DialogueManager.Instance.StartDialogueByID("chenyan-05-2");
+        }
+        
+        private void StartDaYinDianDialogue()
+        {
+            DialogueManager.Instance.StartDialogueByID("dayin-06-1");
+        }
 
         /// <summary>
         /// 对话结束回调
         /// </summary>
         private void OnDialogueEnd(string dialogueID)
         {
-            // 处理特定对话结束后的逻辑
-            if (dialogueID == "dialogue_001" && levelName == "女生宿舍")
+            switch (dialogueID)
             {
-                if (GameStateManager.Instance != null)
+                // 处理特定对话结束后的逻辑
+                case "dialogue_001" when levelName == "女生宿舍":
                 {
-                    GameStateManager.Instance.SetFlag("canEnter_outside1", true);
-                    Debug.Log("女生宿舍对话完成，设置outside1可进入标志");
-                }
-            }
+                    if (GameStateManager.Instance != null)
+                    {
+                        GameStateManager.Instance.SetFlag("canEnter_outside1", true);
+                        Debug.Log("女生宿舍对话完成，设置outside1可进入标志");
+                    }
 
-            if (dialogueID == "fang_dialogue")
-            {
-                GameStateManager.Instance.SetFlag("canEnter_"+"In_LiDe", true);
-                Debug.Log("方对话完成，设置In_LiDe可进入标志");
+                    break;
+                }
+                case "fang_dialogue":
+                    GameStateManager.Instance.SetFlag("canEnter_"+"In_LiDe", true);
+                    Debug.Log("方对话完成，设置In_LiDe可进入标志");
+                    break;
+                case "lide-05-1":
+                    GameStateManager.Instance.SetFlag("canEnter_"+"outside2", true);
+                    break;
+                case "dayindian_dialogue":
+                    GameStateManager.Instance.SetFlag("canEnter_"+"In_No_1", true);
+                    break;
+                case "dayin-06-1":
+                    GameStateManager.Instance.SetFlag("canEnter_"+"In_No_1", true);
+                    break;
             }
         }
         

@@ -11,6 +11,7 @@ namespace UI
         public GameObject bgImageGirl; 
         public Animator bgImageAnimator;
         public GameObject TimeGate;
+        public GameObject FianlObject;
         
         private void Awake()
         {
@@ -41,6 +42,8 @@ namespace UI
                 bgImageGirl.SetActive(false);
                 bgImageOpen.SetActive(true);
                 bgImageAnimator.gameObject.SetActive(false);
+                if(GameStateManager.Instance.GetFlag("show_FangHuaigu"))
+                    FianlObject.SetActive(true);   
             }
             else if (GameStateManager.Instance.GetFlag("show_TimeGate"))
             {

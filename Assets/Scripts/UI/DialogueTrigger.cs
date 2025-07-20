@@ -23,6 +23,12 @@ namespace UI
             {
                 // 显示下一个关卡的GameObject
                 GameStateManager.Instance.SetFlag("close_TimeGate",true);
+                GameStateManager.Instance.SetFlag("show_FangHuaigu",true);
+                NextLevelGameObject.SetActive(true);
+            }else if (dialogueId == "chenyan-05-2")
+            {
+                // 显示下一个关卡的GameObject
+                GameStateManager.Instance.SetFlag("finish_Dinner",true);
                 NextLevelGameObject.SetActive(true);
             }
         }

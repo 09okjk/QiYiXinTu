@@ -27,7 +27,7 @@ MonoBehaviour:
     choices: []
     questID: 
     rewardIDs:
-    - swiss rolls
+    - swiss_rolls
     isFollow: 0
     conditionType: 0
     conditionValue: 

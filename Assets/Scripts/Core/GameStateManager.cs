@@ -36,6 +36,8 @@ public class GameStateManager : MonoBehaviour
         gameFlags["canEnter_"+ "In_LiDe_3"] = true; 
         gameFlags["canEnter_" + "In_LiDe_4"] = true; // 假设In_LiDe_4是一个场景
         gameFlags["canEnter_" + "Space_Time"] = true; // 假设In_LiDe_4是一个场景
+        gameFlags["canEnter_" + "DaYinDian"] = true; // 假设In_LiDe_4是一个场景
+        gameFlags["canEnter_" + "DinnerHall"] = true; // 假设In_LiDe_4是一个场景
 
         #endregion
 
@@ -59,9 +61,15 @@ public class GameStateManager : MonoBehaviour
         gameFlags["canInteract_"+"li_dialogue"] = true; 
         gameFlags["canInteract_"+"zhang_dialogue"] = true; 
         gameFlags["canInteract_"+"xiao_dialogue"] = true; 
-        gameFlags["canInteract_"+"rift_1955_dialogue"] = true; 
+        // gameFlags["canInteract_"+"rift_1955_dialogue"] = true; 
         gameFlags["canInteract_"+"silence_dialogue"] = true; 
-
+        
+        gameFlags["canInteract_"+"lide-05-1"] = true; 
+        gameFlags["canInteract_"+"quan-05-2"] = true; 
+        gameFlags["canInteract_"+"chenyan-05-2"] = true; 
+        gameFlags["canInteract_"+"xiaoxiao-05-3"] = true; 
+        gameFlags["canInteract_"+"dayindian_dialogue"] = true; 
+        
         #endregion
 
         #region 特殊触发器-Flag

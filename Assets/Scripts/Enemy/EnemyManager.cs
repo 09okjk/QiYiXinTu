@@ -107,31 +107,41 @@ public class EnemyManager:MonoBehaviour
 
     private void OnEnemyTypeClearedHandler(EnemyType obj)
     {
-        if (obj == EnemyType.Enemy1)
+        switch (obj)
         {
-            var LuXinsheng = NPCManager.Instance.GetNPC("LuXinsheng");
-            if (LuXinsheng != null)
+            case EnemyType.Enemy1:
             {
-                LuXinsheng.SetCurrentDialogueID("fight_over_dialogue");
-                LuXinsheng.SetCanInteract(true);
+                var LuXinsheng = NPCManager.Instance.GetNPC("LuXinsheng");
+                if (LuXinsheng != null)
+                {
+                    LuXinsheng.SetCurrentDialogueID("fight_over_dialogue");
+                    LuXinsheng.SetCanInteract(true);
+                }
+                else
+                {
+                    Debug.LogWarning("NPC 'LuXinsheng' not found.");
+                }
+
+                break;
             }
-            else
-            {
-                Debug.LogWarning("NPC 'LuXinsheng' not found.");
-            }
-        }
-        if (obj == EnemyType.Enemy2)
-        {
-            DialogueManager.Instance.StartDialogueByID("lide_fight_over_dialogue");
-        }
-        
-        if (obj == EnemyType.Enemy3)
-        {
-            DialogueManager.Instance.StartDialogueByID("lide_fight_over_xi_dialogue");
-        }
-        if (obj == EnemyType.Enemy4)
-        {
-            DialogueManager.Instance.StartDialogueByID("lide_fight_over_xin_dialogue");
+            case EnemyType.Enemy2:
+                DialogueManager.Instance.StartDialogueByID("lide_fight_over_dialogue");
+                break;
+            case EnemyType.Enemy3:
+                DialogueManager.Instance.StartDialogueByID("lide_fight_over_xi_dialogue");
+                break;
+            case EnemyType.Enemy4:
+                DialogueManager.Instance.StartDialogueByID("lide_fight_over_xin_dialogue");
+                break;
+            case EnemyType.Enemy5:
+                DialogueManager.Instance.StartDialogueByID("quan_fight_over_dialogue");
+                break;
+            case EnemyType.Enemy5_2:
+                DialogueManager.Instance.StartDialogueByID("jiaoyi_fight_over_dialogue");
+                break;
+            case EnemyType.Enemy6:
+                DialogueManager.Instance.StartDialogueByID("dayin_fight_over_dialogue");
+                break;
         }
     }
 }

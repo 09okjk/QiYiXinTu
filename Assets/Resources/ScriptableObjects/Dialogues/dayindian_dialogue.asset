@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: dayindian_dialogue
+  m_EditorClassIdentifier: 
+  dialogueID: dayindian_dialogue
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "{playerName}\uFF0C\u4F60\u53EF\u4EE5\u966A\u6211\u53BB\u6559\u4E00\u6253\u5370\u4E00\u4E0B\u6211\u521A\u91C7\u5199\u7684\u5185\u5BB9\u5417\uFF1F\u8001\u5E08\u8BF4\u4E0D\u4EC5\u8981\u7535\u5B50\u7248\u4E5F\u8981\u4EA4\u7EB8\u8D28\u7248\u7684\u4F5C\u4E1A\u5462\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node002
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node002
+    text: "\u8BF4\u8D77\u6765\u8FD9\u91CC\u7684\u6253\u5370\u5E97\u4EBA\u6D41\u91CF\u5F88\u5927\uFF0C\u6211\u4EEC\u8FD8\u53EF\u4EE5\u5728\u90A3\u91CC\u6253\u542C\u6253\u542C\u6709\u6CA1\u6709\u65F6\u7A7A\u88C2\u7F1D\u7684\u7EBF\u7D22\u3002"
+    speaker:
+      speakerID: LuXinsheng
+      speakerName: "\u8DEF\u85AA\u58F0"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: node003
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
+  - nodeID: node003
+    text: "\u8D70\u5427\u3002"
+    speaker:
+      speakerID: player
+      speakerName: playerName
+      speakerType: 0
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 
