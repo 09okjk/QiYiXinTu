@@ -280,7 +280,7 @@ public class GameManager : MonoBehaviour
                     "你死了",
                     "是否重新加载最近的保存点？",
                     null,
-                    () => LoadScene("MainMenu"), () => LoadLastSave());
+                    () => LoadLastSave(), () => LoadScene("MainMenu"));
                 break;
             case "DialogueManagerReady":
                 // 触发对话管理器准备就绪事件

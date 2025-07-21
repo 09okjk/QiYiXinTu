@@ -36,7 +36,7 @@ namespace Save
     }
     public class SaveLoadAsyncSystem:MonoBehaviour
     {
-        private static SaveData saveData;
+        private static SaveData _saveData;
         public static SaveLoadAsyncSystem Instance { get; private set; }
         private static string SaveDirectory => Application.persistentDataPath + "/Saves/";
        
@@ -188,72 +188,72 @@ namespace Save
             {
                 // 异步读取保存文件
                 string jsonData = await File.ReadAllTextAsync(savePath, Encoding.UTF8);
-                saveData = JsonConvert.DeserializeObject<SaveData>(jsonData);
+                _saveData = JsonConvert.DeserializeObject<SaveData>(jsonData);
                 
                 // 设置玩家数据
-                if (PlayerManager.Instance.SetPlayerGameData(saveData.PlayerGameData))
+                if (PlayerManager.Instance.SetPlayerGameData(_saveData.PlayerGameData))
                 {
-                    Debug.Log("玩家数据加载成功: " + saveData.saveName);
+                    Debug.Log("玩家数据加载成功: " + _saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.1f,"玩家数据加载成功"); // 更新加载进度
                 }
                 
                 // 设置NPC数据
-                if (NPCManager.Instance.SetNpcDatas(saveData.NpcGameDatas))
+                if (NPCManager.Instance.SetNpcDatas(_saveData.NpcGameDatas))
                 {
-                    Debug.Log("NPC数据加载成功: " + saveData.saveName);
+                    Debug.Log("NPC数据加载成功: " + _saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.2f,"NPC数据加载成功"); // 更新加载进度
                 }
                 
                 // 设置物品数据
-                if (InventoryManager.Instance.SetAllItemsByIDs(saveData.itemIDs))
+                if (InventoryManager.Instance.SetAllItemsByIDs(_saveData.itemIDs))
                 {
-                    Debug.Log("物品数据加载成功: " + saveData.saveName);
+                    Debug.Log("物品数据加载成功: " + _saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.3f,"物品数据加载成功"); // 更新加载进度 
                 }
                 
                 // 设置当前任务
-                QuestManager.Instance.SetCurrentQuest(saveData.currentQuest);
+                QuestManager.Instance.SetCurrentQuest(_saveData.currentQuest);
                 // 设置所有任务
-                if (QuestManager.Instance.SetAllQuests(saveData.allQuests))
+                if (QuestManager.Instance.SetAllQuests(_saveData.allQuests))
                 {
-                    Debug.Log("任务数据加载成功: " + saveData.saveName);
+                    Debug.Log("任务数据加载成功: " + _saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.4f,"任务数据加载成功"); // 更新加载进度
                 }
                 
                 // 设置当前对话
-                DialogueManager.Instance.SetCurrentDialogueData(saveData.currentDialogue);
+                DialogueManager.Instance.SetCurrentDialogueData(_saveData.currentDialogue);
                 // 设置所有对话
-                if (DialogueManager.Instance.SetAllDialogues(saveData.allDialogues))
+                if (DialogueManager.Instance.SetAllDialogues(_saveData.allDialogues))
                 {
-                    Debug.Log("对话数据加载成功: " + saveData.saveName);
+                    Debug.Log("对话数据加载成功: " + _saveData.saveName);
                     GameManager.Instance.OnGameEvent("DialogueManagerReady");
                     GameManager.Instance.UpdateLoadingProgress(0.5f,"对话数据加载成功"); // 更新加载进度
                 }
                 
                 // 设置所有新闻数据
-                if (NewsManager.Instance.SetAllNewsData(saveData.allNewsData))
+                if (NewsManager.Instance.SetAllNewsData(_saveData.allNewsData))
                 {
-                    Debug.Log("新闻数据加载成功: " + saveData.saveName);
+                    Debug.Log("新闻数据加载成功: " + _saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.6f,"新闻数据加载成功"); // 更新加载进度
                 }
                 
                 // 设置游戏状态标志
-                if (GameStateManager.Instance.SetAllFlags(saveData.allGameFlags))
+                if (GameStateManager.Instance.SetAllFlags(_saveData.allGameFlags))
                 {
-                    Debug.Log("游戏状态标志加载成功: " + saveData.saveName);
+                    Debug.Log("游戏状态标志加载成功: " + _saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.7f,"游戏状态标志加载成功"); // 更新加载进度
                 }
                 
                 // 设置音频数据
-                if (AudioManager.Instance.SetAudioGameData(saveData.audioGameData))
+                if (AudioManager.Instance.SetAudioGameData(_saveData.audioGameData))
                 {
-                    Debug.Log("音频数据加载成功: " + saveData.saveName);
+                    Debug.Log("音频数据加载成功: " + _saveData.saveName);
                     GameManager.Instance.UpdateLoadingProgress(0.7f,"音频数据加载成功"); // 更新加载进度
                 }
                 
-                Debug.Log("游戏数据加载完成: " + saveData.saveName);
+                Debug.Log("游戏数据加载完成: " + _saveData.saveName);
                 
-                OnLoadComplete?.Invoke("加载成功: " + saveData.saveName);
+                OnLoadComplete?.Invoke("加载成功: " + _saveData.saveName);
             }
             catch (Exception e)
             {
