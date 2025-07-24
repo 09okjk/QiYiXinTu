@@ -473,6 +473,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &157679753
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,7 +702,7 @@ GameObject:
   - component: {fileID: 193395438}
   - component: {fileID: 193395439}
   m_Layer: 0
-  m_Name: FrontBG (2)
+  m_Name: FrontBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1451,6 +1452,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &252420469
 GameObject:
   m_ObjectHideFlags: 0
@@ -1826,6 +1828,7 @@ MonoBehaviour:
   panel: {fileID: 203891444}
   puzzlePanel: {fileID: 1865394535}
   closeButton: {fileID: 1282138800}
+  puzzlePieceCount: 11
   truePieceCount: 0
   puzzleID: puzzle
   TrueObject: {fileID: 839459866}
@@ -2634,6 +2637,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &377560282
 GameObject:
   m_ObjectHideFlags: 0
@@ -3289,6 +3293,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &430779506
 GameObject:
   m_ObjectHideFlags: 0
@@ -3301,7 +3306,7 @@ GameObject:
   - component: {fileID: 430779509}
   - component: {fileID: 430779508}
   m_Layer: 0
-  m_Name: FrontBG (3)
+  m_Name: FrontBG_Animator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6504,6 +6509,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &839459866
 GameObject:
   m_ObjectHideFlags: 0
@@ -7632,6 +7638,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &998920977
 GameObject:
   m_ObjectHideFlags: 0
@@ -7697,7 +7704,7 @@ MonoBehaviour:
   bgImageGirl: {fileID: 2144881674}
   bgImageAnimator: {fileID: 430779508}
   TimeGate: {fileID: 735059285}
-  FianlObject: {fileID: 157679753}
+  FinalObject: {fileID: 157679753}
 --- !u!4 &999993222
 Transform:
   m_ObjectHideFlags: 0
@@ -8695,6 +8702,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &1128192063
 GameObject:
   m_ObjectHideFlags: 0
@@ -10219,6 +10227,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &1390755876
 GameObject:
   m_ObjectHideFlags: 0
@@ -12462,6 +12471,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &1558961616
 GameObject:
   m_ObjectHideFlags: 0
@@ -12885,7 +12895,7 @@ GameObject:
   - component: {fileID: 1633517614}
   - component: {fileID: 1633517615}
   m_Layer: 0
-  m_Name: FrontBG
+  m_Name: FrontBG_Open
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14139,7 +14149,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 617833567127753317, guid: 4d0417ac925e59749be3d52e781cba96, type: 3}
+  m_Sprite: {fileID: -5197437495098493371, guid: 957328b2c1dba3c4eab8882d916a61d0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14766,6 +14776,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &1742747558
 GameObject:
   m_ObjectHideFlags: 0
@@ -17146,6 +17157,7 @@ MonoBehaviour:
   currentSpriteIndex: 0
   trueSpriteIndex: 0
   isCorrect: 0
+  puzzleType: 0
 --- !u!1 &1989313201
 GameObject:
   m_ObjectHideFlags: 0
@@ -18915,7 +18927,7 @@ GameObject:
   - component: {fileID: 2144881675}
   - component: {fileID: 2144881676}
   m_Layer: 0
-  m_Name: FrontBG (1)
+  m_Name: FrontBG_Girl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -20,7 +20,7 @@ MonoBehaviour:
     text: "\u54DF\uFF0C\u8FD9\u4E0D\u662F\u6211\u7684\u624B\u4E0B\u8D25\u5C06\xB7\u5C0F\u77EE\u5B50\xB7\u4E07\u5E74\u8001\u4E8C\xB7\u8DEF\u85AA\u58F0\u561B~"
     speaker:
       speakerID: Cenyanzhi
-      speakerName: ???
+      speakerName: XXX
       speakerType: 1
       emotion: 0
     nextNodeID: node002

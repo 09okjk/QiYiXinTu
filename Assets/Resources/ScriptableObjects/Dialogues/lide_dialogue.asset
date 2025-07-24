@@ -33,7 +33,7 @@ MonoBehaviour:
     rewardIDs: []
     isFollow: 0
     conditionType: 0
-    conditionValue: 
+    conditionValue: Room1
   - nodeID: node002
     text: "\u8FD9\u662F\u4F60\u4EEC\u7684\u5BBF\u820D\u697C\u5417\uFF1F"
     speaker:

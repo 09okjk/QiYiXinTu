@@ -196,7 +196,6 @@ public class InventoryManager : MonoBehaviour
         questItems.Clear();
         puzzleItems.Clear();
         
-        questItems.Add(ItemManager.Instance.GetItem("book"));
         var currentQuestItems = new List<ItemGameData>();
         var currentPuzzleItems = new List<ItemGameData>();
         foreach (var itemID in itemIDs)

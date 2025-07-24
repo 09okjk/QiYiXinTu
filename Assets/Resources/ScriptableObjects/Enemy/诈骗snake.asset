@@ -24,7 +24,7 @@ MonoBehaviour:
   enemyID: "\u8BC8\u9A97snake"
   enemyName: "\u9AB7\u9AC5002"
   description: "\u654C\u4EBA"
-  enemyType: 8
+  enemyType: 9
   moveSpeed: 2
   idleTime: 2
   battleTime: 1

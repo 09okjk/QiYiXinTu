@@ -126,7 +126,7 @@ public class SaveSlotUI : MonoBehaviour
 
     private Task SaveGame(bool isQuickSave)
     {
-        SaveLoadAsyncSystem.SaveGame(isQuickSave,slotIndex);
+        _ = SaveLoadAsyncSystem.SaveGame(isQuickSave,slotIndex);
         return Task.CompletedTask;
     }
     

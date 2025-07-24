@@ -15,6 +15,7 @@ namespace UI.Puzzle
         public GameObject panel;
         public GameObject puzzlePanel; // 拼图面板
         public Button closeButton; // 关闭按钮
+        public int puzzlePieceCount = 12; // 拼图块数量
         public int truePieceCount = 0; // 正确拼图块数量
         public string puzzleID = "puzzle"; // 拼图面板ID
         public GameObject TrueObject;
@@ -26,6 +27,8 @@ namespace UI.Puzzle
         public string puzzleItemID = "PuzzleItem"; // 拼图物品ID
         
         private Dictionary<string,bool> puzzleStateDictionary = new Dictionary<string, bool>(); // 存储拼图块状态
+        
+        public event Action OnReSetAllPuzzlePieces; // 重置所有拼图块事件
         private void Awake()
         {
             if (Instance == null)
@@ -91,7 +94,7 @@ namespace UI.Puzzle
 
             Debug.Log("拼图块 " + pieceIndex + " 状态更新为: " + state);
             Debug.Log("当前正确拼图块数量: " + truePieceCount);
-            if (truePieceCount >= 11) // 检查是否完成拼图
+            if (truePieceCount >= puzzlePieceCount) // 检查是否完成拼图
             {
                 FinishPuzzle(); // 完成拼图
             }
@@ -106,7 +109,7 @@ namespace UI.Puzzle
         {
             if (puzzleID == "puzzle")
             {
-                GameStateManager.Instance.SetFlag("show_TimeGate",false);
+                // GameStateManager.Instance.SetFlag("show_TimeGate",false);
             }else if (puzzleID == "puzzle2")
             {
                 
@@ -115,6 +118,11 @@ namespace UI.Puzzle
             GameStateManager.Instance.SetFlag(puzzleID+"Completed", true); // 设置拼图完成标志
             Debug.Log("拼图完成，隐藏拼图面板");
             HidePuzzlePanel(); // 隐藏拼图面板
+        }
+
+        public void ReSetAllPuzzlePieces()
+        {
+            OnReSetAllPuzzlePieces?.Invoke();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Audio;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,7 @@ namespace News
 
         private void OnSlotButtonClicked()
         {
+            AudioManager.Instance.PlayEffectAudio("button_menu_audio");
             NewsManager.Instance.ShowNewsInfoPanel(currentNewsData);
         }
     }

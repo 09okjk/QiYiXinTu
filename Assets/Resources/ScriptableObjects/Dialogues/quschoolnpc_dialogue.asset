@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: quschoolnpc_dialogue
+  m_EditorClassIdentifier: 
+  dialogueID: quschoolnpc_dialogue
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u4F60\u4E5F\u8981\u4E0A\u5B66\u5417\uFF1F\u597D\u60E8\u3002\u7B49\u6211\u6512\u591F\u94B1\uFF0C\u5C31\u548C\u6211\u7684\u7535\u8111\u4E00\u8D77\u53BB\u6D41\u6D6A"
+    speaker:
+      speakerID: Luren11
+      speakerName: "\u5C48\u5C0F\u79BE"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 

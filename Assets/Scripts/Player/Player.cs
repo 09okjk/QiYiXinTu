@@ -356,7 +356,7 @@ public class Player : Entity
         _ = base.Die();
         // 触发游戏事件
         GameManager.Instance.OnGameEvent("PlayerDied");
-        Destroy(gameObject);
+        // Destroy(gameObject);
         return Task.CompletedTask;
     }
 

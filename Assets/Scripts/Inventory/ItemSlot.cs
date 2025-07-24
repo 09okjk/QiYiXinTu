@@ -1,4 +1,5 @@
 ﻿using System;
+using Audio;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -48,6 +49,7 @@ public class ItemSlot : MonoBehaviour
     private void OnItemClicked()
     {
         if (item == null) return;
+        AudioManager.Instance.PlayEffectAudio("button_menu_audio");
         isSelected = !isSelected;
         InventoryManager.Instance.ItemDetailsTrigger(isSelected, item);
     }

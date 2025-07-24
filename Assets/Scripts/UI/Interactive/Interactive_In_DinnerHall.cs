@@ -24,6 +24,7 @@ namespace UI
 
             if (GameStateManager.Instance.GetFlag("canEnter_" + "In_LiDe_4"))
             {
+                gameObject.SetActive(true);
                 showNextLevel = true;
             }
             else

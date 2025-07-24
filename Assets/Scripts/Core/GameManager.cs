@@ -216,13 +216,19 @@ public class GameManager : MonoBehaviour
         // 显示加载界面
         ShowLoadingScreen($"正在加载场景: {sceneName}");
         // 先保存数据
-        if(SceneManager.GetActiveScene().name != "Initialization Scene" && SceneManager.GetActiveScene().name != "MainMenu")
+        if(SceneManager.GetActiveScene().name != "Initialization Scene" && SceneManager.GetActiveScene().name != "MainMenu"&& !GameStateManager.Instance.GetFlag("PlayerDied"))
             yield return SaveLoadAsyncSystem.SaveGame(true, 0);
         // 异步加载场景
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false; // 禁止自动激活场景，直到加载完成
         
         float startTime = Time.time;
+        
+        // 游戏取消暂停状态
+        if (Time.timeScale == 0f)
+        {
+            Time.timeScale = 1f;
+        }
         
         // 更新加载进度
         while (!asyncLoad.isDone)
@@ -232,7 +238,7 @@ public class GameManager : MonoBehaviour
             UpdateLoadingProgress(progress, $"正在加载场景: {sceneName} ({progress:P0})");
             
             // 等待直到接近完成并且最小时间已过
-            if (asyncLoad.progress >= 0.9f && Time.time - startTime >= minimumLoadingTime)
+            if (asyncLoad.progress >= 0.88f && Time.time - startTime >= minimumLoadingTime)
             {
                 UpdateLoadingProgress(1f, "加载完成");
                 asyncLoad.allowSceneActivation = true;
@@ -275,6 +281,9 @@ public class GameManager : MonoBehaviour
                 
             case "PlayerDied":
                 AudioManager.Instance.PlayEffectAudio("death_audio");
+                GameStateManager.Instance.SetFlag("PlayerDied", true);
+                if (SceneManager.GetActiveScene().name == "MainMenu")
+                    return;
                 // 显示游戏结束界面
                 UIManager.Instance.ShowConfirmDialog(
                     "你死了",
@@ -297,6 +306,12 @@ public class GameManager : MonoBehaviour
     // 加载最近的保存
     private void LoadLastSave()
     {
-        // 实现最近存档加载逻辑
+        string levelName = SaveLoadAsyncSystem.GetNewestSaveLevelName();
+        if (string.IsNullOrEmpty(levelName))
+        {
+            Debug.LogError("没有找到可加载的存档");
+            return;
+        }
+        LoadScene(levelName);
     }
 }

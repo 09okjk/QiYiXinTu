@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: xingschoolnpc_dialogue
+  m_EditorClassIdentifier: 
+  dialogueID: xingschoolnpc_dialogue
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u4F60\u597D\u5440 \u9700\u8981\u6211\u7ED9\u4F60\u514D\u8D39\u62CD\u7167\u5417?...\u4E0D\u597D\u610F\u601D\u5462
+      \u53EA\u60F3\u8DDF\u5C0F\u7F8E\u62CD\u5462 (\u505C\u987F)\u2026\u5F00\u73A9\u7B11\u5566
+      \u62CD\uFF01"
+    speaker:
+      speakerID: xiaohoumi
+      speakerName: "\u884C\u8D70\u7684\u5C0F\u539A\u7C73"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15750a2ebf0844ff90ffa2f4f956956d, type: 3}
+  m_Name: ruischoolnpc_dialogue
+  m_EditorClassIdentifier: 
+  dialogueID: ruischoolnpc_dialogue
+  state: 2
+  currentNodeID: node001
+  nodes:
+  - nodeID: node001
+    text: "\u4F60\u4E5F\u662F\u6765\u627E\u732B\u7684\u5417\uFF1F\u53EF\u4EE5\u591A\u53BB\u6C42\u662F\u697C\u722C\u5C71\u864E\u90A3\u91CC\u591A\u5237\u65B0\u51E0\u6B21\u54E6\u3002\u6211\u4E0A\u6B21\u9047\u89C1\u4E863\u53EA\u732B\u54AA\u5462(\u2267\u2207\u2266)"
+    speaker:
+      speakerID: Ruiyiqin
+      speakerName: "\u95EB\u4E00\u99A8"
+      speakerType: 1
+      emotion: 0
+    nextNodeID: 
+    choices: []
+    questID: 
+    rewardIDs: []
+    isFollow: 0
+    conditionType: 0
+    conditionValue: 

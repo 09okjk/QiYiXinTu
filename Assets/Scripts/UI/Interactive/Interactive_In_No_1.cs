@@ -13,15 +13,23 @@ namespace UI
         {
             base.Start();
             nextLevelGameObject.SetActive(false);
-            isActive = false;
+            isActive = true;
             showNextLevel = false;
             gameObject.SetActive(true); // 初始显示交互按钮
         }
         protected override void Update()
         {
             base.Update();
-    
-            showNextLevel = true;
+            
+            if (GameStateManager.Instance.GetFlag("canEnter_" + interactionValue))
+            {
+                showNextLevel = true;
+            }
+            else
+            {
+                interactImage.gameObject.SetActive(false);
+                return;
+            }
             
             // 检测按键输入
             if (Input.GetKeyDown(KeyCode.E) && interactImage.gameObject.activeSelf && showNextLevel)

@@ -520,9 +520,9 @@ namespace Manager
                         Invoke(nameof(StartRiftDialogue), 2f); // 延迟2秒开始时空裂缝对话
                         break;
                     case "outside2":
-                        if (GameStateManager.Instance.GetFlag("canEnter_outside2"))
+                        if (GameStateManager.Instance.GetFlag("finish_Dinner"))
                         {
-                            DialogueManager.Instance.StartDialogueByID("lide-05-1");
+                            DialogueManager.Instance.StartDialogueByID("chenyan-05-3");
                         }
                         break;
                     case "DinnerHall":
@@ -551,7 +551,7 @@ namespace Manager
         /// </summary>
         private void StartDinnerHallDialogue()
         {
-            DialogueManager.Instance.StartDialogueByID("chenyan-05-2");
+            DialogueManager.Instance.StartDialogueByID("shitang-05-2");
         }
         
         private void StartDaYinDianDialogue()
@@ -579,6 +579,7 @@ namespace Manager
                 }
                 case "fang_dialogue":
                     GameStateManager.Instance.SetFlag("canEnter_"+"In_LiDe", true);
+                    GameStateManager.Instance.SetFlag("canInteract_fang_dialogue", false);
                     Debug.Log("方对话完成，设置In_LiDe可进入标志");
                     break;
                 case "lide-05-1":
@@ -587,8 +588,40 @@ namespace Manager
                 case "dayindian_dialogue":
                     GameStateManager.Instance.SetFlag("canEnter_"+"In_No_1", true);
                     break;
-                case "dayin-06-1":
-                    GameStateManager.Instance.SetFlag("canEnter_"+"In_No_1", true);
+                case "quschoolnpc_dialogue":
+                    DialogueManager.Instance.ChangeDialogueState("quschoolnpc_dialogue", DialogueState.WithOutStart);
+                    GameStateManager.Instance.SetFlag("canInteract_" + "quschoolnpc_dialogue", true);
+                    break;                
+                case "ruischoolnpc_dialogue":
+                    DialogueManager.Instance.ChangeDialogueState("ruischoolnpc_dialogue", DialogueState.WithOutStart);
+                    GameStateManager.Instance.SetFlag("canInteract_" + "ruischoolnpc_dialogue", true);
+                    break;                
+                case "xingschoolnpc_dialogue": 
+                    DialogueManager.Instance.ChangeDialogueState("xingschoolnpc_dialogue", DialogueState.WithOutStart);
+                    GameStateManager.Instance.SetFlag("canInteract_" + "xingschoolnpc_dialogue", true);
+                    break;                
+                case "jin_dayin": 
+                    DialogueManager.Instance.ChangeDialogueState("jin_dayin", DialogueState.WithOutStart);
+                    GameStateManager.Instance.SetFlag("canInteract_" + "jin_dayin", true);
+                    break;
+                
+                case "silence_dialogue":
+                    GameStateManager.Instance.SetFlag("canInteract_silence_dialogue", false);
+                    break;               
+                case "shi_dialogue":
+                    GameStateManager.Instance.SetFlag("canInteract_shi_dialogue", false);
+                    break;                
+                case "zhang_dialogue":
+                    GameStateManager.Instance.SetFlag("canInteract_zhang_dialogue", false);
+                    break;                
+                case "quan-05-2":
+                    GameStateManager.Instance.SetFlag("canInteract_quan-05-2", false);
+                    break;                
+                case "chenyan-05-2":
+                    GameStateManager.Instance.SetFlag("canInteract_chenyan-05-2", false);
+                    break;                
+                case "xiaoxiao-05-3":
+                    GameStateManager.Instance.SetFlag("canInteract_xiaoxiao-05-3", false);
                     break;
             }
         }

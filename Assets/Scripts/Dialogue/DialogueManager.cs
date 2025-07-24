@@ -821,6 +821,25 @@ public class DialogueManager : MonoBehaviour
         return runtimeDataDictionary != null && runtimeDataDictionary.Count > 0;
     }
     
+    public void ChangeDialogueState(string dialogueID, DialogueState newState)
+    {
+        if (string.IsNullOrEmpty(dialogueID))
+        {
+            Debug.LogWarning("传入的dialogueID为空");
+            return;
+        }
+
+        if (runtimeDataDictionary.ContainsKey(dialogueID))
+        {
+            runtimeDataDictionary[dialogueID].state = newState;
+            Debug.Log($"对话 {dialogueID} 状态已更改为 {newState}");
+        }
+        else
+        {
+            Debug.LogWarning($"无法找到对话数据: {dialogueID}");
+        }
+    }
+    
     public bool IsDialogueFinished(string dialogueID)
     {
         var dialogue = GetDialogueData(dialogueID);

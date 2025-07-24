@@ -28,6 +28,8 @@ namespace News
                 newsButton.onClick.AddListener(OnNewsButtonClicked);
                 Debug.Log($"按钮 {gameObject.name} 已添加点击监听器");
             }
+            if (GameStateManager.Instance.GetFlag("newsIsRead_"+newsID))
+                gameObject.SetActive(false);
         }
 
         private void OnNewsButtonClicked()
@@ -44,7 +46,7 @@ namespace News
             {
                 Debug.LogError("NewsManager实例不存在");
             }
+            GameStateManager.Instance.SetFlag("newsIsRead_"+newsID, true);
         }
-        
     }
 }

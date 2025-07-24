@@ -11,7 +11,7 @@ namespace UI
         public GameObject bgImageGirl; 
         public Animator bgImageAnimator;
         public GameObject TimeGate;
-        public GameObject FianlObject;
+        public GameObject FinalObject;
         
         private void Awake()
         {
@@ -35,23 +35,27 @@ namespace UI
 
         private void Update()
         {
-            if (GameStateManager.Instance.GetFlag("close_TimeGate"))
+            if (GameStateManager.Instance.GetFlag("close_TimeGate"))// 静音室开门，时间之门关闭，女孩消失
             {
                 bgImageAnimator.SetBool("IsOpen", false);
-                bgImage.gameObject.SetActive(false);
-                bgImageGirl.SetActive(false);
-                bgImageOpen.SetActive(true);
                 bgImageAnimator.gameObject.SetActive(false);
+                bgImage.gameObject.SetActive(false);
+                bgImageOpen.SetActive(true);
+                bgImageGirl.SetActive(false);
+                TimeGate.SetActive(false);
                 if(GameStateManager.Instance.GetFlag("show_FangHuaigu"))
-                    FianlObject.SetActive(true);   
+                    FinalObject.SetActive(true);   
             }
-            else if (GameStateManager.Instance.GetFlag("show_TimeGate"))
+            else if (GameStateManager.Instance.GetFlag("show_TimeGate"))// 静音室开门，时间之门开启，女孩消失
             {
+                bgImageAnimator.gameObject.SetActive(true);
                 bgImageAnimator.SetBool("IsOpen", true);
+                bgImage.gameObject.SetActive(false);
+                bgImageOpen.SetActive(true);
                 bgImageGirl.SetActive(false);
                 TimeGate.SetActive(true);
             }
-            else if (GameStateManager.Instance.GetFlag("silence_DoorOpen"))
+            else if (GameStateManager.Instance.GetFlag("silence_DoorOpen"))// 静音室开门，时间之门出现，女孩出现
             {
                 bgImage.gameObject.SetActive(false);
                 bgImageOpen.SetActive(true);

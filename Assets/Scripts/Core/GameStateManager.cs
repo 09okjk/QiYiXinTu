@@ -64,11 +64,16 @@ public class GameStateManager : MonoBehaviour
         // gameFlags["canInteract_"+"rift_1955_dialogue"] = true; 
         gameFlags["canInteract_"+"silence_dialogue"] = true; 
         
-        gameFlags["canInteract_"+"lide-05-1"] = true; 
         gameFlags["canInteract_"+"quan-05-2"] = true; 
         gameFlags["canInteract_"+"chenyan-05-2"] = true; 
         gameFlags["canInteract_"+"xiaoxiao-05-3"] = true; 
         gameFlags["canInteract_"+"dayindian_dialogue"] = true; 
+        
+        // school_npc
+        gameFlags["canInteract_"+"quschoolnpc_dialogue"] = true;
+        gameFlags["canInteract_"+"ruischoolnpc_dialogue"] = true; 
+        gameFlags["canInteract_"+"xingschoolnpc_dialogue"] = true; 
+        gameFlags["canInteract_"+"jin_dayin"] = true; 
         
         #endregion
 
@@ -118,14 +123,17 @@ public class GameStateManager : MonoBehaviour
     {
         if (gameFlags.TryGetValue(flagName, out bool value))
         {
+            // Debug.Log($"GetFlag:{flagName}, Value:{value}");
             return value;
         }
+        // Debug.Log($"GetFlag:{flagName}, Value:false (not found)");
         return false;
     }
     
     // 设置标志值
     public void SetFlag(string flagName, bool value)
     {
+        Debug.Log($"SetFlag:{flagName}, Value:{value}");
         gameFlags[flagName] = value;
     }
     
